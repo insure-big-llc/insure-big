@@ -1,0 +1,264 @@
+---
+/**
+ * /terms-%26-conditions
+ *
+ * 🔴 INDEXED URL, WITH THE PERCENT-ENCODED AMPERSAND.
+ *
+ * ⚠️ THE FILENAME IS `terms-[amp]conditions.astro` ON PURPOSE. DO NOT rename it
+ * to `terms-&-conditions.astro` or `terms-%26-conditions.astro`.
+ *
+ * Astro URL-decodes route filenames, so:
+ *   - `terms-%26-conditions.astro` is decoded to `terms-&-conditions.astro` before
+ *     it is read, and the build fails with ENOENT.
+ *   - a literal `&` in a filename is fragile across shells and archives.
+ *
+ * The bracketed dynamic segment matches the literal string `%26`, which is exactly
+ * the URL segment Google has indexed. Astro never decodes the bracketed value, so
+ * `[amp]` resolves to the literal `%26` and the output is:
+ *
+ *     dist/terms-%26-conditions.html   ->   https://insure-big.com/terms-%26-conditions
+ *
+ * Content fixes carried over (website-scope.md §8):
+ *   - ~12 blank company-name fields, including "the intellectual property of
+ *     https:// unless otherwise specified"
+ *   - heading casing "terms & Conditions" -> "Terms & Conditions"
+ *   - copyright 2025 in the body vs 2026 in the footer -> standardised
+ *
+ * ⚠️ NOT LEGAL ADVICE. Bret must have it reviewed before launch (scope §8).
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import { SITE, LOCATIONS, CONTACT } from '../config/site.js';
+import { webPageSchema, breadcrumbSchema } from '../lib/schema.js';
+
+/**
+ * `[amp]` is a dynamic segment, so Astro requires getStaticPaths even though
+ * there is exactly one page. Returning `%26` makes the generated URL
+ * `/terms-%26-conditions` — the literal indexed path.
+ */
+export function getStaticPaths() {
+  return [{ params: { amp: '%26' } }];
+}
+
+/**
+ * The URL path, written with the real encoded ampersand.
+ * This is what goes into the canonical, the breadcrumb and the JSON-LD.
+ */
+const path = '/terms-%26-conditions';
+
+const trail = [
+  { name: 'Home', path: '/' },
+  { name: 'Terms & Conditions', path },
+];
+
+const effectiveDate = '2026-01-01';
+const year = new Date().getFullYear();
+
+const schema = [
+  webPageSchema({
+    path,
+    title: `Terms & Conditions — ${SITE.name}`,
+    description: `The terms governing your use of the ${SITE.name} website, including limitations, third-party links and governing law.`,
+  }),
+  breadcrumbSchema(trail),
+];
+---
+
+<BaseLayout
+  title="Terms & Conditions | BIG"
+  description="Terms and conditions governing use of the Ballentine Insurance Group website, including website content, third-party links, limitations and governing law."
+  path={path}
+  schema={schema}
+>
+  <Breadcrumbs trail={trail} />
+
+  <article class="container-page py-12">
+    <div class="prose-page">
+      <h1 class="text-3xl leading-tight sm:text-4xl">Terms &amp; Conditions</h1>
+      <p class="mt-4 text-sm text-[var(--color-ink-muted)]">
+        <strong>Effective date:</strong> {effectiveDate}
+      </p>
+
+      <h2>1. Agreement to these terms</h2>
+      <p>
+        These Terms &amp; Conditions govern your access to and use of the website at
+        {' '}<a href={SITE.url}>{SITE.url.replace('https://', '')}</a> (the "Website"),
+        operated by {SITE.name} ("we", "us", "our"). By accessing or using the Website
+        you agree to be bound by these terms. If you do not agree, please do not use the
+        Website.
+      </p>
+
+      <h2>2. About this website</h2>
+      <p>
+        {' '}{SITE.name} is an independent insurance agency. We are licensed to transact
+        insurance in the States of Missouri and Kansas and provide services to clients
+        across the Kansas City metro area.
+      </p>
+      <p>
+        The content on this Website is provided for general information only. It
+        describes the types of coverage we can arrange and the carriers we work with. It
+        is <strong>not</strong> a quote, an offer of insurance, or a contract of
+        insurance, and it does not amend or replace the terms of any policy you hold.
+      </p>
+
+      <h2>3. No advice, and no coverage created by this Website</h2>
+      <p>
+        Nothing on this Website constitutes insurance advice, legal advice, tax advice or
+        financial advice for your specific circumstances. Coverage is determined solely by
+        the terms, conditions, limitations and exclusions of the policy ultimately issued
+        by an insurance carrier.
+      </p>
+      <p>
+        Submitting a form on this Website, sending us an email, or otherwise contacting us
+        <strong>does not create insurance coverage</strong> and does not bind any carrier.
+        Coverage begins only when a carrier has issued a policy and any required premium
+        has been paid.
+      </p>
+      <p>
+        Descriptions of coverage on this Website are summaries. Where a summary and the
+        policy wording differ, the policy wording governs.
+      </p>
+
+      <h2>4. Quotes and forms</h2>
+      <p>
+        Quote and contact forms on this Website are provided through a third-party form
+        service. Information you submit is transmitted to us and handled in accordance
+        with our <a href="/privacy-policy">Privacy Policy</a>. Any indication of price
+        shown during an enquiry is an estimate only and is subject to underwriting,
+        verification of the information you provide, and carrier approval.
+      </p>
+
+      <h2>5. Acceptable use</h2>
+      <p>You agree not to:</p>
+      <ul>
+        <li>use the Website for any unlawful purpose, or in breach of any regulation;</li>
+        <li>
+          submit false, misleading or fraudulent information, including in any quote or
+          claim enquiry;
+        </li>
+        <li>
+          attempt to gain unauthorised access to the Website, its servers, or any connected
+          system or network;
+        </li>
+        <li>
+          introduce viruses, malware or any other harmful material, or interfere with the
+          proper working of the Website;
+        </li>
+        <li>
+          scrape, harvest or systematically extract content or personal data from the
+          Website; or
+        </li>
+        <li>use automated means to submit forms or generate enquiries.</li>
+      </ul>
+
+      <h2>6. Intellectual property</h2>
+      <p>
+        All content on this Website — including text, layout, graphics, logos and the
+        compilation of the site — is the intellectual property of {SITE.name} unless
+        otherwise specified, and is protected by applicable copyright and trademark law.
+      </p>
+      <p>
+        Third-party names and logos shown on this Website, including the logos of insurance
+        carriers we are appointed with, are the property of their respective owners and are
+        displayed to identify those carriers. Their display does not imply any endorsement
+        of this Website by those carriers.
+      </p>
+      <p>
+        You may view and print pages from this Website for your own personal,
+        non-commercial use. You may not reproduce, republish, distribute, modify or use
+        our content for any commercial purpose without our prior written permission.
+      </p>
+
+      <h2>7. Third-party websites and services</h2>
+      <p>
+        This Website links to third-party sites and uses third-party services, including
+        our form provider, mapping services and social media. We do not control those
+        sites and are not responsible for their content, availability, security or privacy
+        practices. Links are provided for convenience and do not imply endorsement. Your
+        use of a third-party site is governed by that site's own terms.
+      </p>
+
+      <h2>8. Availability and changes</h2>
+      <p>
+        We aim to keep this Website available and accurate, but we do not warrant that it
+        will be uninterrupted, error-free, or free of harmful components. We may change,
+        suspend or withdraw any part of the Website, and may amend these terms, at any
+        time. The effective date above will change when we do. Continued use of the Website
+        after a change constitutes acceptance.
+      </p>
+
+      <h2>9. Disclaimer of warranties</h2>
+      <p>
+        To the fullest extent permitted by law, the Website and its content are provided
+        "as is" and "as available", without warranties of any kind, whether express or
+        implied, including but not limited to implied warranties of merchantability,
+        fitness for a particular purpose, and non-infringement. We do not warrant that the
+        content is accurate, complete or current, or that it applies to your particular
+        circumstances.
+      </p>
+
+      <h2>10. Limitation of liability</h2>
+      <p>
+        To the fullest extent permitted by applicable law, in no event shall {SITE.name},
+        its officers, employees, agents or affiliates be liable for any indirect,
+        incidental, special, consequential or punitive damages — including loss of
+        profits, loss of data, or business interruption — arising out of or in connection
+        with your use of, or inability to use, this Website or its content, even if we have
+        been advised of the possibility of such damages.
+      </p>
+      <p>
+        Nothing in these terms limits or excludes any liability that cannot lawfully be
+        limited or excluded, including liability arising from our own negligence where
+        such limitation is not permitted.
+      </p>
+
+      <h2>11. Indemnity</h2>
+      <p>
+        You agree to indemnify and hold harmless {SITE.name} and its officers, employees
+        and agents from any claim, loss, liability or expense (including reasonable legal
+        fees) arising from your breach of these terms or your misuse of the Website.
+      </p>
+
+      <h2>12. Privacy</h2>
+      <p>
+        Our handling of personal information is described in our
+        {' '}<a href="/privacy-policy">Privacy Policy</a>, which forms part of these terms.
+      </p>
+
+      <h2>13. Governing law and jurisdiction</h2>
+      <p>
+        These terms are governed by the laws of the State of Missouri, without regard to
+        its conflict of law provisions. You agree that any dispute arising out of or
+        relating to these terms or the Website shall be subject to the exclusive
+        jurisdiction of the state and federal courts located in Jackson County, Missouri.
+      </p>
+
+      <h2>14. Severability</h2>
+      <p>
+        If any provision of these terms is held to be unenforceable, that provision will be
+        limited or severed to the minimum extent necessary, and the remaining provisions
+        will remain in full force and effect.
+      </p>
+
+      <h2>15. Contact</h2>
+      <p>Questions about these terms should be directed to:</p>
+      <ul>
+        <li>
+          <strong>Email:</strong>
+          {' '}<a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a>
+        </li>
+        <li>
+          <strong>Phone:</strong> <a href={CONTACT.phoneHref}>{CONTACT.phone}</a>,
+          {' '}{CONTACT.hours.display}
+        </li>
+        <li>
+          <strong>Post:</strong> {SITE.name}, {LOCATIONS[0].full}
+        </li>
+      </ul>
+
+      <p class="mt-10 text-sm text-[var(--color-ink-muted)]">
+        Copyright © {year} {SITE.name}. All rights reserved.
+      </p>
+    </div>
+  </article>
+</BaseLayout>

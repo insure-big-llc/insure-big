@@ -1,0 +1,103 @@
+---
+/**
+ * /contact — NET NEW. The live site returns a 404 for this path (scope §1).
+ *
+ * Carries the NAP block prominently, which is the single biggest local-SEO gap
+ * on the current site: it has no address or phone number on any page.
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SectionBand from '../components/SectionBand.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import ServiceForm from '../components/ServiceForm.astro';
+import { SITE, LOCATIONS, CONTACT } from '../config/site.js';
+import { contactPageSchema, breadcrumbSchema } from '../lib/schema.js';
+
+const path = '/contact';
+const trail = [
+  { name: 'Home', path: '/' },
+  { name: 'Contact', path },
+];
+
+const schema = [
+  contactPageSchema({
+    path,
+    title: 'Contact Ballentine Insurance Group',
+    description:
+      'Call, email or visit Ballentine Insurance Group. Two offices serving the Kansas City metro: Lee\u2019s Summit and the Northland.',
+  }),
+  breadcrumbSchema(trail),
+];
+---
+
+<BaseLayout
+  title="Contact Us | Kansas City & Lee's Summit | BIG"
+  description="Call (816) 868-1787 or visit Ballentine Insurance Group in Lee's Summit or the Kansas City Northland. Open Monday to Friday, 9am to 5pm."
+  path={path}
+  schema={schema}
+>
+  <Breadcrumbs trail={trail} />
+
+  <SectionBand title="Contact Ballentine Insurance Group" kicker="Two offices, one local team" />
+
+  <section class="container-page py-12">
+    <header class="max-w-3xl">
+      <p class="mt-5 text-lg leading-relaxed text-[var(--color-ink-soft)]">
+        Two offices, one local team. Call, email, or stop in — whichever suits you.
+        {SITE.marketStatement}
+      </p>
+    </header>
+
+    <!-- Primary contact details, front and centre -->
+    <div class="mt-10 grid gap-6 sm:grid-cols-3">
+      <div class="rounded-xl bg-[var(--color-surface-alt)] p-6">
+        <h2 class="text-base font-bold uppercase tracking-wide text-[var(--color-brand-700)]">Phone</h2>
+        <p class="mt-3 text-lg">
+          <a href={CONTACT.phoneHref} class="font-semibold underline">{CONTACT.phone}</a>
+        </p>
+        <p class="mt-1 text-sm text-[var(--color-ink-soft)]">{CONTACT.hours.display}</p>
+      </div>
+      <div class="rounded-xl bg-[var(--color-surface-alt)] p-6">
+        <h2 class="text-base font-bold uppercase tracking-wide text-[var(--color-brand-700)]">Email</h2>
+        <p class="mt-3 text-lg break-words">
+          <a href={`mailto:${CONTACT.email}`} class="font-semibold underline">{CONTACT.email}</a>
+        </p>
+        <p class="mt-1 text-sm text-[var(--color-ink-soft)]">We reply within one business day.</p>
+      </div>
+      <div class="rounded-xl bg-[var(--color-surface-alt)] p-6">
+        <h2 class="text-base font-bold uppercase tracking-wide text-[var(--color-brand-700)]">Hours</h2>
+        <p class="mt-3 text-lg font-semibold">Mon – Fri</p>
+        <p class="mt-1 text-sm text-[var(--color-ink-soft)]">9:00am – 5:00pm</p>
+        <p class="mt-1 text-sm text-[var(--color-ink-soft)]">Closed weekends</p>
+      </div>
+    </div>
+
+    <!-- Both offices -->
+    <h2 class="mt-14 text-2xl">Our offices</h2>
+    <div class="mt-6 grid gap-6 sm:grid-cols-2">
+      {
+        LOCATIONS.map((loc) => (
+          <section class="rounded-xl border border-neutral-200 p-6">
+            <h3 class="text-lg">{loc.name}</h3>
+            <address class="mt-3 not-italic leading-relaxed text-[var(--color-ink-soft)]">
+              {loc.street}<br />
+              {loc.locality}, {loc.region} {loc.postalCode}
+            </address>
+            <p class="mt-3">
+              <a href={CONTACT.phoneHref} class="font-semibold underline">{CONTACT.phone}</a>
+            </p>
+            <p class="mt-1 text-sm text-[var(--color-ink-soft)]">{CONTACT.hours.display}</p>
+            <p class="mt-4 text-sm">
+              <a href={`/${loc.slug}`} class="font-semibold underline">
+                More about this office
+              </a>
+            </p>
+          </section>
+        ))
+      }
+    </div>
+
+    <div class="mt-14">
+      <ServiceForm form="personal" path={path} label="insurance" />
+    </div>
+  </section>
+</BaseLayout>

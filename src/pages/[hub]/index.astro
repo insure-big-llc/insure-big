@@ -1,0 +1,148 @@
+---
+/**
+ * Hub pages: /personal-insurance  /business-insurance  /life-insurance
+ *
+ * 🔴 These three URLs are ALREADY INDEXED — they appear in the live
+ * sitemap.website.xml and the paths must not change (website-scope.md §4).
+ * They were previously thin service pages; here they become full hub pages that
+ * introduce the group and link to every child. No redirect touches them.
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import SectionBand from '../../components/SectionBand.astro';
+import ServiceForm from '../../components/ServiceForm.astro';
+import CarrierStrip from '../../components/CarrierStrip.astro';
+import FaqBlock from '../../components/FaqBlock.astro';
+import RelatedCoverage from '../../components/RelatedCoverage.astro';
+import { HUBS, SERVICES, HUB_FAQ } from '../../config/services.js';
+import { SERVICE_CARRIERS } from '../../config/carriers.js';
+import { ART } from '../../config/site.js';
+import { webPageSchema, faqSchema, breadcrumbSchema } from '../../lib/schema.js';
+
+export function getStaticPaths() {
+  return HUBS.map((hub) => ({ params: { hub: hub.slug }, props: { hub } }));
+}
+
+const { hub } = Astro.props;
+const children = SERVICES.filter((s) => s.hub === hub.slug);
+const path = `/${hub.slug}`;
+const carriers = SERVICE_CARRIERS[hub.slug] ?? [];
+
+const trail = [
+  { name: 'Home', path: '/' },
+  { name: hub.title, path },
+];
+
+/**
+ * Hub-level FAQ. The SAME array feeds the visible block and the FAQPage JSON-LD —
+ * Google treats markup whose questions are not visible on the page as spam, so
+ * these must never diverge.
+ */
+const faq = HUB_FAQ[hub.slug] ?? [];
+
+const schema = [
+  webPageSchema({ path, title: hub.metaTitle, description: hub.metaDescription }),
+  faqSchema({ faqs: faq, path }),
+  breadcrumbSchema(trail),
+].filter(Boolean);
+---
+
+<BaseLayout
+  title={hub.metaTitle}
+  description={hub.metaDescription}
+  path={path}
+  schema={schema}
+>
+  <Breadcrumbs trail={trail} />
+
+  <SectionBand title={hub.h1} kicker="Ballentine Insurance Group — an independent agency" art={ART.hub[hub.slug]} />
+
+  <article class="container-page py-10 lg:py-14">
+    <header class="max-w-3xl">
+      {
+        hub.intro.map((para, i) => (
+          <p
+            class:list={[
+              'mt-5 leading-relaxed',
+              i === 0 ? 'text-lg text-[var(--color-ink-soft)]' : 'text-[var(--color-ink-soft)]',
+            ]}
+          >
+            {para}
+          </p>
+        ))
+      }
+      <p class="mt-6 text-base font-semibold">
+        Serving the Kansas City metro and communities throughout Missouri and Kansas.
+      </p>
+    </header>
+
+    {
+      /* 🔴 The agency's own "Why choose" list — restored verbatim (W4). This is
+         their wording from the live pages, not a paraphrase. */
+      hub.whyChoose && (
+        <section class="mt-12 rounded-xl bg-[var(--color-surface-alt)] p-6 sm:p-8">
+          <h2 class="text-xl sm:text-2xl">{hub.whyChoose.heading}</h2>
+          <ul class="mt-5 grid gap-x-8 gap-y-3 sm:grid-cols-2">
+            {hub.whyChoose.items.map((item) => (
+              <li class="flex gap-3 text-base leading-relaxed">
+                <span aria-hidden="true" class="mt-0.5 shrink-0 text-[var(--color-brand-600)]">✓</span>
+                <span>{item}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )
+    }
+
+    <section class="mt-12">
+      <h2 class="text-2xl">{hub.title} we write</h2>
+      <p class="prose-page mt-3 text-[var(--color-ink-soft)]">
+        Every line below has its own page with detail on what is covered and a quote
+        form. If you need something not listed here, call us — this is not the limit
+        of what we can place.
+      </p>
+
+      <ul class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {
+          children.map((s) => (
+            <li class="rounded-xl border border-neutral-200 p-5 transition hover:border-[var(--color-brand-500)]">
+              <h3 class="text-lg">
+                <a href={`/${hub.slug}/${s.slug}`} class="hover:underline hover:text-[var(--color-brand-700)]">
+                  {s.name}
+                </a>
+              </h3>
+              <p class="mt-2 text-sm leading-relaxed text-[var(--color-ink-soft)]">{s.blurb}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+
+    <section class="mt-14">
+      <ServiceForm
+        form={hub.form ?? 'personal'}
+        path={path}
+        label={hub.title.replace(/ Insurance$/, '').toLowerCase()}
+      />
+    </section>
+
+    {faq.length > 0 && <FaqBlock faqs={faq} heading={`${hub.title} — common questions`} />}
+
+    <RelatedCoverage current="" hub={hub.slug} slugs={children.map((c) => c.slug).slice(0, 4)} />
+
+    {
+      carriers.length ? (
+        <section class="mt-14">
+          <CarrierStrip
+            slugs={carriers}
+            heading={`Carriers we place ${hub.title.toLowerCase()} with`}
+          />
+          <p class="mt-4 text-sm text-[var(--color-ink-muted)]">
+            Appointment with every carrier shown. Ask us for the current list for your
+            specific risk.
+          </p>
+        </section>
+      ) : null
+    }
+  </article>
+</BaseLayout>

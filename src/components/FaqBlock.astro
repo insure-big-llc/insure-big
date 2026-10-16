@@ -1,0 +1,38 @@
+---
+/**
+ * FAQ block.
+ *
+ * The questions and answers are rendered as real, visible content AND emitted as
+ * FAQPage JSON-LD by the page. Google treats FAQ markup whose content is not
+ * visible on the page as spam, so these must always be the same array — the page
+ * passes `service.faq` to both this component and `faqSchema()`.
+ *
+ * Uses native <details>/<summary> so it works with JS disabled and is keyboard
+ * accessible without extra script.
+ */
+const { faqs = [], heading = 'Frequently asked questions' } = Astro.props;
+---
+
+{
+  faqs.length ? (
+    <section class="mt-14">
+      <h2 class="text-2xl">{heading}</h2>
+      <div class="mt-6 divide-y divide-neutral-200 border-y border-neutral-200">
+        {faqs.map((faq) => (
+          <details class="group py-4">
+            <summary class="flex min-h-11 cursor-pointer list-none items-center justify-between gap-4">
+              <h3 class="text-base font-bold">{faq.q}</h3>
+              <span
+                aria-hidden="true"
+                class="shrink-0 text-xl leading-none text-[var(--color-brand-600)] transition group-open:rotate-45"
+              >
+                +
+              </span>
+            </summary>
+            <p class="prose-page mt-3 text-[var(--color-ink-soft)]">{faq.a}</p>
+          </details>
+        ))}
+      </div>
+    </section>
+  ) : null
+}

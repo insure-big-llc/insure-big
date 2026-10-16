@@ -1,0 +1,36 @@
+---
+/**
+ * Breadcrumb trail. Rendered visually AND emitted as BreadcrumbList JSON-LD
+ * by the page (see src/lib/schema.js → breadcrumbSchema).
+ *
+ * The visible trail and the structured data must always describe the same thing,
+ * which is why the page builds one `trail` array and passes it to both.
+ */
+const { trail = [] } = Astro.props;
+
+// The last crumb is the current page — not a link, and marked aria-current.
+const parents = trail.slice(0, -1);
+const current = trail[trail.length - 1];
+---
+
+<nav aria-label="Breadcrumb" class="border-b border-neutral-200 bg-[var(--color-surface-alt)]">
+  <div class="container-page">
+    <ol class="flex flex-wrap items-center gap-x-2 gap-y-1 py-3 text-sm">
+      {
+        parents.map((crumb) => (
+          <li class="flex items-center gap-2">
+            <a href={crumb.path} class="text-[var(--color-ink-soft)] hover:underline hover:text-[var(--color-brand-700)]">
+              {crumb.name}
+            </a>
+            <span aria-hidden="true" class="text-[var(--color-ink-muted)]">/</span>
+          </li>
+        ))
+      }
+      <li>
+        <span aria-current="page" class="font-semibold text-[var(--color-ink)]">
+          {current?.name}
+        </span>
+      </li>
+    </ol>
+  </div>
+</nav>

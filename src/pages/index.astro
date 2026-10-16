@@ -1,0 +1,247 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/Hero.astro';
+import ReviewsBand from '../components/ReviewsBand.astro';
+import QuoteBand from '../components/QuoteBand.astro';
+import FaqBlock from '../components/FaqBlock.astro';
+import { SITE, CONTACT, LOCATIONS } from '../config/site.js';
+import { HUBS, SERVICES, SPECIALTY_GROUP, HOME_OFFER_COPY, HOME_FAQ } from '../config/services.js';
+import { CARRIERS } from '../config/carriers.js';
+import { GOOGLE_REVIEWS } from '../config/reviews.js';
+import { webPageSchema, reviewsSchema, faqSchema } from '../lib/schema.js';
+
+const specialties = SERVICES.filter((s) => s.hub === 'specialty');
+
+/** Minimal coverage icons per hub, matching the research pattern of coverage as a menu. */
+const HUB_ICONS = {
+  'personal-insurance': ['M3 11l9-8 9 8', 'M5 10v10h14V10'],
+  'business-insurance': ['M4 21V8l8-5 8 5v13', 'M8 12h2M14 12h2M8 16h2M14 16h2'],
+  'life-insurance': ['M12 3a9 9 0 0 1 9 9H3a9 9 0 0 1 9-9', 'M12 12v9'],
+};
+
+const schema = [
+  webPageSchema({
+    path: '/',
+    title: `${SITE.name} — Insurance in the Kansas City Metro`,
+    description: SITE.marketStatement,
+  }),
+  // Contributes review + aggregateRating to the organization node in BaseLayout.
+  reviewsSchema(),
+  faqSchema({ faqs: HOME_FAQ, path: '/' }),
+];
+---
+
+<BaseLayout
+  title="Insurance in the Kansas City Metro"
+  description="Independent insurance agency in Lee's Summit and the Kansas City Northland. Home, auto, business, life and specialty coverage compared across multiple carriers."
+  path="/"
+  schema={schema}
+>
+  <!-- Hero: the shield art stays background only; the BIG mark anchors the right side. -->
+  <Hero
+    headline={SITE.tagline}
+    supporting={`Tailored insurance solutions to fit you — home, auto, business, life and specialty coverage, compared across ${CARRIERS.length} top-rated carriers instead of sold from a single shelf.`}
+    brand
+  >
+    <a href="/get-a-quote" class="btn btn-primary">Get a quote</a>
+    <a href={CONTACT.phoneHref} class="btn btn-on-dark">Call {CONTACT.phone}</a>
+    <p class="basis-full text-base font-semibold text-white/85">{SITE.marketStatement}</p>
+  </Hero>
+
+  <!-- Proof card: overlaps the hero bottom, the counted numbers up top -->
+  <div class="container-page relative z-10 -mt-10 lg:-mt-12">
+    <div class="mx-auto max-w-3xl rounded-xl border border-neutral-200 bg-white p-5 shadow-lg sm:p-6">
+      <div class="grid grid-cols-3 divide-x divide-neutral-200 text-center">
+        <div class="px-2">
+          <p class="flex items-center justify-center gap-1 text-2xl font-bold">
+            {GOOGLE_REVIEWS.rating.toFixed(1)}
+            <span aria-hidden="true" class="text-base text-[var(--color-brand-600)]">★</span>
+          </p>
+          <p class="mt-1 text-xs font-semibold text-[var(--color-ink-soft)]">
+            {GOOGLE_REVIEWS.count} Google reviews
+          </p>
+        </div>
+        <div class="px-2">
+          <p class="text-2xl font-bold">{CARRIERS.length}</p>
+          <p class="mt-1 text-xs font-semibold text-[var(--color-ink-soft)]">carriers compared</p>
+        </div>
+        <div class="px-2">
+          <p class="text-2xl font-bold">{SITE.founded}</p>
+          <p class="mt-1 text-xs font-semibold text-[var(--color-ink-soft)]">serving the metro</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hubs -->
+  <section class="container-page py-16">
+    <p class="font-[var(--font-heading)] text-sm font-bold uppercase tracking-widest text-[var(--color-brand-700)]">
+      Coverage
+    </p>
+    <h2 class="mt-2 text-2xl sm:text-3xl">What we cover</h2>
+    <p class="prose-page mt-3 text-[var(--color-ink-soft)]">
+      Every line below has its own page, and every page has a quote form. If you
+      don't see what you need, call us — we write coverage well beyond this list.
+    </p>
+
+    <div class="mt-10 grid gap-8 lg:grid-cols-3">
+      {
+        HUBS.map((hub) => (
+          <div class="rounded-xl border border-neutral-200 p-6">
+            <span
+              aria-hidden="true"
+              class="flex h-11 w-11 items-center justify-center rounded-lg bg-[var(--color-brand-50)] text-[var(--color-brand-700)]"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                class="h-6 w-6"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                {HUB_ICONS[hub.slug].map((d) => <path d={d} />)}
+              </svg>
+            </span>
+            <h3 class="mt-4 text-xl">
+              <a href={`/${hub.slug}`} class="hover:underline hover:text-[var(--color-brand-700)]">
+                {hub.title}
+              </a>
+            </h3>
+            <p class="mt-2 text-sm leading-relaxed text-[var(--color-ink-soft)]">
+              {HOME_OFFER_COPY[hub.slug] ?? hub.blurb}
+            </p>
+            <ul class="mt-5 space-y-2 text-sm">
+              {SERVICES.filter((s) => s.hub === hub.slug).map((s) => (
+                <li>
+                  <a
+                    href={`/${hub.slug}/${s.slug}`}
+                    class="text-[var(--color-ink-soft)] hover:underline hover:text-[var(--color-brand-700)]"
+                  >
+                    {s.name}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))
+      }
+    </div>
+  </section>
+
+  <!-- Specialty -->
+  <section class="bg-[var(--color-surface-alt)] py-16">
+    <div class="container-page">
+      <p class="font-[var(--font-heading)] text-sm font-bold uppercase tracking-widest text-[var(--color-brand-700)]">
+        More ways we help
+      </p>
+      <h2 class="mt-2 text-2xl sm:text-3xl">{SPECIALTY_GROUP.title}</h2>
+      <p class="prose-page mt-3 text-[var(--color-ink-soft)]">{SPECIALTY_GROUP.blurb}</p>
+      <ul class="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        {
+          specialties.map((s) => (
+            <li>
+              <a
+                href={`/specialty/${s.slug}`}
+                class="flex min-h-11 items-center rounded-lg border border-neutral-200 bg-white px-4 py-3 text-sm font-semibold hover:underline hover:border-[var(--color-brand-500)]"
+              >
+                <span aria-hidden="true" class="mr-2 text-[var(--color-brand-600)]">◆</span>
+                {s.name}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <!-- Why BIG -->
+  <section class="container-page py-16">
+    <div class="grid gap-10 lg:grid-cols-2">
+      <div>
+        <p class="font-[var(--font-heading)] text-sm font-bold uppercase tracking-widest text-[var(--color-brand-700)]">
+          Why BIG
+        </p>
+        <h2 class="mt-2 text-2xl sm:text-3xl">Why clients choose BIG</h2>
+        <ul class="mt-6 space-y-4 text-[var(--color-ink-soft)]">
+          <li class="flex gap-3">
+            <span aria-hidden="true" class="mt-0.5 text-[var(--color-brand-600)]">✓</span>
+            <span>An independent agency representing multiple top-rated insurance companies.</span>
+          </li>
+          <li class="flex gap-3">
+            <span aria-hidden="true" class="mt-0.5 text-[var(--color-brand-600)]">✓</span>
+            <span>Personalised recommendations rather than a one-size-fits-all package.</span>
+          </li>
+          <li class="flex gap-3">
+            <span aria-hidden="true" class="mt-0.5 text-[var(--color-brand-600)]">✓</span>
+            <span>Annual policy reviews, so your cover keeps pace with your life.</span>
+          </li>
+          <li class="flex gap-3">
+            <span aria-hidden="true" class="mt-0.5 text-[var(--color-brand-600)]">✓</span>
+            <span>Claims support from someone who knows you — not a call centre.</span>
+          </li>
+        </ul>
+        <a href="/about" class="btn btn-secondary mt-8">More about us</a>
+      </div>
+
+      <ReviewsBand />
+    </div>
+  </section>
+
+  <!-- Quote band -->
+  <QuoteBand
+    heading="Get your quote compared across carriers"
+    copy="One short form, one local team, and quotes from the carriers we would recommend for your risk. No obligation, no single-shelf steering."
+  >
+    <a href="/get-a-quote" class="btn btn-primary">Get a quote</a>
+    <a href={CONTACT.phoneHref} class="btn btn-secondary">Call {CONTACT.phone}</a>
+  </QuoteBand>
+
+  <!-- FAQ — the live home FAQ, answers drafted and flagged for review -->
+  <section class="bg-[var(--color-surface-alt)] py-16">
+    <div class="container-page">
+      <h2 class="text-2xl sm:text-3xl">Frequently asked questions</h2>
+      <p class="prose-page mt-3 text-[var(--color-ink-soft)]">
+        Please reach us at {CONTACT.email} if you cannot find an answer to your question.
+      </p>
+      <div class="mt-6">
+        <FaqBlock faqs={HOME_FAQ} />
+      </div>
+    </div>
+  </section>
+
+  <!-- Locations — NAP in body copy, not just the footer -->
+  <section class="bg-[var(--color-ink)] py-16 text-white">
+    <div class="container-page">
+      <p class="font-[var(--font-heading)] text-sm font-bold uppercase tracking-widest text-[var(--color-brand-300)]">
+        Visit us
+      </p>
+      <h2 class="mt-2 text-2xl sm:text-3xl">Two offices, one local team</h2>
+      <div class="mt-8 grid gap-8 sm:grid-cols-2">
+        {
+          LOCATIONS.map((loc) => (
+            <div>
+              <h3 class="text-lg">
+                <a href={`/${loc.slug}`} class="hover:underline hover:text-[var(--color-brand-200)]">
+                  {loc.name}
+                </a>
+              </h3>
+              <address class="mt-2 not-italic leading-relaxed text-white/85">
+                {loc.street}<br />
+                {loc.locality}, {loc.region} {loc.postalCode}
+              </address>
+            </div>
+          ))
+        }
+      </div>
+      <div class="mt-8 border-t border-white/15 pt-6">
+        <p class="text-white/85">
+          Call <a href={CONTACT.phoneHref} class="font-semibold text-[var(--color-brand-300)]">{CONTACT.phone}</a>
+          {' '}· {CONTACT.hours.display}
+        </p>
+        <a href="/get-a-quote" class="btn btn-on-dark mt-5">Get a quote</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

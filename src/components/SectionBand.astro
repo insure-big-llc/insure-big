@@ -1,0 +1,42 @@
+---
+/**
+ * SectionBand: compact ink band, used as the page header on hubs and the
+ * other purpose treated pages. Spec 0002, revised after the client's review:
+ * optional themed line drawing on the right (per hub), clean ink on the left,
+ * and the gold rule under the headline. The gold rule stays.
+ *
+ * Carries the page's single <h1>; the caller must not render another one.
+ */
+const { title, kicker = null, art = null } = Astro.props;
+---
+
+<section class="relative overflow-hidden bg-[var(--color-ink)] text-white">
+  {
+    art && (
+      <div
+        aria-hidden="true"
+        class="absolute inset-0 bg-cover bg-[right_center] opacity-90"
+        style={`background-image:url('${art}')`}
+      />
+    )
+  }
+  {
+    art && (
+      <div
+        aria-hidden="true"
+        class="absolute inset-0 bg-gradient-to-r from-[var(--color-ink)] via-[var(--color-ink)]/85 to-transparent"
+      />
+    )
+  }
+  <div class="container-page relative py-8 lg:py-10">
+    <div class="max-w-3xl">
+      {kicker && (
+        <p class="font-[var(--font-heading)] text-sm font-bold uppercase tracking-widest text-[var(--color-brand-300)]">
+          {kicker}
+        </p>
+      )}
+      <h1 class="mt-3 text-3xl leading-tight sm:text-4xl">{title}</h1>
+      <slot />
+    </div>
+  </div>
+</section>

@@ -1,0 +1,130 @@
+---
+/**
+ * /get-a-quote
+ *
+ * 🔴 INDEXED URL — must stay at exactly this path (website-scope.md §4).
+ *
+ * The live page has a visible copy bug: three consecutive headings all read
+ * "Step 2". This is the corrected three-step version (scope §10).
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import { FORMS } from '../config/site.js';
+import { webPageSchema, breadcrumbSchema } from '../lib/schema.js';
+
+const path = '/get-a-quote';
+const trail = [
+  { name: 'Home', path: '/' },
+  { name: 'Get a Quote', path },
+];
+
+const steps = [
+  {
+    n: 1,
+    title: 'Tell us what you need',
+    body: 'Pick the type of cover below — personal, business or life. It takes a couple of minutes and there is no obligation.',
+  },
+  {
+    n: 2,
+    title: 'Share the details',
+    body: 'Answer a few questions about what you are protecting, from your home and vehicles to your commercial operations.',
+  },
+  {
+    n: 3,
+    title: 'Get your quote',
+    body: 'A licensed agent compares options across multiple carriers and comes back to you with a recommendation, not just a price.',
+  },
+];
+
+const schema = [
+  webPageSchema({
+    path,
+    title: 'Get an Insurance Quote',
+    description:
+      'Start a personal, business or life insurance quote with Ballentine Insurance Group, serving the Kansas City metro.',
+  }),
+  breadcrumbSchema(trail),
+];
+---
+
+<BaseLayout
+  title="Get an Insurance Quote | Kansas City | BIG"
+  description="Start a personal, business or life insurance quote with Ballentine Insurance Group. Serving the Kansas City metro and communities throughout Missouri and Kansas."
+  path={path}
+  schema={schema}
+>
+  <Breadcrumbs trail={trail} />
+
+  <section class="container-page py-12">
+    <header class="max-w-3xl">
+      <h1 class="text-3xl leading-tight sm:text-4xl">Start your quote the BIG way</h1>
+      <p class="mt-5 text-lg leading-relaxed text-[var(--color-ink-soft)]">
+        Pick the type of quote you need below. A licensed agent will compare options
+        across multiple carriers and come back to you with a recommendation — not just
+        a price.
+      </p>
+    </header>
+
+    <!-- Three steps — the live page shows "Step 2" three times (scope §10) -->
+    <ol class="mt-12 grid gap-6 sm:grid-cols-3">
+      {
+        steps.map((s) => (
+          <li class="rounded-xl border border-neutral-200 p-6">
+            <p class="font-[var(--font-heading)] text-sm font-bold uppercase tracking-widest text-[var(--color-brand-700)]">
+              Step {s.n}
+            </p>
+            <h2 class="mt-2 text-lg">{s.title}</h2>
+            <p class="mt-2 text-sm leading-relaxed text-[var(--color-ink-soft)]">{s.body}</p>
+          </li>
+        ))
+      }
+    </ol>
+
+    <!-- The two live forms, linked directly so they work with JS disabled -->
+    <div class="mt-12 grid gap-6 lg:grid-cols-2">
+      <section class="rounded-xl border border-neutral-200 p-6">
+        <h2 class="text-xl">Personal &amp; life insurance quote</h2>
+        <p class="mt-2 text-sm leading-relaxed text-[var(--color-ink-soft)]">
+          Home, auto, renters, condo, landlord, umbrella, flood, life, Medicare and
+          the rest of our personal lines.
+        </p>
+        <a href={FORMS.personal} class="btn btn-primary mt-5 w-full sm:w-auto" rel="noopener">
+          Start a personal quote
+        </a>
+        <p class="mt-3 text-xs text-[var(--color-ink-muted)]">
+          Opens our secure Jotform in a new tab.
+        </p>
+      </section>
+
+      <section class="rounded-xl border border-neutral-200 p-6">
+        <h2 class="text-xl">Business insurance quote</h2>
+        <p class="mt-2 text-sm leading-relaxed text-[var(--color-ink-soft)]">
+          General liability, BOP, commercial property and auto, workers'
+          compensation, professional liability and surety bonds.
+        </p>
+        <a href={FORMS.business} class="btn btn-primary mt-5 w-full sm:w-auto" rel="noopener">
+          Start a business quote
+        </a>
+        <p class="mt-3 text-xs text-[var(--color-ink-muted)]">
+          Opens our secure Jotform in a new tab.
+        </p>
+      </section>
+    </div>
+
+    <section class="mt-12 rounded-xl bg-[var(--color-surface-alt)] p-6">
+      <h2 class="text-lg">Would you rather just talk?</h2>
+      <p class="mt-2 text-[var(--color-ink-soft)]">
+        Call <a href="tel:+18168681787" class="font-semibold underline">(816) 868-1787</a>
+        {' '}during {`Monday – Friday, 9:00am – 5:00pm`}, or
+        <a href="/contact" class="font-semibold underline">see both office locations</a>.
+      </p>
+    </section>
+
+    <p class="mt-8 text-xs leading-relaxed text-[var(--color-ink-muted)]">
+      Submitting a form does not commit you to anything. See our
+      <a href="/privacy-policy" class="underline">Privacy Policy</a> for how we handle
+      your information. Consent is required before any marketing text message; you can
+      opt out at any time by replying STOP.
+    </p>
+  </section>
+</BaseLayout>

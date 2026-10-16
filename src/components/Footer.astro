@@ -1,0 +1,131 @@
+---
+/**
+ * Site footer — carries the NAP block.
+ *
+ * 🔴 website-scope.md §1 and §5: the live site has NO address and NO phone number
+ * on any page. That is the single biggest local-SEO gap on the site, and it is
+ * also a consistency problem for AI answer engines. This footer fixes it, and it
+ * is the ONLY place NAP is rendered from — everything reads from config/site.js
+ * so the values cannot drift between pages.
+ */
+import { SITE, LOCATIONS, CONTACT } from '../config/site.js';
+import { HUBS, SERVICES, servicesByHub } from '../config/services.js';
+
+const year = new Date().getFullYear();
+const specialty = SERVICES.filter((s) => s.hub === 'specialty');
+---
+
+<footer class="mt-16 bg-[var(--color-ink)] text-white">
+  <div class="container-page py-12">
+    <div class="grid gap-10 md:grid-cols-2 lg:grid-cols-4">
+      <!-- Brand + market statement (verbatim, sitewide) -->
+      <div>
+        <p class="font-[var(--font-heading)] text-lg font-bold">{SITE.name}</p>
+        <p class="mt-3 max-w-xs text-sm leading-relaxed text-white/80">
+          {SITE.marketStatement}
+        </p>
+        <p class="mt-4 text-sm text-white/80">
+          An independent agency, founded in {SITE.founded} in {SITE.foundedWhere}.
+        </p>
+        <a
+          href={SITE.facebook}
+          class="mt-5 inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-[var(--color-brand-300)] hover:underline hover:text-[var(--color-brand-200)]"
+          rel="noopener"
+        >
+          Follow us on Facebook
+          <span class="sr-only">(opens in a new tab)</span>
+        </a>
+      </div>
+
+      <!-- Insurance -->
+      <nav aria-label="Insurance products">
+        <p class="text-sm font-bold uppercase tracking-wide text-[var(--color-brand-300)]">
+          Insurance
+        </p>
+        <ul class="mt-4 space-y-2 text-sm">
+          {
+            HUBS.map((hub) => (
+              <li>
+                <a href={`/${hub.slug}`} class="text-white/85 hover:underline hover:text-white">
+                  {hub.title}
+                </a>
+              </li>
+            ))
+          }
+          <li><a href="/specialty/surety-bonds" class="text-white/85 hover:underline hover:text-white">Specialty coverage</a></li>
+          <li><a href="/get-a-quote" class="text-white/85 hover:underline hover:text-white">Get a quote</a></li>
+        </ul>
+      </nav>
+
+      <!-- 🔴 NAP BLOCK — the fix for the missing address/phone -->
+      <div>
+        <p class="text-sm font-bold uppercase tracking-wide text-[var(--color-brand-300)]">
+          Visit or call
+        </p>
+        <ul class="mt-4 space-y-4 text-sm">
+          {
+            LOCATIONS.map((loc) => (
+              <li>
+                <a href={`/${loc.slug}`} class="font-semibold text-white hover:underline hover:text-[var(--color-brand-200)]">
+                  {loc.name}
+                </a>
+                <address class="mt-1 not-italic leading-relaxed text-white/85">
+                  {loc.street}<br />
+                  {loc.locality}, {loc.region} {loc.postalCode}
+                </address>
+              </li>
+            ))
+          }
+          <li>
+            <a href={CONTACT.phoneHref} class="font-semibold text-white hover:underline hover:text-[var(--color-brand-200)]">
+              {CONTACT.phone}
+            </a>
+            <p class="mt-1 text-white/85">{CONTACT.hours.display}</p>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Popular services -->
+      <nav aria-label="Popular coverage">
+        <p class="text-sm font-bold uppercase tracking-wide text-[var(--color-brand-300)]">
+          Popular coverage
+        </p>
+        <ul class="mt-4 space-y-2 text-sm">
+          {
+            [
+              ...servicesByHub('personal-insurance').slice(0, 3),
+              ...servicesByHub('business-insurance').slice(0, 3),
+            ].map((s) => (
+              <li>
+                <a href={`/${s.hub}/${s.slug}`} class="text-white/85 hover:underline hover:text-white">
+                  {s.name}
+                </a>
+              </li>
+            ))
+          }
+          <li><a href="/personal-insurance/flood" class="text-white/85 hover:underline hover:text-white">Flood insurance</a></li>
+          {specialty.slice(0, 1).map((s) => (
+            <li>
+              <a href={`/specialty/${s.slug}`} class="text-white/85 hover:underline hover:text-white">
+                {s.name}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+    </div>
+
+    <div class="mt-10 flex flex-col gap-4 border-t border-white/15 pt-6 text-sm text-white/70 sm:flex-row sm:items-center sm:justify-between">
+      <p>© {year} {SITE.name}. All rights reserved.</p>
+      <ul class="flex flex-wrap gap-x-5 gap-y-2">
+        <li><a href="/privacy-policy" class="hover:underline hover:text-white">Privacy Policy</a></li>
+        <!-- Encoded ampersand preserved deliberately — this URL is indexed. -->
+        <li><a href="/terms-%26-conditions" class="hover:underline hover:text-white">Terms &amp; Conditions</a></li>
+        <li><a href="/reviews" class="hover:underline hover:text-white">Reviews</a></li>
+        <li><a href="/coverage-partners" class="hover:underline hover:text-white">Coverage Partners</a></li>
+        <li><a href="/contact" class="hover:underline hover:text-white">Contact</a></li>
+        <li><a href="/about" class="hover:underline hover:text-white">About</a></li>
+      </ul>
+    </div>
+  </div>
+</footer>

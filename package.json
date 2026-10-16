@@ -1,0 +1,38 @@
+{
+  "name": "insure-big-site",
+  "type": "module",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Ballentine Insurance Group â€” insure-big.com static site",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "prebuild": "node scripts/build-fonts.mjs && node scripts/build-artwork.mjs",
+    "build": "astro build && node scripts/postbuild.mjs",
+    "preview": "astro preview",
+    "check": "astro check",
+    "verify": "node scripts/verify-seo.mjs && node scripts/verify-assets.mjs",
+    "verify:seo": "node scripts/verify-seo.mjs",
+    "verify:assets": "node scripts/verify-assets.mjs",
+    "build:verify": "npm run build && npm run verify",
+    "icons": "node scripts/build-icons.mjs",
+    "measure": "node scripts/measure.mjs",
+    "measure:mcp": "node scripts/mcp-measure.mjs"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.7.4",
+    "@tailwindcss/vite": "^4.3.3",
+    "astro": "^7.3.8",
+    "tailwindcss": "^4.3.3"
+  },
+  "devDependencies": {
+    "@fontsource/cantarell": "^5.3.0",
+    "@fontsource/poppins": "^5.3.0",
+    "lighthouse": "^13.5.0",
+    "playwright-core": "^1.64.1",
+    "sharp": "^0.34.5"
+  },
+  "engines": {
+    "node": ">=22.12.0"
+  }
+}

@@ -1,0 +1,167 @@
+---
+/**
+ * /about — NET NEW. The live site returns a 404 for this path (scope §1).
+ *
+ * Content is the agency's OWN "Who We Are" copy from evidence/BIG files/Bio.md,
+ * with two required corrections (scope §10):
+ *   1. The market sentence is normalised to the agreed wording — the file said
+ *      "Missouri, Kansas, and beyond" while the homepage said "Kansas" only.
+ *   2. Any reference to Blaine is removed. Rodney Roberts does not appear either —
+ *      both have left (scope §2, decision 10). Four team members only.
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SectionBand from '../components/SectionBand.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import { SITE, LOCATIONS, CONTACT } from '../config/site.js';
+import { aboutPageSchema, breadcrumbSchema } from '../lib/schema.js';
+
+const path = '/about';
+const trail = [
+  { name: 'Home', path: '/' },
+  { name: 'About', path },
+];
+
+/** Four people. Both departures applied. */
+const team = [
+  {
+    name: 'Bret Ballentine',
+    title: 'Founder & Principal Agent',
+    photo: '/team/bret-ballentine.webp',
+    bio: `Bret founded Ballentine Insurance Group in ${SITE.founded} with a mission to provide honest advice, exceptional service, and customized insurance solutions for families and businesses throughout Missouri and Kansas. Specializing in both personal and commercial insurance, he helps clients protect their homes, vehicles, businesses, and financial future. His philosophy is simple: build lasting relationships by educating clients and helping them make confident insurance decisions. Outside the office, Bret enjoys spending time with his wife, Valerie, and their two daughters.`,
+  },
+  {
+    name: 'Pete Carroll',
+    title: 'Agency Director',
+    photo: '/team/pete-carroll.webp',
+    bio: `Pete began his insurance career in 2017 and joined Ballentine Insurance Group in 2018. As Agency Director he oversees agency operations, customer service, and retention, ensuring every client receives the exceptional support BIG is known for. Known for his leadership and problem-solving, Pete has helped maintain a 93%+ client retention rate by building lasting relationships and always putting clients first.`,
+  },
+  {
+    name: 'Dillon Schallenberg',
+    title: 'Personal & Life Insurance Producer',
+    photo: '/team/dillon-schallenberg.webp',
+    bio: `Dillon has been helping clients at Ballentine Insurance Group since 2018, specializing in personal and life insurance. He works closely with individuals and families to find the right coverage at a competitive price while making the insurance process simple and straightforward. Outside the office, Dillon enjoys spending time outdoors hunting, fishing, and golfing.`,
+  },
+  {
+    name: 'Ashley Neugebauer',
+    title: 'Insurance Producer',
+    photo: '/team/ashley-neugebauer.webp',
+    bio: `Ashley joined Ballentine Insurance Group in 2025 with a passion for helping people protect their homes, vehicles, businesses, and financial future. Known for her friendly approach and attention to detail, she is dedicated to providing a smooth, personalized experience from quote to claim.`,
+  },
+];
+
+const schema = [
+  aboutPageSchema({
+    path,
+    title: `About ${SITE.name}`,
+    description: `Founded in ${SITE.founded} in ${SITE.foundedWhere}, ${SITE.name} is an independent insurance agency. ${SITE.marketStatement}`,
+    team,
+  }),
+  breadcrumbSchema(trail),
+];
+---
+
+<BaseLayout
+  title="About Us | Kansas City Metro | BIG"
+  description="Founded in 2018 in Downtown Lee's Summit, Ballentine Insurance Group is an independent agency serving the Kansas City metro across Missouri and Kansas."
+  path={path}
+  schema={schema}
+>
+  <Breadcrumbs trail={trail} />
+
+  <SectionBand title="Who we are" kicker="About Ballentine Insurance Group" />
+
+  <article class="container-page py-12">
+    <!-- Who we are — the agency's own words, market sentence normalised -->
+    <header class="max-w-3xl">
+      <div class="prose-page mt-6 text-[var(--color-ink-soft)]">
+        <p>
+          Founded in {SITE.founded} by Bret Ballentine in {SITE.foundedWhere},
+          {SITE.name} (BIG) is an independent insurance agency dedicated to protecting
+          what matters most. We proudly serve individuals, families, and businesses
+          throughout the Kansas City metro area and communities across Missouri and
+          Kansas.
+        </p>
+        <p>
+          Our mission is simple: to provide expert guidance, exceptional service, and
+          long-term value by helping clients make informed decisions about protecting
+          their homes, vehicles, businesses, families, and financial future.
+        </p>
+        <p>
+          Whether you need homeowners, auto, life, commercial, or specialty insurance,
+          our experienced team works with multiple top-rated insurance carriers to find
+          coverage tailored to your needs and budget. We also offer value-added services
+          including Surety Bonds, Estate Planning, Premium Lock, Medicare solutions, and
+          supplemental protection options to help clients prepare for every stage of life.
+        </p>
+        <p>
+          At BIG, we believe insurance is more than a policy. It's a relationship built
+          on trust, education, and advocacy. From your first quote to every claim and
+          renewal, we're committed to being your long-term partner in protection.
+        </p>
+        <p class="font-semibold text-[var(--color-ink)]">
+          Experience the BIG Difference: trusted advice, personalized service, and
+          protection you can count on.
+        </p>
+      </div>
+    </header>
+
+    <!-- Team — four people -->
+    <section class="mt-16">
+      <h2 class="text-2xl">The team you'll work with</h2>
+      <p class="prose-page mt-3 text-[var(--color-ink-soft)]">
+        When you call, you reach one of these four people — not a call centre.
+      </p>
+
+      <div class="mt-8 grid gap-8 sm:grid-cols-2">
+        {
+          team.map((person) => (
+            <article class="rounded-xl border border-neutral-200 p-6">
+              <img
+                src={person.photo}
+                alt={`${person.name}, ${person.title} at ${SITE.name}`}
+                width="200"
+                height="200"
+                loading="lazy"
+                decoding="async"
+                class="h-28 w-28 rounded-full object-cover"
+              />
+              <h3 class="mt-4 text-lg">{person.name}</h3>
+              <p class="text-sm font-semibold text-[var(--color-brand-700)]">{person.title}</p>
+              <p class="mt-3 text-sm leading-relaxed text-[var(--color-ink-soft)]">{person.bio}</p>
+            </article>
+          ))
+        }
+      </div>
+    </section>
+
+    <!-- Where we are -->
+    <section class="mt-16">
+      <h2 class="text-2xl">Where to find us</h2>
+      <div class="mt-6 grid gap-6 sm:grid-cols-2">
+        {
+          LOCATIONS.map((loc) => (
+            <div class="rounded-xl bg-[var(--color-surface-alt)] p-6">
+              <h3 class="text-lg">
+                <a href={`/${loc.slug}`} class="hover:underline hover:text-[var(--color-brand-700)]">
+                  {loc.name}
+                </a>
+              </h3>
+              <address class="mt-2 not-italic leading-relaxed text-[var(--color-ink-soft)]">
+                {loc.street}<br />
+                {loc.locality}, {loc.region} {loc.postalCode}
+              </address>
+            </div>
+          ))
+        }
+      </div>
+      <p class="mt-6">
+        Call <a href={CONTACT.phoneHref} class="font-semibold underline">{CONTACT.phone}</a>
+        {' '}· {CONTACT.hours.display}
+      </p>
+      <div class="mt-6 flex flex-wrap gap-3">
+        <a href="/get-a-quote" class="btn btn-primary">Get a quote</a>
+        <a href="/contact" class="btn btn-secondary">Contact us</a>
+      </div>
+    </section>
+  </article>
+</BaseLayout>

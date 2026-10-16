@@ -1,0 +1,105 @@
+---
+/**
+ * "Related coverage" — internal linking module. website-scope.md §4a.
+ *
+ * WHY: the live site's coverage types are plain text with no links, so a visitor
+ * has nowhere to go and no internal link equity flows to pages that need to rank.
+ * This module fixes both: it keeps a reader on our domain instead of bouncing to a
+ * carrier's own page, and it concentrates internal links on the 37 cover pages.
+ *
+ * Sibling selection is deliberate rather than random — it mirrors how a real
+ * conversation moves ("you have a rental? then you probably also need...").
+ */
+import { SERVICES, HUBS, SPECIALTY_GROUP, servicePath } from '../config/services.js';
+
+const {
+  /** Current service slug, excluded from its own list. */
+  current,
+  /** Which hub to draw siblings from. */
+  hub,
+  /** Optional explicit list of slugs, overriding the automatic selection. */
+  slugs = null,
+  heading = 'Related coverage',
+} = Astro.props;
+
+const hubMeta = HUBS.find((h) => h.slug === hub) ?? SPECIALTY_GROUP;
+
+/** Preferred pairings — how a client conversation actually flows. */
+const PAIRINGS = {
+  home: ['auto', 'umbrella', 'flood', 'valuable-articles'],
+  auto: ['home', 'umbrella', 'motorcycle-rv-boat', 'renters'],
+  renters: ['auto', 'condo', 'valuable-articles', 'umbrella'],
+  condo: ['home', 'renters', 'valuable-articles', 'flood'],
+  landlord: ['home', 'flood', 'umbrella', 'condo'],
+  'motorcycle-rv-boat': ['auto', 'home', 'umbrella', 'travel'],
+  umbrella: ['home', 'auto', 'valuable-articles', 'commercial-umbrella'],
+  flood: ['home', 'landlord', 'condo', 'valuable-articles'],
+  'valuable-articles': ['home', 'condo', 'renters', 'umbrella'],
+
+  'general-liability': ['bop', 'commercial-property', 'workers-compensation', 'professional-liability-eo'],
+  bop: ['general-liability', 'commercial-property', 'cyber-epli-do', 'workers-compensation'],
+  'commercial-property': ['bop', 'inland-marine', 'builders-risk', 'general-liability'],
+  'commercial-auto': ['general-liability', 'commercial-umbrella', 'workers-compensation', 'inland-marine'],
+  'workers-compensation': ['general-liability', 'commercial-auto', 'professional-liability-eo', 'bop'],
+  'professional-liability-eo': ['cyber-epli-do', 'general-liability', 'commercial-umbrella', 'workers-compensation'],
+  'cyber-epli-do': ['professional-liability-eo', 'commercial-umbrella', 'bop', 'general-liability'],
+  'commercial-umbrella': ['general-liability', 'commercial-auto', 'commercial-property', 'workers-compensation'],
+  'inland-marine': ['commercial-property', 'builders-risk', 'commercial-auto', 'bop'],
+  'builders-risk': ['inland-marine', 'general-liability', 'commercial-property', 'workers-compensation'],
+  'specialized-industries': ['bop', 'general-liability', 'workers-compensation', 'commercial-auto'],
+
+  life: ['estate-planning', 'medicare', 'umbrella', 'farmers-insurance'],
+  medicare: ['life', 'estate-planning', 'farmers-insurance', 'umbrella'],
+  'estate-planning': ['life', 'medicare', 'valuable-articles', 'farmers-insurance'],
+
+  'surety-bonds': ['general-liability', 'workers-compensation', 'bop', 'commercial-umbrella'],
+  travel: ['auto', 'valuable-articles', 'umbrella', 'device-protection'],
+  pet: ['home', 'renters', 'auto', 'umbrella'],
+  'device-protection': ['home', 'renters', 'valuable-articles', 'auto'],
+  'sola-wind-hail': ['home', 'flood', 'landlord', 'premium-lock'],
+  'premium-lock': ['home', 'auto', 'sola-wind-hail', 'umbrella'],
+  'farmers-insurance': ['home', 'auto', 'life', 'bop'],
+};
+
+const chosenSlugs = slugs ?? PAIRINGS[current] ?? null;
+
+/** Fall back to siblings within the same hub if there is no explicit pairing. */
+const pool = chosenSlugs
+  ? chosenSlugs.map((s) => SERVICES.find((x) => x.slug === s)).filter(Boolean)
+  : SERVICES.filter((s) => s.hub === hub && s.slug !== current).slice(0, 4);
+
+const items = pool.filter((s) => s.slug !== current).slice(0, 4);
+---
+
+{
+  items.length > 0 && (
+    <section class="mt-14">
+      <h2 class="text-2xl">{heading}</h2>
+      <p class="prose-page mt-3 text-[var(--color-ink-soft)]">
+        Clients rarely need just one policy. These are the lines that most often come
+        up alongside {current.replace(/-/g, ' ')}.
+      </p>
+
+      <ul class="mt-6 grid gap-3 sm:grid-cols-2">
+        {items.map((s) => (
+          <li>
+            <a
+              href={servicePath(s)}
+              class="flex min-h-11 items-center rounded-lg border border-neutral-200 px-4 py-3 text-sm font-semibold transition hover:underline hover:border-[var(--color-brand-500)]"
+            >
+              {s.name}
+            </a>
+          </li>
+        ))}
+      </ul>
+
+      {hubMeta && (
+        <p class="mt-5 text-sm">
+          <a href={`/${hub}`} class="font-semibold underline">
+            See all {hubMeta.title.toLowerCase()}
+          </a>
+        </p>
+      )}
+    </section>
+  )
+}

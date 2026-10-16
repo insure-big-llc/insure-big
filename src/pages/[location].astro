@@ -1,0 +1,164 @@
+---
+/**
+ * Location pages: /lees-summit and /northland
+ *
+ * Both are NET NEW. Each carries its own address, LocalBusiness node and
+ * directions content, which is what makes a location page worth having rather
+ * than a duplicate of /contact.
+ *
+ * Note both offices share one phone number and one set of hours (confirmed by
+ * the client). The telephone is emitted at Organization level in the layout's
+ * JSON-LD and deliberately NOT repeated on each LocalBusiness node — two nodes
+ * claiming the same number reads as conflicting data to validators.
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import ServiceForm from '../components/ServiceForm.astro';
+import { SITE, LOCATIONS, CONTACT, absoluteUrl } from '../config/site.js';
+import { HUBS, SERVICES } from '../config/services.js';
+import { breadcrumbSchema, webPageSchema } from '../lib/schema.js';
+
+export function getStaticPaths() {
+  return LOCATIONS.map((loc) => ({ params: { location: loc.slug }, props: { loc } }));
+}
+
+const { loc } = Astro.props;
+const path = `/${loc.slug}`;
+
+const trail = [
+  { name: 'Home', path: '/' },
+  { name: 'Contact', path: '/contact' },
+  { name: loc.name, path },
+];
+
+/** Distinct local copy per office — no boilerplate duplication between the two. */
+const LOCAL = {
+  'lees-summit': {
+    heading: "Insurance in Lee's Summit, Missouri",
+    metaTitle: "Insurance in Lee's Summit, MO | Ballentine | BIG",
+    metaDescription:
+      "Ballentine Insurance Group has served Lee's Summit from Downtown since 2018. Home, auto, business and life insurance on 3rd Street. Call (816) 868-1787.",
+    lead: `Ballentine Insurance Group began here. Bret Ballentine founded the agency in ${SITE.founded} in Downtown Lee's Summit, and this is still where the team works from.`,
+    body: [
+      "If you live in Lee's Summit, you are likely insuring a home that has appreciated faster than its rebuild cost, two or more vehicles, and possibly a business you run from the same address. Those are the conversations we have every week.",
+      'Being downtown also means we are easy to reach. Parking is on the street, and you can walk in without an appointment during business hours.',
+    ],
+    nearby: ['Lee\u2019s Summit', 'Blue Springs', 'Independence', 'Raymore', 'Grandview', 'Greenwood'],
+  },
+  northland: {
+    heading: 'Insurance in the Kansas City Northland',
+    metaTitle: 'Insurance in the Kansas City Northland | BIG',
+    metaDescription:
+      'Ballentine Insurance Group serves the Kansas City Northland from our 91st Street office. Home, auto, business and life insurance. Call (816) 868-1787.',
+    lead:
+      'Our Northland office on NE 91st Street serves clients across the northern corridor — from the river up through Gladstone, Liberty and beyond.',
+    body: [
+      'The Northland is a mix of established neighbourhoods and fast-growing new construction. New builds often need coverage arranged before closing, and we are used to working to a title company\u2019s timeline.',
+      'Kansas City sits on the state line, so a lot of our Northland clients commute into Kansas or keep property on both sides. We check your policy against the rules of each state you actually drive and live in.',
+    ],
+    nearby: ['Gladstone', 'Liberty', 'North Kansas City', 'Parkville', 'Riverside', 'Smithville'],
+  },
+};
+
+const copy = LOCAL[loc.id];
+
+const schema = [
+  webPageSchema({
+    path,
+    title: copy.metaTitle,
+    description: copy.metaDescription,
+  }),
+  breadcrumbSchema(trail),
+];
+
+const isPrimary = loc.isPrimary;
+---
+
+<BaseLayout
+  title={copy.metaTitle}
+  description={copy.metaDescription}
+  path={path}
+  schema={schema}
+>
+  <Breadcrumbs trail={trail} />
+
+  <article class="container-page py-12">
+    <div class="grid gap-12 lg:grid-cols-[minmax(0,1fr)_360px]">
+      <div>
+        <header>
+          <p class="text-sm font-semibold uppercase tracking-widest text-[var(--color-brand-700)]">
+            {isPrimary ? 'Head office' : 'Northland office'}
+          </p>
+          <h1 class="mt-3 text-3xl leading-tight sm:text-4xl">{copy.heading}</h1>
+          <p class="mt-5 text-lg leading-relaxed text-[var(--color-ink-soft)]">{copy.lead}</p>
+        </header>
+
+        <div class="prose-page mt-8 text-[var(--color-ink-soft)]">
+          {copy.body.map((p) => <p>{p}</p>)}
+        </div>
+
+        <section class="mt-10 rounded-xl border border-neutral-200 p-6">
+          <h2 class="text-xl">Find this office</h2>
+          <address class="mt-3 not-italic leading-relaxed">
+            <strong>{SITE.name}</strong><br />
+            {loc.street}<br />
+            {loc.locality}, {loc.region} {loc.postalCode}
+          </address>
+          <dl class="mt-5 grid gap-3 text-sm sm:grid-cols-2">
+            <div>
+              <dt class="font-semibold">Phone</dt>
+              <dd>
+                <a href={CONTACT.phoneHref} class="underline">{CONTACT.phone}</a>
+              </dd>
+            </div>
+            <div>
+              <dt class="font-semibold">Hours</dt>
+              <dd>{CONTACT.hours.display}</dd>
+            </div>
+          </dl>
+          <p class="mt-4 text-sm text-[var(--color-ink-muted)]">
+            Walk-ins welcome during business hours, or
+            <a href="/contact" class="underline">get in touch first</a> so we can have
+            your details ready.
+          </p>
+        </section>
+
+        <section class="mt-10">
+          <h2 class="text-xl">Communities we serve from here</h2>
+          <ul class="mt-4 flex flex-wrap gap-2">
+            {
+              copy.nearby.map((place) => (
+                <li class="rounded-full border border-neutral-200 px-3 py-1 text-sm text-[var(--color-ink-soft)]">
+                  {place}
+                </li>
+              ))
+            }
+          </ul>
+        </section>
+
+        <section class="mt-10">
+          <h2 class="text-xl">What we write</h2>
+          <ul class="mt-4 grid gap-2 sm:grid-cols-2">
+            {
+              HUBS.map((hub) => (
+                <li>
+                  <a href={`/${hub.slug}`} class="font-semibold underline">
+                    {hub.title}
+                  </a>
+                  <span class="text-sm text-[var(--color-ink-muted)]">
+                    {' '}
+                    — {SERVICES.filter((s) => s.hub === hub.slug).length} coverage types
+                  </span>
+                </li>
+              ))
+            }
+          </ul>
+        </section>
+      </div>
+
+      <aside class="lg:sticky lg:top-6 lg:self-start">
+        <ServiceForm form="personal" path={path} label="insurance" />
+      </aside>
+    </div>
+  </article>
+</BaseLayout>

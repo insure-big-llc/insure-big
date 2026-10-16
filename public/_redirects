@@ -1,0 +1,44 @@
+# Netlify redirects — insure-big.com
+# website-scope.md §4.
+#
+# Two jobs:
+#
+#   1. ENFORCE THE CANONICAL FORM. The seven indexed URLs have NO trailing slash.
+#      Any request for the slash form must 301 to the no-slash form in ONE hop,
+#      or Google indexes both and splits the equity.
+#
+#   2. MAP THE DYING LEGACY PATHS. The old GoDaddy URLs that will not exist on
+#      the new site. Keep every mapping a single hop — chains waste crawl budget.
+#
+# Order matters: Netlify applies the first matching rule, so the specific legacy
+# paths come before the catch-all slash rule.
+#
+# ⚠️ The seven indexed URLs are NOT redirected. They are served as-is:
+#      /  /personal-insurance  /business-insurance  /life-insurance
+#      /get-a-quote  /privacy-policy  /terms-%26-conditions
+#    A redirect on any of those would be an own goal. Do not add one.
+
+# ── Legacy paths that die at cutover ──────────────────────────────────────────
+# The unencoded ampersand — GoDaddy serves this today, the new site does not.
+/terms-&-conditions            /terms-%26-conditions            301!
+/terms-conditions              /terms-%26-conditions            301!
+
+/home                          /                                301!
+/index.html                    /                                301!
+/quote                         /get-a-quote                     301!
+/contact-us                    /contact                         301!
+/about-us                      /about                           301!
+
+# ── Trailing-slash normalisation ──────────────────────────────────────────────
+# Any extensionless path with a trailing slash 301s to the no-slash form.
+# `/personal-insurance/` -> `/personal-insurance`
+#
+# The regex deliberately excludes paths containing a dot so that real files
+# (/robots.txt, /llms.txt) and Astro's generated `/foo.html` outputs are never
+# rewritten into a redirect loop.
+/^(.*[^\/.])/$                /$1                              301!
+
+# ── 404 ───────────────────────────────────────────────────────────────────────
+# Netlify serves dist/404.html with a genuine HTTP 404 status automatically.
+# Do NOT add a catch-all `/* /404.html 200` rule — that would recreate exactly
+# the soft-404 problem this rebuild is fixing.

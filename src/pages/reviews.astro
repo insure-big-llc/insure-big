@@ -1,0 +1,204 @@
+---
+/**
+ * /reviews — NET NEW, additive (no existing URL changes).
+ *
+ * WHY THIS PAGE EXISTS
+ * The recorded AI-visibility finding was blunt: when you ask an AI assistant about
+ * "Ballentine Insurance Group reviews", it cannot tell you anything — not because
+ * the reviews are poor, but because nothing citable about them exists. The live
+ * site shows a carousel that TRUNCATES every quote with an ellipsis, which is
+ * unquotable by a person and invisible to a machine.
+ *
+ * This page fixes that: every review in full, in the reviewer's own words, with
+ * the real names and the real aggregate, plus Review/AggregateRating markup.
+ *
+ * ⚠️ Reviews are reproduced unedited. Google's policies require review content to
+ * be genuine, unmodified and attributed — so nothing here is paraphrased, tidied
+ * or cherry-picked into a marketing voice.
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SectionBand from '../components/SectionBand.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import { SITE, absoluteUrl } from '../config/site.js';
+import { GOOGLE_REVIEWS, CUSTOMER_REVIEWS } from '../config/reviews.js';
+import { webPageSchema, breadcrumbSchema, reviewsSchema } from '../lib/schema.js';
+
+const path = '/reviews';
+const trail = [
+  { name: 'Home', path: '/' },
+  { name: 'Reviews', path },
+];
+
+const schema = [
+  webPageSchema({
+    path,
+    title: `Client Reviews — ${SITE.name}`,
+    description: `Read ${CUSTOMER_REVIEWS.length} verified Google reviews of ${SITE.name}, rated ${GOOGLE_REVIEWS.rating.toFixed(1)} from ${GOOGLE_REVIEWS.count} reviews.`,
+  }),
+  breadcrumbSchema(trail),
+  // Contributes review + aggregateRating to the organization node.
+  reviewsSchema(),
+];
+
+/** Group by theme so the page reads as evidence, not a wall of quotes. */
+const mentioning = (name) => CUSTOMER_REVIEWS.filter((r) => r.staffMentioned?.includes(name)).length;
+---
+
+<BaseLayout
+  title="Client Reviews | Kansas City Metro | BIG"
+  description={`Rated ${GOOGLE_REVIEWS.rating.toFixed(1)} from ${GOOGLE_REVIEWS.count} Google reviews. Read what Kansas City metro clients say about Ballentine Insurance Group.`}
+  path={path}
+  schema={schema}
+>
+  <Breadcrumbs trail={trail} />
+
+  <SectionBand title="What our clients say" kicker="Client reviews" />
+
+  <article class="container-page py-12">
+    <header class="max-w-3xl">
+
+      <!-- Aggregate, attributed to Google as their policy requires. -->
+      <div class="mt-8 flex flex-wrap items-center gap-x-6 gap-y-4 rounded-xl bg-[var(--color-surface-alt)] p-6">
+        <div>
+          <p class="font-[var(--font-heading)] text-4xl font-bold">
+            {GOOGLE_REVIEWS.rating.toFixed(1)}
+          </p>
+          <p aria-hidden="true" class="text-lg text-[var(--color-brand-600)]">★★★★★</p>
+        </div>
+        <div class="text-sm">
+          <p class="font-semibold">{GOOGLE_REVIEWS.count} Google reviews</p>
+          <p class="text-[var(--color-ink-soft)]">{GOOGLE_REVIEWS.profileName}</p>
+          <a
+            href={GOOGLE_REVIEWS.source}
+            class="font-semibold underline"
+            rel="noopener noreferrer"
+          >
+            See them on Google<span class="sr-only"> (opens in a new tab)</span>
+          </a>
+        </div>
+      </div>
+
+      <p class="mt-6 leading-relaxed text-[var(--color-ink-soft)]">
+        These are reviews left publicly on our Google listing. We reproduce them
+        exactly as written and we do not edit, filter or reword them — including the
+        ones that name a specific person on our team.
+      </p>
+    </header>
+
+    <!-- Who gets mentioned, which is itself a useful signal -->
+    <section class="mt-10">
+      <h2 class="text-xl">Mentioned by name</h2>
+      <ul class="mt-4 flex flex-wrap gap-3 text-sm">
+        {
+          [
+            { name: 'Pete Carroll', role: 'Agency Director' },
+            { name: 'Ashley Neugebauer', role: 'Insurance Producer' },
+            { name: 'Bret Ballentine', role: 'Founder & Principal Agent' },
+            { name: 'Dillon Schallenberg', role: 'Personal & Life Producer' },
+          ]
+            .map((p) => ({ ...p, count: mentioning(p.name) }))
+            .filter((p) => p.count > 0)
+            .map((p) => (
+              <li class="rounded-full border border-neutral-200 px-4 py-2">
+                <span class="font-semibold">{p.name}</span>
+                <span class="text-[var(--color-ink-muted)]">
+                  {' '}
+                  — {p.count} review{p.count === 1 ? '' : 's'}
+                </span>
+              </li>
+            ))
+        }
+      </ul>
+      <p class="mt-3 text-sm text-[var(--color-ink-muted)]">
+        <a href="/about" class="underline">Meet the team</a>
+      </p>
+    </section>
+
+    <!-- Every review, in full -->
+    <section class="mt-12">
+      <h2 class="text-2xl">All {CUSTOMER_REVIEWS.length} reviews</h2>
+
+      <ul class="mt-8 space-y-6">
+        {
+          CUSTOMER_REVIEWS.map((r) => (
+            <li class="rounded-xl border border-neutral-200 p-6">
+              <div class="flex flex-wrap items-center justify-between gap-2">
+                <p class="font-semibold">{r.author}</p>
+                <p class="text-xs text-[var(--color-ink-muted)]">{r.dateText}</p>
+              </div>
+
+              <p aria-hidden="true" class="mt-1 text-sm text-[var(--color-brand-600)]">
+                {'★'.repeat(r.rating)}
+              </p>
+              <span class="sr-only">{r.rating} out of 5 stars</span>
+
+              <blockquote class="mt-3 leading-relaxed text-[var(--color-ink-soft)]">
+                &ldquo;{r.text}&rdquo;
+              </blockquote>
+
+              {r.ratingContext && (
+                <p class="mt-3 text-xs text-[var(--color-ink-muted)]">{r.ratingContext}</p>
+              )}
+
+              {r.staffMentioned?.length > 0 && (
+                <p class="mt-3 text-sm">
+                  <span class="text-[var(--color-ink-muted)]">Mentioned: </span>
+                  {r.staffMentioned.map((name, i) => (
+                    <>
+                      {i > 0 && ', '}
+                      <a href="/about" class="font-semibold underline">
+                        {name}
+                      </a>
+                    </>
+                  ))}
+                </p>
+              )}
+
+              {r.ownerResponse && (
+                <div class="mt-4 rounded-lg bg-[var(--color-surface-alt)] p-4">
+                  <p class="text-xs font-bold uppercase tracking-wide text-[var(--color-brand-700)]">
+                    Response from {SITE.name}
+                  </p>
+                  <p class="mt-2 text-sm leading-relaxed text-[var(--color-ink-soft)]">
+                    {r.ownerResponse}
+                  </p>
+                </div>
+              )}
+
+              <p class="mt-4 text-xs text-[var(--color-ink-muted)]">
+                Review from Google
+              </p>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+
+    <!-- One card on Google is a rating-only submission from a staff member.
+         It is deliberately not shown here as a testimonial. -->
+    <section class="mt-12 rounded-xl bg-[var(--color-surface-alt)] p-6">
+      <h2 class="text-xl">Leave us a review</h2>
+      <p class="mt-2 leading-relaxed text-[var(--color-ink-soft)]">
+        If we have looked after you well, a review helps other people in the Kansas
+        City metro find us — and it is the single most useful thing you can do for a
+        small local agency.
+      </p>
+      <div class="mt-5 flex flex-wrap gap-3">
+        <a
+          href={GOOGLE_REVIEWS.source}
+          class="btn btn-primary"
+          rel="noopener noreferrer"
+        >
+          Review us on Google<span class="sr-only"> (opens in a new tab)</span>
+        </a>
+        <a href="/get-a-quote" class="btn btn-secondary">Get a quote</a>
+      </div>
+    </section>
+
+    <p class="mt-8 text-xs leading-relaxed text-[var(--color-ink-muted)]">
+      Reviews shown are from our Google Business Profile, read on {GOOGLE_REVIEWS.observedOn}.
+      We do not offer incentives for reviews and we do not remove negative ones.
+      Google's own policies govern how reviews are collected and displayed.
+    </p>
+  </article>
+</BaseLayout>

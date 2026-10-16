@@ -1,0 +1,6 @@
+# Deploy configuration for insure-big.com (the GitHub repo carries the site only).
+# The deploy command is the project's own gate: a regression fails the deploy.
+[build]
+  publish = "dist"
+  command = "npm run build:verify"
+  environment = { NODE_VERSION = "22" }

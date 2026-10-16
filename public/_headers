@@ -1,0 +1,21 @@
+# Response headers, shipped into the publish directory (dist/) on every build.
+# netlify-config skill guidance. No HSTS here on purpose: _headers applies to
+# every deploy context including previews, and HSTS on a preview domain is a
+# footgun. If HSTS is wanted later, add it per-context in the Netlify UI.
+
+/*
+  X-Frame-Options: DENY
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=()
+
+# Immutable, content-hashed build assets can cache for a year.
+/_astro/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Self-hosted fonts and generated artwork are stable files.
+/fonts/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/images/art/*
+  Cache-Control: public, max-age=31536000, immutable

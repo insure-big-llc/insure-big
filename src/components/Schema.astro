@@ -1,0 +1,122 @@
+---
+/**
+ * JSON-LD structured data. website-scope.md §5.2.
+ *
+ * One `InsuranceAgency` node carries the ORGANIZATION-level facts — including
+ * `telephone`, which is deliberately NOT repeated on each LocalBusiness node.
+ * Both offices share one number, and two LocalBusiness nodes each claiming the
+ * same telephone reads as conflicting data to validators.
+ *
+ * Every node gets a stable `@id` so the graph can reference rather than duplicate.
+ */
+import { SITE, LOCATIONS, CONTACT, absoluteUrl } from '../config/site.js';
+import { offerCatalogSchema, AREA_SERVED } from '../lib/schema.js';
+
+const ORG_ID = `${SITE.url}/#organization`;
+const WEBSITE_ID = `${SITE.url}/#website`;
+
+const organization = {
+  '@type': 'InsuranceAgency',
+  '@id': ORG_ID,
+  name: SITE.name,
+  alternateName: SITE.alternateNames,
+  url: `${SITE.url}/`,
+  description: `${SITE.name} is an independent insurance agency in the Kansas City metro, offering personal, business, life and specialty insurance. ${SITE.marketStatement}`,
+  foundingDate: String(SITE.founded),
+  foundingLocation: SITE.foundedWhere,
+  telephone: CONTACT.phone,
+  email: CONTACT.email,
+  sameAs: [SITE.facebook],
+  areaServed: AREA_SERVED,
+  knowsAbout: [
+    'Home insurance',
+    'Auto insurance',
+    'Renters insurance',
+    'Condo insurance',
+    'Landlord insurance',
+    'Umbrella insurance',
+    'Flood insurance',
+    'Business insurance',
+    'General liability insurance',
+    'Commercial property insurance',
+    "Workers' compensation",
+    'Professional liability insurance',
+    'Cyber liability insurance',
+    'Life insurance',
+    'Medicare',
+    'Surety bonds',
+  ],
+  // The two offices. `telephone` intentionally omitted — see note above.
+  location: LOCATIONS.map((loc) => ({
+    '@type': 'LocalBusiness',
+    '@id': `${SITE.url}/#location-${loc.id}`,
+    name: `${SITE.name} — ${loc.name}`,
+    parentOrganization: { '@id': ORG_ID },
+    address: {
+      '@type': 'PostalAddress',
+      streetAddress: loc.street,
+      addressLocality: loc.locality,
+      addressRegion: loc.region,
+      postalCode: loc.postalCode,
+      addressCountry: 'US',
+    },
+    geo: {
+      '@type': 'GeoCoordinates',
+      latitude: loc.geo.latitude,
+      longitude: loc.geo.longitude,
+    },
+    openingHoursSpecification: [CONTACT.hours.spec],
+    url: `${SITE.url}/${loc.slug}`,
+  })),
+};
+
+const website = {
+  '@type': 'WebSite',
+  '@id': WEBSITE_ID,
+  url: `${SITE.url}/`,
+  name: SITE.name,
+  publisher: { '@id': ORG_ID },
+  inLanguage: 'en-US',
+};
+
+/**
+ * Every coverage line the agency writes, as one node. Sitewide, so a crawler gets
+ * the full scope of the business from any single page rather than having to infer
+ * it from 37 pages.
+ */
+const offerCatalog = offerCatalogSchema();
+
+const props = Astro.props;
+
+/** Page-level nodes, supplied per page. */
+const pageNode = props.schema ?? null;
+const supplied = Array.isArray(pageNode) ? pageNode : pageNode ? [pageNode] : [];
+
+/**
+ * Merge any supplied node that carries the ORGANIZATION @id into the
+ * organization node itself, rather than emitting two nodes with the same @id.
+ *
+ * This is how reviewsSchema() contributes `review` and `aggregateRating` to the
+ * agency without duplicating it — two nodes sharing an @id is invalid graph
+ * structure and validators flag it.
+ */
+let mergedOrganization = organization;
+const pageNodes = [];
+
+for (const node of supplied) {
+  if (node && node['@id'] === ORG_ID) {
+    mergedOrganization = { ...mergedOrganization, ...node };
+  } else if (node) {
+    pageNodes.push(node);
+  }
+}
+
+const graph = [mergedOrganization, website, offerCatalog, ...pageNodes];
+---
+
+<script type="application/ld+json" set:html={JSON.stringify({ '@context': 'https://schema.org', '@graph': graph })} />
+
+<!--
+  Helper builders live in src/lib/schema.js so pages stay declarative and every
+  node is constructed in one place.
+-->

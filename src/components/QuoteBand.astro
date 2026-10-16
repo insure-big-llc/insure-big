@@ -1,0 +1,20 @@
+---
+/**
+ * QuoteBand: a light gold tinted call to action band. Spec 0002.
+ * The tint keeps it visually distinct from the white and ink sections beside
+ * it, which the home page rhythm check asserts.
+ */
+const { heading, copy, href, label } = Astro.props;
+---
+
+<section class="bg-[var(--color-brand-50)] py-14">
+  <div class="container-page">
+    <div class="mx-auto max-w-2xl text-center">
+      <h2 class="text-2xl sm:text-3xl">{heading}</h2>
+      <p class="prose-page mx-auto mt-5 text-[var(--color-ink-soft)]">{copy}</p>
+      <div class="mt-7 flex flex-wrap justify-center gap-3">
+        <slot />
+      </div>
+    </div>
+  </div>
+</section>

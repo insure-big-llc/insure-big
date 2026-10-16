@@ -1,0 +1,108 @@
+---
+/**
+ * Service page quote form. website-scope.md §7.
+ *
+ * PERFORMANCE: the Jotform embed is the single largest performance risk on the
+ * site (§6). Loading it inline would pull third-party JS before first paint and
+ * wreck LCP. So it is deferred behind a click: the static HTML ships a button,
+ * and the iframe is only created on interaction. A crawler that does not run JS
+ * still sees the real form URL as a link, so the form is discoverable either way.
+ *
+ * ATTRIBUTION (goal 11): the Jotform URLs are appended with utm_* and page URL
+ * parameters so submissions carry their own source. Without this, "which policy
+ * line produces the best leads" is unanswerable — which is the current state.
+ */
+import { FORMS, absoluteUrl } from '../config/site.js';
+
+const {
+  /** 'personal' | 'business' */
+  form = 'personal',
+  /** Site-relative path, used for the attribution params. */
+  path,
+  /** Human label for what is being quoted. */
+  label = 'insurance',
+} = Astro.props;
+
+const base = FORMS[form];
+
+// Attribution. Jotform passes through query params to hidden fields named to match.
+const params = new URLSearchParams({
+  source: 'website',
+  page_url: absoluteUrl(path),
+  utm_source: 'website',
+  utm_medium: 'organic',
+  utm_campaign: form === 'business' ? 'business-insurance' : 'personal-insurance',
+});
+const src = `${base}?${params.toString()}`;
+
+// A stable, unique id per page so multiple embeds never collide.
+const uid = `jotform-${path.replace(/[^a-z0-9]+/gi, '-').replace(/^-|-$/g, '')}`;
+---
+
+<section id="quote" class="rounded-xl border border-neutral-200 bg-[var(--color-surface-alt)] p-6 sm:p-8">
+  <h2 class="text-2xl">Request a {label} quote</h2>
+  <p class="prose-page mt-3 text-[var(--color-ink-soft)]">
+    Tell us a little about what you need and a licensed agent will come back to
+    you with options compared across multiple carriers. No obligation.
+  </p>
+
+  <div id={uid} class="mt-6">
+    <!-- Static fallback: always present, crawlable, and works with JS disabled. -->
+    <a
+      href={src}
+      class="btn btn-primary w-full sm:w-auto"
+      data-jotform-trigger
+      data-src={src}
+      data-target={uid}
+    >
+      Open the quote form
+    </a>
+    <p class="mt-3 text-sm text-[var(--color-ink-muted)]">
+      Opens a secure form in this page. Prefer to talk?
+      <a href="/contact" class="font-semibold underline">Contact us</a> or call
+      <a href="tel:+18168681787" class="font-semibold underline">(816) 868-1787</a>.
+    </p>
+  </div>
+
+  <p class="mt-5 text-xs leading-relaxed text-[var(--color-ink-muted)]">
+    By submitting this form you agree to be contacted about your insurance enquiry.
+    See our <a href="/privacy-policy" class="underline">Privacy Policy</a> for how we
+    handle your information. Consent is required before any marketing text message;
+    you can opt out at any time by replying STOP.
+  </p>
+</section>
+
+<script>
+  // Deferred loader. Astro bundles this as a module; it runs after HTML parse.
+  // No framework, no hydration — a few hundred bytes.
+  const TRIGGER = 'data-jotform-trigger';
+
+  function mount(trigger: HTMLElement) {
+    const src = trigger.getAttribute('data-src');
+    const targetId = trigger.getAttribute('data-target');
+    if (!src || !targetId) return;
+
+    const host = document.getElementById(targetId);
+    if (!host) return;
+
+    const iframe = document.createElement('iframe');
+    iframe.src = src;
+    iframe.title = 'Insurance quote form';
+    iframe.loading = 'lazy';
+    iframe.style.width = '100%';
+    iframe.style.height = '720px';
+    iframe.style.border = '0';
+    iframe.style.borderRadius = '0.5rem';
+    iframe.setAttribute('allow', 'payment');
+
+    host.replaceChildren(iframe);
+  }
+
+  // Event delegation, so every embed on the page works from one listener.
+  document.addEventListener('click', (event) => {
+    const el = (event.target as HTMLElement | null)?.closest?.(`[${TRIGGER}]`);
+    if (!el) return;
+    event.preventDefault();
+    mount(el as HTMLElement);
+  });
+</script>

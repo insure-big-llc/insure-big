@@ -1,0 +1,48 @@
+---
+/**
+ * ReviewsBand: the aggregate plus three verified reviews, fed by the single
+ * source of truth so it can never drift from the /reviews page or the
+ * Review JSON-LD. Spec 0002.
+ */
+import { GOOGLE_REVIEWS, FEATURED_REVIEWS, CUSTOMER_REVIEWS } from '../config/reviews.js';
+---
+
+<div class="rounded-xl bg-[var(--color-surface-alt)] p-6 sm:p-8">
+  <h3 class="text-lg">What our clients say</h3>
+
+  <!--
+    Real Google reviews, reproduced in the reviewer's own words and in FULL.
+    The live site truncates every one of these with an ellipsis, which throws
+    away the strongest trust asset the agency has.
+  -->
+  <p class="mt-3 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm">
+    <span class="font-[var(--font-heading)] text-2xl font-bold">
+      {GOOGLE_REVIEWS.rating.toFixed(1)}
+    </span>
+    <span aria-hidden="true" class="text-[var(--color-brand-600)]">★★★★★</span>
+    <span class="text-[var(--color-ink-muted)]">
+      {GOOGLE_REVIEWS.count} Google reviews
+    </span>
+  </p>
+
+  <ul class="mt-5 space-y-4">
+    {
+      FEATURED_REVIEWS.slice(0, 3).map((r) => (
+        <li class="rounded-lg border-l-2 border-[var(--color-brand-500)] bg-white p-4">
+          <p aria-hidden="true" class="text-xs text-[var(--color-brand-600)]">★★★★★</p>
+          <p class="mt-1 text-sm leading-relaxed text-[var(--color-ink-soft)]">
+            &ldquo;{r.text}&rdquo;
+          </p>
+          <p class="mt-2 text-xs font-semibold">
+            {r.author}
+            <span class="font-normal text-[var(--color-ink-muted)]"> — Google review</span>
+          </p>
+        </li>
+      ))
+    }
+  </ul>
+
+  <a href="/reviews" class="btn btn-secondary mt-5 w-full sm:w-auto">
+    Read all {CUSTOMER_REVIEWS.length} reviews
+  </a>
+</div>

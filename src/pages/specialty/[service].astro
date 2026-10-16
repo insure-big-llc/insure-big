@@ -1,0 +1,199 @@
+---
+/**
+ * Specialty service pages: /specialty/{slug}
+ *
+ * These seven products (surety bonds, travel, pet, device protection, wind and
+ * hail, premium lock, Farmers) do not belong under an indexed hub, and inventing
+ * a fourth hub risked competing with the three that are already indexed.
+ * website-scope.md §4.
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import ServiceForm from '../../components/ServiceForm.astro';
+import FaqBlock from '../../components/FaqBlock.astro';
+import RelatedCoverage from '../../components/RelatedCoverage.astro';
+import { SERVICES, SPECIALTY_GROUP, servicePath } from '../../config/services.js';
+import { partnerFor } from '../../config/partners.js';
+import { SPECIALTY_EXPLAINERS } from '../../config/specialty-explainers.js';
+import {
+  serviceSchema,
+  faqSchema,
+  breadcrumbSchema,
+  partnerOfferSchema,
+} from '../../lib/schema.js';
+
+export function getStaticPaths() {
+  return SERVICES.filter((s) => s.hub === 'specialty').map((service) => ({
+    params: { service: service.slug },
+    props: { service },
+  }));
+}
+
+const { service } = Astro.props;
+const path = servicePath(service);
+
+/**
+ * Some specialty lines are placed through a partner platform rather than written
+ * directly. See src/config/partners.js.
+ *
+ * ⚠️ The ON-SITE FORM IS ALWAYS THE PRIMARY CTA. Where a destination carries no
+ * Ballentine identity — or where the arrangement is unconfirmed — the form is the
+ * only path that guarantees the agency keeps the customer AND records consent for
+ * follow-up. The partner link is secondary and always labelled.
+ */
+const partner = partnerFor(service.slug);
+const showPartnerLink = Boolean(partner?.shipsLink && partner?.url);
+
+/** Original explanatory copy for this line (W3). */
+const explainer = SPECIALTY_EXPLAINERS[service.slug] ?? [];
+
+const trail = [
+  { name: 'Home', path: '/' },
+  { name: SPECIALTY_GROUP.title, path: '/specialty/surety-bonds' },
+  { name: service.name, path },
+];
+
+const schema = [
+  serviceSchema({ name: service.name, description: service.metaDescription, path }),
+  partner
+    ? partnerOfferSchema({
+        serviceName: service.name,
+        description: service.metaDescription,
+        path,
+        partnerName: partner.partner,
+        partnerUrl: showPartnerLink ? partner.url : null,
+      })
+    : null,
+  faqSchema({ faqs: service.faq, path }),
+  breadcrumbSchema(trail),
+].filter(Boolean);
+---
+
+<BaseLayout
+  title={service.metaTitle}
+  description={service.metaDescription}
+  path={path}
+  schema={schema}
+>
+  <Breadcrumbs trail={trail} />
+
+  <article class="container-page py-10 lg:py-14">
+    <div class="grid gap-12 lg:grid-cols-[minmax(0,1fr)_380px]">
+      <div>
+        <header>
+          <p class="text-sm font-semibold uppercase tracking-widest text-[var(--color-brand-700)]">
+            Specialty coverage
+          </p>
+          <h1 class="mt-3 text-3xl leading-tight sm:text-4xl">{service.h1}</h1>
+          <p class="mt-5 max-w-2xl text-lg leading-relaxed text-[var(--color-ink-soft)]">
+            {service.blurb}
+          </p>
+          <p class="mt-4 text-sm font-semibold">
+            Serving the Kansas City metro and communities throughout Missouri and Kansas.
+          </p>
+        </header>
+
+        <div class="prose-page mt-10">
+          <h2>What this coverage includes</h2>
+          <ul>
+            {service.covers.map((item) => <li>{item}</li>)}
+          </ul>
+        </div>
+
+        {
+          /* ORIGINAL explanatory content (W3) — written in our voice, with the
+             local detail a partner site cannot have. Never copied from the
+             partner: their copy is their copyright, and duplicating it would be
+             duplicate content on our side. */
+          explainer?.length > 0 && (
+            <div class="prose-page mt-10">
+              <h2>Understanding {service.name.toLowerCase()}</h2>
+              {explainer.map((para) => <p>{para}</p>)}
+            </div>
+          )
+        }
+
+        {service.faq?.length ? <FaqBlock faqs={service.faq} /> : null}
+
+        <section class="mt-14 rounded-xl bg-[var(--color-surface-alt)] p-6">
+          <h2 class="text-xl">Other specialty cover we write</h2>
+          <ul class="mt-4 grid gap-2 sm:grid-cols-2">
+            {
+              SERVICES.filter((s) => s.hub === 'specialty' && s.slug !== service.slug).map((s) => (
+                <li>
+                  <a href={`/specialty/${s.slug}`} class="text-sm font-semibold underline">
+                    {s.name}
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </section>
+
+        <RelatedCoverage current={service.slug} hub="specialty" />
+      </div>
+
+      <aside class="lg:sticky lg:top-6 lg:self-start">
+        {/* PRIMARY: the on-site form. Captures the lead with consent and attribution
+            before anyone leaves for a partner's site. */}
+        <ServiceForm
+          form={service.form ?? 'personal'}
+          path={path}
+          label={service.name.replace(/ Insurance$/i, '').toLowerCase()}
+        />
+
+        {partner && (
+          <div class="mt-6 rounded-xl border border-neutral-200 p-5 text-sm">
+            <h2 class="text-base font-bold">
+              {showPartnerLink ? `About ${partner.partner}` : 'How this cover is placed'}
+            </h2>
+
+            <p class="mt-2 leading-relaxed text-[var(--color-ink-soft)]">{partner.disclosure}</p>
+
+            {partner.agentOfRecord === true && (
+              <p class="mt-3 leading-relaxed text-[var(--color-ink-soft)]">
+                We remain your agency — {partner.partner} provides the platform under our
+                appointment.
+              </p>
+            )}
+
+            {partner.agentOfRecord === null && (
+              <p class="mt-3 leading-relaxed text-[var(--color-ink-soft)]">
+                This is a third-party programme, and their application is theirs. If you
+                would like us involved, start with the form above or call us.
+              </p>
+            )}
+
+            {showPartnerLink ? (
+              /*
+               * INFORMATIONAL, not transactional — matching the live site's
+               * "LEARN MORE" intent. The label says exactly what the link does.
+               */
+              <a
+                href={partner.url}
+                class="btn btn-secondary mt-4 w-full"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Learn more at {partner.partner}
+                <span class="sr-only">(opens {partner.partner}'s website in a new tab)</span>
+              </a>
+            ) : (
+              <p class="mt-4 text-[var(--color-ink-muted)]">
+                No external application for this cover — we place it for you directly.
+                Call <a href="tel:+18168681787" class="font-semibold underline">(816) 868-1787</a>
+                {' '}and we will take it from there.
+              </p>
+            )}
+
+            <p class="mt-3 text-xs text-[var(--color-ink-muted)]">
+              <a href="/coverage-partners" class="underline">
+                How our partner programmes work
+              </a>
+            </p>
+          </div>
+        )}
+      </aside>
+    </div>
+  </article>
+</BaseLayout>

@@ -1,0 +1,83 @@
+---
+/**
+ * Hero: dark ink section with the faint shield artwork behind it. Spec 0002,
+ * revised per the client's direction: the shield stays background only, and
+ * the BIG brand mark anchors the right side on a white card.
+ *
+ * The headline, supporting line, and action come from the caller (the home
+ * page reuses its existing copy unchanged). The artwork is a CSS background,
+ * so it never occupies layout and cannot shift it.
+ *
+ * The photo slot stays available for later: when `image` is set AND the file
+ * exists on disk at build time, the photo renders right of the text in a
+ * reserved 4:3 aspect box. When it is missing, the hero shows the brand card
+ * instead, never a broken box.
+ */
+import { existsSync } from 'node:fs';
+import { join } from 'node:path';
+import { SITE, ART, HERO_IMAGE } from '../config/site.js';
+
+const { headline, supporting, kicker = `${SITE.shortName} — an independent agency`, brand = false } =
+  Astro.props;
+
+const requested = Astro.props.image ?? HERO_IMAGE;
+const image = requested && existsSync(join(process.cwd(), 'public', requested)) ? requested : null;
+const art = Astro.props.art ?? ART.hero;
+const hasSide = Boolean(image || brand);
+---
+
+<section class="relative overflow-hidden bg-[var(--color-ink)] text-white">
+  <div
+    aria-hidden="true"
+    class="absolute inset-0 bg-cover bg-center"
+    style={`background-image:url('${art}')`}
+  />
+  <div
+    aria-hidden="true"
+    class="absolute inset-0 bg-gradient-to-r from-[var(--color-ink)] via-[var(--color-ink)]/90 to-[var(--color-ink)]/60"
+  />
+  <div class="container-page relative py-16 lg:py-24">
+    <div class:list={['grid items-center gap-10', hasSide && 'lg:grid-cols-[minmax(0,1fr)_440px]']}>
+      <div class="max-w-2xl">
+        <p class="font-[var(--font-heading)] text-sm font-bold uppercase tracking-widest text-[var(--color-brand-300)]">
+          {kicker}
+        </p>
+        <h1 class="mt-4 text-4xl leading-tight sm:text-5xl lg:text-6xl">{headline}</h1>
+        {supporting && <p class="mt-6 max-w-xl text-lg leading-relaxed text-white/85">{supporting}</p>}
+        <div class="mt-8 flex flex-wrap gap-3">
+          <slot />
+        </div>
+      </div>
+      {
+        image && (
+          <div class="aspect-[4/3] overflow-hidden rounded-xl border border-white/15">
+            <img
+              src={image}
+              alt="Ballentine Insurance Group"
+              width="880"
+              height="660"
+              loading="eager"
+              decoding="async"
+              class="h-full w-full object-cover"
+            />
+          </div>
+        )
+      }
+      {
+        brand && !image && (
+          <div class="mx-auto flex w-full max-w-md items-center justify-center rounded-2xl bg-white p-8 shadow-2xl lg:p-10">
+            <img
+              src="/images/big-logo.webp"
+              alt="Ballentine Insurance Group"
+              width="180"
+              height="60"
+              loading="eager"
+              decoding="async"
+              class="h-auto w-full max-w-sm object-contain"
+            />
+          </div>
+        )
+      }
+    </div>
+  </div>
+</section>

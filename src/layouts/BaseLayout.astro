@@ -1,0 +1,183 @@
+---
+/**
+ * Base layout. website-scope.md §5.
+ *
+ *  - <link rel="canonical"> self-references the NO-TRAILING-SLASH form,
+ *    matching sitemap.website.xml byte-for-byte. This is the single most
+ *    important crawl rule on the site.
+ *  - Exactly one <h1> per page, supplied by the page itself.
+ *  - Content is fully prerendered — Astro emits static HTML, no client framework.
+ */
+import '../styles/global.css';
+import { SITE, CONTACT, QUOTE_URL, absoluteUrl } from '../config/site.js';
+import { SELF_HOSTED_FONTS } from '../generated/fonts.js';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import Schema from '../components/Schema.astro';
+
+const {
+  title,
+  description,
+  /** Site-relative path, no trailing slash. e.g. "/personal-insurance/auto" */
+  path = '/',
+  ogType = 'website',
+  /** Optional per-page Open Graph image (site-relative path). */
+  ogImage = null,
+  /** Optional JSON-LD node(s) built by src/lib/schema.js */
+  schema = null,
+  noindex = false,
+} = Astro.props;
+
+const canonical = absoluteUrl(path);
+
+/**
+ * Title policy.
+ *
+ * Every page title is authored to already end in the short brand marker "| BIG",
+ * which keeps the full string inside Google's ~60-character display width. The
+ * old site's titles carried no location at all; these carry location AND brand.
+ *
+ * The brand is appended ONLY if the title does not already carry it, so a title
+ * can never come out as "... | BIG | Ballentine Insurance Group".
+ */
+const BRAND_MARKER = '| BIG';
+const fullTitle = title.includes(BRAND_MARKER) ? title : `${title} ${BRAND_MARKER}`;
+---
+
+<!doctype html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+    {!noindex && <meta name="robots" content="index, follow, max-image-preview:large" />}
+
+    <!-- Open Graph -->
+    <meta property="og:type" content={ogType} />
+    <meta property="og:site_name" content={SITE.name} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:locale" content="en_US" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+
+    <!--
+      Open Graph image. Pages may override via the `ogImage` prop; the default is
+      a generated brand card. Without og:image, shared links render as bare text —
+      this closes that gap (website-scope.md §16a, W5).
+    -->
+    <meta property="og:image" content={absoluteUrl(ogImage ?? '/og-default.png')} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:image" content={absoluteUrl(ogImage ?? '/og-default.png')} />
+
+    <!--
+      Icons. Declared in order of preference, with fallbacks, because a single
+      WebP favicon is not enough: Safari and several crawlers/feed readers do not
+      support WebP here, and /favicon.ico is requested by convention whether or
+      not it is declared.
+        - favicon.ico       for legacy browsers and bare-path requests
+        - PNG set           for browsers without WebP
+        - favicon.webp      smallest, preferred by modern browsers
+        - apple-touch-icon  iOS home screen (must be opaque PNG)
+    -->
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="icon" type="image/webp" href="/favicon.webp" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+
+    <!--
+      Fonts are SELF-HOSTED, never loaded from Google's CDN — a third-party font
+      request blocks first paint and leaks visitor IPs to a third party.
+
+      Both the preloads and the @font-face rules come from
+      scripts/build-fonts.mjs, which inspects public/fonts at build time. That
+      means we preload exactly the fonts that exist: preloading a missing file
+      would emit a 404 and waste bandwidth, which is worse than no preload.
+      Drop the .woff2 files in and rebuild — the wiring appears automatically.
+    -->
+    <link rel="stylesheet" href="/fonts.css" />
+    {
+      // Preload ONLY the faces used above the fold — body 400, semibold 600
+      // (buttons and labels), and heading 700. The 600 face was added after
+      // the measurement run flagged its late swap as a layout shift source.
+      // The other weights load on demand via the @font-face rules.
+      SELF_HOSTED_FONTS.filter(
+        (f) =>
+          (f.family === 'Poppins' && (f.weight === 400 || f.weight === 600)) ||
+          (f.family === 'Cantarell' && f.weight === 700),
+      ).map((f) => (
+        <link
+          rel="preload"
+          href={f.href}
+          as="font"
+          type="font/woff2"
+          crossorigin="anonymous"
+        />
+      ))
+    }
+
+    <!-- Preconnect only to hosts we actually load from. The Jotform embed is
+         deferred until interaction (see ServiceForm.astro), so it is not
+         preconnected here — preconnecting would cost bytes for nothing. -->
+    <meta name="theme-color" content="#bd9b01" />
+
+    <Schema schema={schema} />
+  </head>
+  <body>
+    <a href="#main" class="skip-link sr-only">Skip to main content</a>
+    <Header />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer />
+
+    <!--
+      Sticky quote bar (spec 0002): Call and Get a Quote pinned to the bottom
+      on phones. Progressive enhancement: the bar ships visible, a tiny inline
+      script hides it on tall pages and reveals it after the first screenful;
+      on short pages it stays visible, and without JavaScript it is always
+      visible. The height is reserved by global.css via --quote-bar-height,
+      so layout shift stays zero.
+    -->
+    <div
+      id="quote-bar"
+      class="fixed inset-x-0 bottom-0 z-50 border-t border-white/10 bg-[var(--color-ink)] lg:hidden"
+      style="padding-bottom: env(safe-area-inset-bottom)"
+    >
+      <div class="container-page flex gap-3 py-1.5">
+        <a href={CONTACT.phoneHref} class="btn btn-on-dark flex-1">Call {CONTACT.phone}</a>
+        <a href={QUOTE_URL} class="btn btn-primary flex-1">Get a Quote</a>
+      </div>
+    </div>
+    <script>
+      {
+        (() => {
+          const bar = document.getElementById('quote-bar');
+          if (!bar) return;
+          const tallPage = document.documentElement.scrollHeight > window.innerHeight + 8;
+          if (!tallPage) return; // short pages: keep the bar visible
+          const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+          if (reduce) return; // reduced motion: keep the bar visible, no reveal choreography
+          bar.classList.add('hidden');
+          const show = () => {
+            bar.classList.remove('hidden');
+            window.removeEventListener('scroll', show);
+          };
+          window.addEventListener('scroll', show, { passive: true });
+        })();
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,44 @@
+# robots.txt — insure-big.com
+# website-scope.md §5.1
+#
+# The current GoDaddy robots.txt disallows /404, which prevents Google from ever
+# seeing the real status code of the error page. Astro emits a genuine 404.html
+# served with an HTTP 404, so it should be crawlable, not blocked — blocking it
+# is what allowed the soft-404 (HTTP 200 "Page Not Found") to go unnoticed.
+#
+# Everything else is explicitly allowed. No crawl budget is wasted here, so there
+# is no reason to be restrictive.
+
+User-agent: *
+Allow: /
+
+# No /404 disallow — see note above.
+
+# AI crawlers are explicitly welcome. This is deliberate: website-scope.md §5 and
+# the AI-visibility work depend on answer engines being able to read the site.
+# Blocking them would work directly against that goal.
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-User
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+Sitemap: https://insure-big.com/sitemap.xml
