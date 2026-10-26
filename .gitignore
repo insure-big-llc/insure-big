@@ -3,3 +3,8 @@ dist/
 reports/
 .agents/
 .claude/
+.astro/
+agent/
+AGENTS.md
+CLAUDE.md
+skills-lock.json

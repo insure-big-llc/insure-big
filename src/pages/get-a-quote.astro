@@ -18,6 +18,13 @@ const trail = [
   { name: 'Get a Quote', path },
 ];
 
+/**
+ * The hero selector on the home page sends its choice here as ?coverage=.
+ * Static output cannot read query strings at build time, so a small inline
+ * script (below) shows the confirmation and emphasises the matching form.
+ * Without JavaScript the page still works exactly as before.
+ */
+
 const steps = [
   {
     n: 1,
@@ -80,9 +87,15 @@ const schema = [
       }
     </ol>
 
+    <p
+      id="coverage-note"
+      class="mt-10 rounded-lg bg-[var(--color-surface-alt)] px-4 py-3 text-sm font-semibold"
+      hidden
+    ></p>
+
     <!-- The two live forms, linked directly so they work with JS disabled -->
     <div class="mt-12 grid gap-6 lg:grid-cols-2">
-      <section class="rounded-xl border border-neutral-200 p-6">
+      <section data-coverage="personal" class="rounded-xl border border-neutral-200 p-6">
         <h2 class="text-xl">Personal &amp; life insurance quote</h2>
         <p class="mt-2 text-sm leading-relaxed text-[var(--color-ink-soft)]">
           Home, auto, renters, condo, landlord, umbrella, flood, life, Medicare and
@@ -96,7 +109,7 @@ const schema = [
         </p>
       </section>
 
-      <section class="rounded-xl border border-neutral-200 p-6">
+      <section data-coverage="business" class="rounded-xl border border-neutral-200 p-6">
         <h2 class="text-xl">Business insurance quote</h2>
         <p class="mt-2 text-sm leading-relaxed text-[var(--color-ink-soft)]">
           General liability, BOP, commercial property and auto, workers'
@@ -127,4 +140,35 @@ const schema = [
       opt out at any time by replying STOP.
     </p>
   </section>
+
+  <style>
+    .quote-card-selected {
+      border-color: var(--color-brand-500);
+      box-shadow: 0 0 0 1px var(--color-brand-500);
+    }
+  </style>
+  <script>
+    (function () {
+      var labels = {
+        home: 'Home insurance',
+        auto: 'Auto insurance',
+        business: 'Business insurance',
+        life: 'Life insurance',
+        other: 'Other coverage',
+      };
+      var key = new URLSearchParams(location.search).get('coverage');
+      var label = labels[key];
+      if (!label) return;
+      var note = document.getElementById('coverage-note');
+      if (note) {
+        note.hidden = false;
+        note.textContent =
+          'You asked about: ' + label + '. The right form for that is highlighted below.';
+      }
+      var card = document.querySelector(
+        '[data-coverage="' + (key === 'business' ? 'business' : 'personal') + '"]',
+      );
+      if (card) card.classList.add('quote-card-selected');
+    })();
+  </script>
 </BaseLayout>

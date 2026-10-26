@@ -65,6 +65,7 @@ const organization = {
       latitude: loc.geo.latitude,
       longitude: loc.geo.longitude,
     },
+    hasMap: loc.mapLink,
     openingHoursSpecification: [CONTACT.hours.spec],
     url: `${SITE.url}/${loc.slug}`,
   })),
@@ -101,15 +102,24 @@ const supplied = Array.isArray(pageNode) ? pageNode : pageNode ? [pageNode] : []
  * structure and validators flag it.
  */
 let mergedOrganization = organization;
+let mergedLocations = organization.location;
 const pageNodes = [];
 
 for (const node of supplied) {
   if (node && node['@id'] === ORG_ID) {
     mergedOrganization = { ...mergedOrganization, ...node };
+  } else if (node && mergedLocations.some((l) => l['@id'] === node['@id'])) {
+    // A page supplied its office's reviews and aggregate: fold them into that
+    // office's LocalBusiness node rather than emitting a duplicate @id.
+    mergedLocations = mergedLocations.map((l) =>
+      l['@id'] === node['@id'] ? { ...l, ...node } : l,
+    );
   } else if (node) {
     pageNodes.push(node);
   }
 }
+
+mergedOrganization = { ...mergedOrganization, location: mergedLocations };
 
 const graph = [mergedOrganization, website, offerCatalog, ...pageNodes];
 ---

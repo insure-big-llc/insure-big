@@ -115,7 +115,7 @@ const fullTitle = title.includes(BRAND_MARKER) ? title : `${title} ${BRAND_MARKE
       // The other weights load on demand via the @font-face rules.
       SELF_HOSTED_FONTS.filter(
         (f) =>
-          (f.family === 'Poppins' && (f.weight === 400 || f.weight === 600)) ||
+          (f.family === 'Poppins' && (f.weight === 400 || f.weight === 600 || f.weight === 700)) ||
           (f.family === 'Cantarell' && f.weight === 700),
       ).map((f) => (
         <link
@@ -131,7 +131,7 @@ const fullTitle = title.includes(BRAND_MARKER) ? title : `${title} ${BRAND_MARKE
     <!-- Preconnect only to hosts we actually load from. The Jotform embed is
          deferred until interaction (see ServiceForm.astro), so it is not
          preconnected here — preconnecting would cost bytes for nothing. -->
-    <meta name="theme-color" content="#bd9b01" />
+    <meta name="theme-color" content="#ffffff" />
 
     <Schema schema={schema} />
   </head>
@@ -153,7 +153,7 @@ const fullTitle = title.includes(BRAND_MARKER) ? title : `${title} ${BRAND_MARKE
     -->
     <div
       id="quote-bar"
-      class="fixed inset-x-0 bottom-0 z-50 border-t border-white/10 bg-[var(--color-ink)] lg:hidden"
+      class="fixed inset-x-0 bottom-0 z-50 border-t border-white/10 bg-[var(--color-ink)]/95 backdrop-blur-sm shadow-[0_-2px_10px_rgba(0,0,0,0.25)] lg:hidden"
       style="padding-bottom: env(safe-area-inset-bottom)"
     >
       <div class="container-page flex gap-3 py-1.5">
@@ -170,9 +170,9 @@ const fullTitle = title.includes(BRAND_MARKER) ? title : `${title} ${BRAND_MARKE
           if (!tallPage) return; // short pages: keep the bar visible
           const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
           if (reduce) return; // reduced motion: keep the bar visible, no reveal choreography
-          bar.classList.add('hidden');
+          bar.classList.add('quote-bar-hidden');
           const show = () => {
-            bar.classList.remove('hidden');
+            bar.classList.remove('quote-bar-hidden');
             window.removeEventListener('scroll', show);
           };
           window.addEventListener('scroll', show, { passive: true });

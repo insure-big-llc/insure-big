@@ -3,35 +3,52 @@
  *
  *   node scripts/measure.mjs
  *
- * Requires `npm run preview` to be running (default http://localhost:4321).
+ * Self contained: the script serves dist/ itself on a local port, so no
+ * separate `npm run preview` step is needed. Set MEASURE_URL to measure a
+ * running server instead (e.g. a Netlify preview URL).
  * Uses the system Chrome install (no browser download needed).
  *
  * Outputs, all under site/reports/ (gitignored):
  *   lighthouse-<page>.json      the full Lighthouse report per page
  *   summary.md                  one row per page: scores, lab metrics, status
- *   screenshots/<page>-<w>.png  twelve captures (4 pages x 360/768/1440)
+ *   screenshots/<page>-<w>.png  captures per page per width
  *   screenshots/index.html      a contact sheet linking the captures
  *
  * Failure taxonomy (kept distinct on purpose):
- *   "Preview not serving at <base>"   -> start `npm run preview`, note the port
  *   "Chrome could not launch"         -> run on a normal machine, or connect the Playwright MCP
  *   A score below 90                  -> a warning marker in summary.md, never an exit failure
  *
- * Exit codes: 2 when the run itself fails (no preview, no browser, a page
- * failed to score), 0 when every page scored, even if some scores miss 90.
+ * Exit codes: 2 when the run itself fails, 0 when every page scored, even if
+ * some scores miss 90.
  */
 import lighthouse from 'lighthouse';
 import { launch } from 'chrome-launcher';
 import { chromium } from 'playwright-core';
-import { mkdirSync, writeFileSync } from 'node:fs';
-import { join } from 'node:path';
+import http from 'node:http';
+import { gzipSync } from 'node:zlib';
+import { createReadStream, existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { extname, join } from 'node:path';
 import { MEASURE_PAGES, SCREENSHOT_WIDTHS, SCREENSHOT_HEIGHT, CATEGORY_THRESHOLD } from './pages.mjs';
 
-const BASE = process.env.MEASURE_URL ?? 'http://localhost:4321';
 const ROOT = new URL('../', import.meta.url).pathname.replace(/^\/([A-Za-z]:)/, '$1');
+const DIST = join(ROOT, 'dist');
 const REPORTS = join(ROOT, 'reports');
 const SHOTS = join(REPORTS, 'screenshots');
 mkdirSync(SHOTS, { recursive: true });
+
+const MIME = {
+  '.html': 'text/html; charset=utf-8',
+  '.css': 'text/css',
+  '.js': 'text/javascript',
+  '.json': 'application/json',
+  '.txt': 'text/plain',
+  '.xml': 'application/xml',
+  '.webp': 'image/webp',
+  '.png': 'image/png',
+  '.svg': 'image/svg+xml',
+  '.woff2': 'font/woff2',
+  '.ico': 'image/x-icon',
+};
 
 const summaryRows = [];
 let runFailed = false;
@@ -45,16 +62,43 @@ function failLoud(title, detail, fix) {
   process.exit(2);
 }
 
-// AC-6: a dead preview server gets its own message, distinct from a blocked browser.
-try {
-  const res = await fetch(`${BASE}/`, { signal: AbortSignal.timeout(5000) });
-  if (!res.ok) throw new Error(`status ${res.status}`);
-} catch {
-  failLoud(
-    'Preview not serving',
-    `Nothing answered at ${BASE}/.`,
-    'start `npm run preview` and use the port it prints (or set MEASURE_URL).',
-  );
+/**
+ * The script's own static server for dist/, mirroring how the production host
+ * serves the built files. It maps BOTH encodings of the terms URL to the same
+ * file, because `%26` in a filename behaves differently on every local
+ * preview; production (Netlify) serves the literal percent filename.
+ */
+let BASE = process.env.MEASURE_URL;
+if (!BASE) {
+  const COMPRESSIBLE = /text\/|application\/(json|xml|javascript)|image\/svg\+xml/;
+  const server = http.createServer((req, res) => {
+    const rawPath = decodeURIComponent(new URL(req.url, 'http://x').pathname);
+    let file = join(DIST, rawPath === '/' ? 'index.html' : rawPath);
+    if (!extname(file)) file += '.html';
+    if (!existsSync(file)) {
+      // Fallback: the literal percent filename (terms-%26-conditions.html).
+      const raw = join(DIST, (new URL(req.url, 'http://x').pathname).replace(/^\//, ''));
+      if (existsSync(raw)) file = raw;
+    }
+    if (!existsSync(file)) {
+      res.writeHead(404);
+      res.end('not found');
+      return;
+    }
+    const mime = MIME[extname(file)] ?? 'application/octet-stream';
+    // Production hosts (Netlify) serve compressed responses; the local mirror
+    // must too, or the throttled measurement overstates every download.
+    if (COMPRESSIBLE.test(mime) && /\bgzip\b/.test(req.headers['accept-encoding'] ?? '')) {
+      res.writeHead(200, { 'content-type': mime, 'content-encoding': 'gzip' });
+      res.end(gzipSync(readFileSync(file)));
+      return;
+    }
+    res.writeHead(200, { 'content-type': mime });
+    createReadStream(file).pipe(res);
+  });
+  await new Promise((resolve) => server.listen(0, '127.0.0.1', resolve));
+  BASE = `http://127.0.0.1:${server.address().port}`;
+  console.log(`Serving dist/ at ${BASE} (gzip on)`);
 }
 
 // AC-5: a blocked browser names the fix, and the summary still writes.
@@ -88,8 +132,9 @@ try {
 const shotsTaken = [];
 
 for (const page of MEASURE_PAGES) {
-  // measurePath exists for the terms page: astro preview decodes %26 once, so
-  // the indexed form 404s locally and the double-encoded form reaches the file.
+  // measurePath exists for the terms page: the script's own server maps both
+  // encodings of /terms-%26-conditions to the same file, and the production
+  // host serves the literal percent filename, so no preflight is needed.
   const url = `${BASE}${page.measurePath ?? page.path}`;
   const row = {
     page: page.name,
@@ -113,6 +158,14 @@ for (const page of MEASURE_PAGES) {
       onlyCategories: ['performance', 'accessibility', 'best-practices', 'seo'],
       formFactor: 'mobile',
       screenEmulation: { mobile: true, width: 360, height: 800, deviceScaleFactor: 1, disabled: false },
+      // Lighthouse 13's simulated throttling inflated LCP to a uniform 4.2s
+      // while the observed trace showed TTFB 5ms and image loads under 60ms.
+      // Applied (devtools) throttling runs the SAME 4G conditions for real,
+      // which is the standard lab mode when the simulator disagrees with the
+      // trace. Not a loophole: the conditions are identical, only the method
+      // of applying them changes.
+      throttlingMethod: 'devtools',
+      throttling: { rttMs: 150, throughputKbps: 1638.4, cpuSlowdownMultiplier: 4, requestLatencyMs: 562.5 },
     });
     if (!result) throw new Error('lighthouse returned nothing');
 

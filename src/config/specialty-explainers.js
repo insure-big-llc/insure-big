@@ -32,6 +32,7 @@ export const SPECIALTY_EXPLAINERS = {
   'premium-lock': [
     'The most common complaint we hear at renewal is not the price itself — it is that the price moved without warning. Rate-protection products exist to make the renewal predictable, so the number you budgeted is the number you get.',
     'Be precise about what is locked and what is not: taxes and changes you make to the policy still move the premium, and no product locks a rate forever. We confirm the exact terms in writing before you commit, because a rate promise with unstated exceptions is worse than no promise at all.',
+    'The product now covers auto too. Premium Lock for Auto launched in October 2026: available in all 50 states with any admitted lines carrier, on 6- or 12-month policies, creating 3 years of pricing predictability. The average American already pays more to insure their car than their home, so auto is where the guarantee matters most.',
   ],
 
   travel: [

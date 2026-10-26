@@ -68,6 +68,9 @@
    */
   html {
     font-size: 100%;
+    scroll-padding-top: 1rem;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -83,6 +86,47 @@
     background-color: var(--color-surface);
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /*
+   * TOUCH POLISH
+   *
+   * `touch-action: manipulation` removes the double-tap zoom delay on buttons
+   * and links, which makes every tap feel instant on phones. It never blocks
+   * pinch zoom on the page itself, which older users rely on.
+   */
+  a,
+  button,
+  .btn {
+    touch-action: manipulation;
+  }
+
+  /*
+   * HEADING LINE BALANCE (web-design-guidelines)
+   *
+   * `text-wrap: balance` evens the lines of short headings so no heading ends
+   * on a single orphaned word. Browsers that do not support it simply wrap
+   * the old way, so this is a pure progressive enhancement.
+   */
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+
+  /*
+   * OFFSCREEN SECTION COST (web-design-guidelines)
+   *
+   * `.cv-auto` lets the browser skip layout and paint for sections below the
+   * fold until they scroll into view. Applied to the heavy sections of the
+   * home page only; the hero and the proof card stay eager because they are
+   * the first screen. Real render work saved, nothing hidden from crawlers
+   * (the DOM and its text are all present, only layout is deferred).
+   */
+  .cv-auto {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 1200px;
   }
 
   /*
@@ -95,6 +139,22 @@
    */
   :root {
     --quote-bar-height: 4rem;
+  }
+
+  /*
+   * The reveal is a fade plus a tiny rise, never a display toggle, so the bar
+   * never pops or shifts the page. `quote-bar-hidden` is added by the inline
+   * script in BaseLayout on tall pages and swapped off at the first scroll;
+   * without JavaScript the bar is simply always visible.
+   */
+  #quote-bar {
+    transition: opacity 180ms ease, transform 180ms ease;
+  }
+
+  .quote-bar-hidden {
+    opacity: 0;
+    transform: translateY(0.5rem);
+    pointer-events: none;
   }
 
   @media (max-width: 63.9375rem) {

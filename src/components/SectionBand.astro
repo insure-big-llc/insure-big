@@ -15,7 +15,7 @@ const { title, kicker = null, art = null } = Astro.props;
     art && (
       <div
         aria-hidden="true"
-        class="absolute inset-0 bg-cover bg-[right_center] opacity-90"
+        class="absolute inset-0 hidden bg-cover bg-[right_center] opacity-90 lg:block"
         style={`background-image:url('${art}')`}
       />
     )
@@ -24,7 +24,7 @@ const { title, kicker = null, art = null } = Astro.props;
     art && (
       <div
         aria-hidden="true"
-        class="absolute inset-0 bg-gradient-to-r from-[var(--color-ink)] via-[var(--color-ink)]/85 to-transparent"
+        class="absolute inset-0 hidden bg-gradient-to-r from-[var(--color-ink)] via-[var(--color-ink)]/85 to-transparent lg:block"
       />
     )
   }

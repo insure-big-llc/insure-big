@@ -49,12 +49,6 @@ function specialistPath(slug) {
   return svc ? servicePath(svc) : `/specialty/${slug}`;
 }
 
-const ATTRIBUTION_LABEL = {
-  agency: 'Placed under our own appointment',
-  'co-branded': 'Co-branded with Ballentine Insurance Group',
-  none: 'Third-party programme',
-  competitor: 'Arrangement not confirmed',
-};
 ---
 
 <BaseLayout
@@ -81,18 +75,20 @@ const ATTRIBUTION_LABEL = {
     </header>
 
     <section class="mt-12">
-      <h2 class="text-2xl">Programmes we place</h2>
+      <h2 class="text-2xl">Programs</h2>
 
       <ul class="mt-8 grid gap-6 md:grid-cols-2">
         {
           live.map((p) => (
             <li class="rounded-xl border border-neutral-200 p-6">
-              <p class="text-xs font-semibold uppercase tracking-wide text-[var(--color-brand-700)]">
-                {ATTRIBUTION_LABEL[p.attribution] ?? 'Partner programme'}
-              </p>
-              <h3 class="mt-2 text-lg">{p.product}</h3>
+              <h3 class="text-lg">{p.product}</h3>
               {p.programName && p.programName !== p.product && (
                 <p class="mt-1 text-sm text-[var(--color-ink-muted)]">{p.programName}</p>
+              )}
+              {p.highlight && (
+                <p class="mt-3 text-sm font-semibold text-[var(--color-brand-700)]">
+                  {p.highlight}
+                </p>
               )}
 
               <p class="mt-3 text-sm leading-relaxed text-[var(--color-ink-soft)]">{p.disclosure}</p>

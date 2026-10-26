@@ -61,18 +61,18 @@ export function serviceSchema({ name, description, path }) {
  * ⚠️ Staff reviews are excluded upstream: `CUSTOMER_REVIEWS` only ever contains
  * genuine customer reviews. Google's policy prohibits marking up anything else.
  */
-function reviewNode(review) {
+function reviewNode(review, itemReviewedId = ORG_ID) {
   const node = {
     '@type': 'Review',
     author: { '@type': 'Person', name: review.author },
     reviewRating: {
       '@type': 'Rating',
-      ratingValue: review.rating,
+      ratingValue: review.rating ?? 5,
       bestRating: 5,
       worstRating: 1,
     },
     reviewBody: review.text,
-    itemReviewed: { '@id': ORG_ID },
+    itemReviewed: { '@id': itemReviewedId },
   };
   if (review.date) node.datePublished = review.date;
   return node;
@@ -96,6 +96,27 @@ export function reviewsSchema() {
       ratingValue: GOOGLE_REVIEWS.rating,
       reviewCount: GOOGLE_REVIEWS.count,
       bestRating: GOOGLE_REVIEWS.bestRating,
+      worstRating: 1,
+    },
+  };
+}
+
+/**
+ * Review + AggregateRating for one office's Google Business Profile. Merges by
+ * @id into that office's LocalBusiness node, so the reviews and the aggregate
+ * are attributed to the right office rather than the organization.
+ */
+export function locationReviewsSchema(locationId, reviews, aggregate) {
+  const id = `${SITE.url}/#location-${locationId}`;
+  return {
+    '@type': 'LocalBusiness',
+    '@id': id,
+    review: reviews.map((r) => reviewNode(r, id)),
+    aggregateRating: {
+      '@type': 'AggregateRating',
+      ratingValue: aggregate.rating,
+      reviewCount: aggregate.count,
+      bestRating: 5,
       worstRating: 1,
     },
   };

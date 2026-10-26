@@ -8,7 +8,9 @@
 export const MEASURE_PAGES = [
   { name: 'home', path: '/' },
   { name: 'service-home-insurance', path: '/personal-insurance/home' },
-  { name: 'reviews', path: '/reviews' },
+  // The /reviews page was removed by the client (2026-10-26); a location page
+  // replaces it in the set so the map embeds stay under measurement.
+  { name: 'lees-summit', path: '/lees-summit' },
   { name: 'hub-business', path: '/business-insurance' },
   // The pages the design pass restyled (spec 0002, task 7): previously untouched.
   { name: 'about', path: '/about' },

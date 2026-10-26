@@ -36,6 +36,8 @@ export const PARTNERS = {
     agentOfRecord: true,
     returnPath: 'partner-notifies-agent',
     disclosure: 'Device protection is administered by Likewize on behalf of Farmers.',
+    /** Bret's highlight for the device protection page (2026-10-25). */
+    highlight: '1 device for $18/month, or all home appliances and 4 phones for $35/month.',
     shipsLink: true,
   },
 
@@ -50,6 +52,7 @@ export const PARTNERS = {
     agentOfRecord: true,
     returnPath: 'partner-notifies-agent',
     disclosure: 'Surety bonds are placed through Propeller under the Farmers appointment.',
+    highlight: 'Access to multiple established and highly rated surety companies, including CNA Surety.',
     shipsLink: true,
   },
 
@@ -64,6 +67,7 @@ export const PARTNERS = {
     agentOfRecord: true,
     returnPath: 'partner-notifies-agent',
     disclosure: 'Wind and hail coverage is placed through Sola Insurance.',
+    highlight: 'Wind and hail coverage with a dedicated quote path, attributed to our agency.',
     /**
      * The URL carries Bret's personal Farmers email, percent-encoded. The client
      * has chosen to keep it. scripts/verify-seo.mjs lists this as a KNOWN
@@ -77,7 +81,7 @@ export const PARTNERS = {
   'premium-lock': {
     product: 'Premium Lock',
     partner: 'Eventual Climate',
-    programName: 'Premium Lock — 3-year home insurance price guarantee',
+    programName: 'Premium Lock — 3-year price guarantee for home and auto',
     url: 'https://eventualclimate.com/request-quote/4ddde0ee-b28b-4015-918c-6d4b853d00d6',
     attribution: 'co-branded',
     evidence:
@@ -86,6 +90,7 @@ export const PARTNERS = {
     returnPath: 'partner-notifies-agent',
     disclosure:
       'Premium Lock is administered by Eventual Climate. Ballentine Insurance Group remains your agency.',
+    highlight: 'A 3-year price guarantee on home insurance — and now auto too.',
     shipsLink: true,
   },
 
@@ -101,6 +106,7 @@ export const PARTNERS = {
     returnPath: 'partner-notifies-agent',
     disclosure:
       'Estate planning is provided by FastWill. Document preparation is not legal advice from Ballentine Insurance Group.',
+    highlight: 'Create your Will, Trust, Power of Attorney, and Advance Healthcare Directive online.',
     shipsLink: true,
     /**
      * ⚠️ LIVE MIS-ROUTE TO FIX ON THE CURRENT SITE: the Surety Bonds "LEARN MORE"
@@ -123,6 +129,7 @@ export const PARTNERS = {
     returnPath: null,
     disclosure:
       'Pet insurance is underwritten and administered by Pets Best. Completing their application does not make Ballentine Insurance Group your agent of record.',
+    highlight: 'Pets Best can cover up to 90% of eligible vet bills.',
     shipsLink: true,
     /**
      * Because the destination carries no agency identity, the on-site form is the
@@ -144,6 +151,7 @@ export const PARTNERS = {
     returnPath: null,
     disclosure:
       'Travel insurance is compared and sold through TravelInsurance.com. Completing their application does not make Ballentine Insurance Group your agent of record.',
+    highlight: 'Compare travel insurance plans from multiple providers and buy online.',
     shipsLink: true,
     formMustLead: true,
   },
@@ -165,6 +173,7 @@ export const PARTNERS = {
     returnPath: null,
     disclosure:
       'Medicare plans are offered through Chris Bell Insurance, a licensed Medicare specialist. Call us and we will guide you through your options.',
+    highlight: 'Medicare information, enrollment, and alternative plan options.',
     shipsLink: true,
     formMustLead: true,
     pendingConfirmation: false,

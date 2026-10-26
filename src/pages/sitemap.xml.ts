@@ -40,8 +40,8 @@ function allPaths(): string[] {
   paths.push('/get-a-quote');
   paths.push('/contact');
   paths.push('/about');
-  paths.push('/reviews');
   paths.push('/coverage-partners');
+  paths.push('/news/premium-lock-for-auto');
   for (const loc of LOCATIONS) paths.push(`/${loc.slug}`);
   paths.push('/privacy-policy');
   paths.push('/terms-%26-conditions');

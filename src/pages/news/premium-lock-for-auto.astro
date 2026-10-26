@@ -1,0 +1,135 @@
+---
+/**
+ * /news/premium-lock-for-auto
+ *
+ * The first post of the small content engine. Written ONLY from the facts the
+ * client supplied: the Eventual Climate launch email (2026-10-21) and the
+ * Eventual Climate blog post "Premium Lock for Auto is Here!" (2026-10-21).
+ * No invented numbers, no copied partner prose.
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import FaqBlock from '../../components/FaqBlock.astro';
+import { SITE } from '../../config/site.js';
+import { webPageSchema, breadcrumbSchema, faqSchema } from '../../lib/schema.js';
+
+const path = '/news/premium-lock-for-auto';
+const trail = [
+  { name: 'Home', path: '/' },
+  { name: 'Premium Lock', path: '/specialty/premium-lock' },
+  { name: 'Premium Lock for Auto', path },
+];
+
+const articleFaq = [
+  {
+    q: 'Is Premium Lock for Auto available in Missouri and Kansas?',
+    a: 'Yes. It is available in all 50 states with any admitted lines carrier, on 6- or 12-month policies. We check eligibility against your actual policy before recommending it.',
+  },
+  {
+    q: 'Does this replace my normal renewal review?',
+    a: 'No. We still review your policies every year, because your life changes even when the price is locked. What Premium Lock addresses is the carrier-initiated increase at renewal, so the number you budgeted is the number you get.',
+  },
+];
+
+const schema = [
+  webPageSchema({
+    path,
+    title: 'Premium Lock for Auto is here',
+    description:
+      'Premium Lock for Auto extends 3 years of pricing predictability from homes to cars, available in all 50 states with any admitted lines carrier.',
+  }),
+  breadcrumbSchema(trail),
+  faqSchema({ faqs: articleFaq, path }),
+  {
+    '@type': 'Article',
+    headline: 'Premium Lock for Auto is here',
+    datePublished: '2026-10-21',
+    author: { '@id': `${SITE.url}/#organization` },
+    publisher: { '@id': `${SITE.url}/#organization` },
+    inLanguage: 'en-US',
+  },
+];
+---
+
+<BaseLayout
+  title="Premium Lock for Auto | 3-Year Price Predictability | BIG"
+  description="Premium Lock for Auto extends 3 years of pricing predictability from homes to cars, available in all 50 states on 6 or 12 month policies."
+  path={path}
+  schema={schema}
+>
+  <Breadcrumbs trail={trail} />
+
+  <article class="container-page py-12">
+    <header class="max-w-3xl">
+      <p class="text-sm font-semibold uppercase tracking-widest text-[var(--color-brand-700)]">
+        October 21, 2026 · Two minute read
+      </p>
+      <h1 class="mt-3 text-3xl leading-tight sm:text-4xl">Premium Lock for Auto is here</h1>
+      <p class="mt-3 text-sm text-[var(--color-ink-muted)]">
+        By Ballentine Insurance Group, a Farmers agency serving Lee's Summit and
+        the Kansas City Northland.
+      </p>
+      <p class="mt-5 text-lg leading-relaxed text-[var(--color-ink-soft)]">
+        Eventual Climate launched Premium Lock for Auto on October 21, 2026,
+        extending the multi-year pricing guarantee from homes to cars. Here is
+        what that means for Kansas City drivers.
+      </p>
+    </header>
+
+    <div class="prose-page mt-10 max-w-3xl">
+      <h2>What changed</h2>
+      <p>
+        Premium Lock started with homeowners, and the people who used it asked
+        for the same predictability on the other big recurring bill: the car.
+        The answer arrived this week. Premium Lock for Auto is live, available
+        in all 50 states with any admitted lines carrier, on 6- or 12-month
+        policies, creating 3 years of pricing predictability.
+      </p>
+
+      <h2>Why it matters now</h2>
+      <p>
+        The average American already pays more to insure their car than their
+        home, which makes auto an overlooked but significant financial stress.
+        Home insurance is often hidden inside the mortgage escrow payment;
+        auto is the visible, frequent bill that gets re-shopped and serviced
+        every term. That is exactly where renewal surprises hurt most.
+      </p>
+      <p>
+        As Dylan DiMarchi, Eventual&rsquo;s CEO, put it at launch: &ldquo;The
+        multi-year nature of Premium Lock handily resolves most auto retention
+        problems for our distribution partners.&rdquo; For you, that means
+        price-sensitive drivers get clarity on their future expenses instead
+        of a surprise at renewal.
+      </p>
+
+      <h2>How it works</h2>
+      <p>
+        Quotes come through the Premium Lock portal. You drag and drop a
+        declarations page into the portal&rsquo;s AI chat window, and the
+        quote builds itself with no manual entry. Before anything is quoted,
+        we check eligibility against your actual policy and confirm the exact
+        terms in writing, because a rate promise with unstated exceptions is
+        worse than no promise at all.
+      </p>
+
+      <h2>What Premium Lock is not</h2>
+      <p>
+        No product locks a rate forever. Taxes, fees, and changes you make to
+        the policy can still move the premium. What Premium Lock addresses is
+        the carrier-initiated increase at renewal, so the number you budgeted
+        is the number you get.
+      </p>
+
+      <h2>Questions we have been asked</h2>
+    </div>
+
+    <div class="mt-6 max-w-3xl">
+      <FaqBlock faqs={articleFaq} />
+    </div>
+
+    <div class="mt-12 flex flex-wrap gap-2">
+      <a href="/specialty/premium-lock" class="btn btn-primary">How Premium Lock works</a>
+      <a href="/get-a-quote?coverage=auto" class="btn btn-secondary">Start an auto quote</a>
+    </div>
+  </article>
+</BaseLayout>

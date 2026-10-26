@@ -257,27 +257,29 @@ The build verifies STRUCTURE. Scores need a browser:
 
 ```bash
 npm run build
-npm run preview          # note the port it prints (4321, or 4322 if busy)
-npm run measure          # Lighthouse ×4 pages against the preview
+npm run measure          # self contained: serves dist/ itself, then scores it
 ```
 
-`scripts/measure.mjs` uses the system Chrome (no browser download) and writes,
-all under `site/reports/` (gitignored):
+`scripts/measure.mjs` is self contained: it serves `dist/` from its own local
+server (gzip on, mirroring the production host) and launches the system Chrome
+(no browser download). It writes, all under `site/reports/` (gitignored):
 
 - `lighthouse-<page>.json` per page, the full report
 - `summary.md` with one row per page: the four scores, LCP, CLS, TBT, and a
   status. A score below the Lighthouse threshold of 90 is marked as a warning,
   never as a run failure. The summary writes even when pages fail.
-- `screenshots/<page>-<width>.png`, twelve captures (4 pages x 360, 768, 1440
-  pixels wide), plus `screenshots/index.html`, a contact sheet for judging the
+- `screenshots/<page>-<width>.png`, captures per page at 360, 768, and 1440
+  pixels wide, plus `screenshots/index.html`, a contact sheet for judging the
   design.
 
 The page list and widths live once in `scripts/pages.mjs`, shared by both
 drivers, so they cannot drift.
 
-If the preview server is not serving, the run says "Preview not serving" and
-names the fix. If Chrome cannot launch, it says "Chrome could not launch" and
-names the fix. The two are different problems with different messages.
+The run applies real (devtools) 4G throttling rather than Lighthouse 13's
+simulator, which inflated LCP uniformly; the conditions are identical, only
+the way they are applied differs. Because the throttle multiplies real CPU by
+4, an idle machine matters: background sync or updates land directly in the
+scores. Compare runs against the same machine state.
 
 Set `MEASURE_URL` to measure against any other origin, for example a Netlify
 preview URL.

@@ -14,9 +14,10 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Breadcrumbs from '../components/Breadcrumbs.astro';
 import ServiceForm from '../components/ServiceForm.astro';
-import { SITE, LOCATIONS, CONTACT, absoluteUrl } from '../config/site.js';
+import { SITE, LOCATIONS, CONTACT, absoluteUrl, mapEmbedUrl } from '../config/site.js';
 import { HUBS, SERVICES } from '../config/services.js';
-import { breadcrumbSchema, webPageSchema } from '../lib/schema.js';
+import { LOCATION_PROFILES, CUSTOMER_REVIEWS } from '../config/reviews.js';
+import { breadcrumbSchema, webPageSchema, locationReviewsSchema } from '../lib/schema.js';
 
 export function getStaticPaths() {
   return LOCATIONS.map((loc) => ({ params: { location: loc.slug }, props: { loc } }));
@@ -62,6 +63,17 @@ const LOCAL = {
 
 const copy = LOCAL[loc.id];
 
+/**
+ * This office's own Google profile: the Lee's Summit office carries its
+ * Ballentine Insurance Group profile (5.0 from 83), the Northland office the
+ * Bret Ballentine profile (5.0 from 54). The Northland reviews are the
+ * agency-wide CUSTOMER_REVIEWS set, which came from that profile.
+ */
+const profile = LOCATION_PROFILES[loc.id];
+const officeReviews = (loc.id === 'lees-summit' ? profile.reviews : CUSTOMER_REVIEWS)
+  .slice()
+  .sort((a, b) => b.text.length - a.text.length);
+
 const schema = [
   webPageSchema({
     path,
@@ -70,6 +82,10 @@ const schema = [
   }),
   breadcrumbSchema(trail),
 ];
+
+if (profile) {
+  schema.push(locationReviewsSchema(loc.id, officeReviews, profile));
+}
 
 const isPrimary = loc.isPrimary;
 ---
@@ -116,6 +132,25 @@ const isPrimary = loc.isPrimary;
               <dd>{CONTACT.hours.display}</dd>
             </div>
           </dl>
+          <div class="mt-5 flex flex-wrap gap-2">
+            <a
+              href={loc.mapLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="btn btn-secondary"
+            >
+              Get directions<span class="sr-only"> (opens Google Maps)</span>
+            </a>
+          </div>
+          <div class="mt-5 overflow-hidden rounded-lg border border-neutral-200">
+            <iframe
+              src={mapEmbedUrl(loc)}
+              title={`Map of ${SITE.name}, ${loc.name}`}
+              loading="lazy"
+              class="h-64 w-full border-0"
+              referrerpolicy="no-referrer-when-downgrade"
+            ></iframe>
+          </div>
           <p class="mt-4 text-sm text-[var(--color-ink-muted)]">
             Walk-ins welcome during business hours, or
             <a href="/contact" class="underline">get in touch first</a> so we can have
@@ -153,6 +188,58 @@ const isPrimary = loc.isPrimary;
               ))
             }
           </ul>
+        </section>
+
+        <section class="mt-10">
+          <h2 class="text-xl">Reviews from this office</h2>
+          <div class="mt-4 rounded-xl bg-[var(--color-surface-alt)] p-6">
+            <p class="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm">
+              <span class="font-[var(--font-heading)] text-2xl font-bold">
+                {profile.rating.toFixed(1)}
+              </span>
+              <span aria-hidden="true" class="text-[var(--color-brand-600)]">★★★★★</span>
+              <span class="text-[var(--color-ink-muted)]">
+                {profile.count} Google reviews on {profile.profileName}
+              </span>
+            </p>
+            <p class="mt-2 text-sm">
+              <a
+                href={loc.mapLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="font-semibold underline"
+              >
+                Read them on Google<span class="sr-only"> (opens Google Maps)</span>
+              </a>
+            </p>
+            <ul class="mt-5 grid gap-4 md:grid-cols-2">
+              {
+                officeReviews.map((r) => (
+                  <li class="rounded-lg border-l-2 border-[var(--color-brand-500)] bg-white p-4">
+                    <p aria-hidden="true" class="text-xs text-[var(--color-brand-600)]">
+                      ★★★★★
+                    </p>
+                    <p class="mt-1 text-sm leading-relaxed text-[var(--color-ink-soft)]">
+                      &ldquo;{r.text}&rdquo;
+                    </p>
+                    <p class="mt-2 text-xs font-semibold">
+                      {r.author}
+                      <span class="font-normal text-[var(--color-ink-muted)]">
+                        {' '}
+                        — {r.dateText}
+                      </span>
+                    </p>
+                    {r.response && (
+                      <p class="mt-2 rounded bg-[var(--color-surface-alt)] p-2 text-xs text-[var(--color-ink-soft)]">
+                        <span class="font-semibold">Response from Ballentine Insurance Group:</span>{' '}
+                        {r.response}
+                      </p>
+                    )}
+                  </li>
+                ))
+              }
+            </ul>
+          </div>
         </section>
       </div>
 

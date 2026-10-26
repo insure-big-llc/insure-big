@@ -101,6 +101,14 @@ const schema = [
         </div>
 
         {
+          service.newsLink && (
+            <p class="mt-6 rounded-lg bg-[var(--color-surface-alt)] px-4 py-3 text-sm font-semibold">
+              <a href={service.newsLink} class="underline">{service.newsLabel}</a>
+            </p>
+          )
+        }
+
+        {
           /* ORIGINAL explanatory content (W3) — written in our voice, with the
              local detail a partner site cannot have. Never copied from the
              partner: their copy is their copyright, and duplicating it would be
@@ -150,10 +158,9 @@ const schema = [
 
             <p class="mt-2 leading-relaxed text-[var(--color-ink-soft)]">{partner.disclosure}</p>
 
-            {partner.agentOfRecord === true && (
-              <p class="mt-3 leading-relaxed text-[var(--color-ink-soft)]">
-                We remain your agency — {partner.partner} provides the platform under our
-                appointment.
+            {partner.highlight && (
+              <p class="mt-3 text-sm font-semibold text-[var(--color-brand-700)]">
+                {partner.highlight}
               </p>
             )}
 

@@ -36,7 +36,7 @@ const INDEXED_URLS = [
 ];
 
 /** Pages added by the rebuild. Additive only — never a substitute for the above. */
-const NEW_PAGES = ['/reviews', '/coverage-partners'];
+const NEW_PAGES = ['/coverage-partners'];
 
 /**
  * The partner destinations the live insure-big.com site links to, supplied by
@@ -299,32 +299,35 @@ for (const file of htmlFiles) {
 }
 
 // ── 11. Reviews ───────────────────────────────────────────────────────────────
-const reviewsPage = join(DIST, 'reviews.html');
-if (!existsSync(reviewsPage)) {
-  fail('dist/reviews.html missing');
+// The /reviews page was removed by the client (2026-10-26); the home page keeps
+// the organization-level review markup and each location page keeps its own
+// office's reviews and aggregate. The same guards run against those pages.
+const homePage = join(DIST, 'index.html');
+if (!existsSync(homePage)) {
+  fail('dist/index.html missing');
 } else {
-  const html = readFileSync(reviewsPage, 'utf8');
+  const html = readFileSync(homePage, 'utf8');
   const ld = html.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/);
   if (!ld) {
-    fail('/reviews: no JSON-LD');
+    fail('/: no JSON-LD');
   } else {
     let parsed;
     try {
       parsed = JSON.parse(ld[1]);
     } catch (e) {
-      fail(`/reviews: JSON-LD does not parse — ${e.message}`);
+      fail(`/: JSON-LD does not parse — ${e.message}`);
     }
     if (parsed) {
       const org = (parsed['@graph'] ?? []).find((n) => n['@id'] === `${SITE}/#organization`);
       if (!org) {
-        fail('/reviews: organization node missing');
+        fail('/: organization node missing');
       } else {
         const reviews = org.review ?? [];
-        if (reviews.length === 0) fail('/reviews: no Review nodes');
+        if (reviews.length === 0) fail('/: no Review nodes');
         if (!org.aggregateRating) {
-          fail('/reviews: no aggregateRating');
+          fail('/: no aggregateRating');
         } else if (org.aggregateRating.reviewCount < 10) {
-          warn(`/reviews: aggregateRating.reviewCount is ${org.aggregateRating.reviewCount}`);
+          warn(`/: aggregateRating.reviewCount is ${org.aggregateRating.reviewCount}`);
         }
         // ⚠️ A staff member's rating-only submission must NEVER be marked up as a
         // customer review. Rendered as a testimonial it would be misleading, and
@@ -333,19 +336,15 @@ if (!existsSync(reviewsPage)) {
         for (const r of reviews) {
           const name = r.author?.name ?? '';
           if (staffNames.includes(name)) {
-            fail(`/reviews: STAFF review "${name}" is present in Review markup — must be excluded`);
+            fail(`/: STAFF review "${name}" is present in Review markup — must be excluded`);
           }
           // datePublished must only exist where a real calendar date is known.
           if ('datePublished' in r && !/^\d{4}-\d{2}-\d{2}$/.test(r.datePublished)) {
-            fail(`/reviews: malformed datePublished "${r.datePublished}"`);
+            fail(`/: malformed datePublished "${r.datePublished}"`);
           }
         }
-        // Aggregate must match what the page actually displays.
-        if (org.aggregateRating && !html.includes(String(org.aggregateRating.reviewCount))) {
-          warn('/reviews: aggregate review count not visible on the page');
-        }
         notes.push(
-          `/reviews: ${reviews.length} Review nodes, aggregate ${org.aggregateRating?.ratingValue}/${org.aggregateRating?.reviewCount}, 0 staff reviews`,
+          `/: ${reviews.length} Review nodes, aggregate ${org.aggregateRating?.ratingValue}/${org.aggregateRating?.reviewCount}, 0 staff reviews`,
         );
       }
     }
@@ -353,8 +352,49 @@ if (!existsSync(reviewsPage)) {
 
   // Reviews must be reproduced in full, not truncated with an ellipsis.
   if (/&hellip;|\.\.\.<\/blockquote>/.test(html)) {
-    fail('/reviews: a review appears to be truncated — reviews must be reproduced in full');
+    fail('/: a review appears to be truncated — reviews must be reproduced in full');
   }
+}
+
+// Each office page carries its own reviews and aggregate, attributed to the
+// right LocalBusiness node.
+for (const [slug, expectedCount] of [['lees-summit', 83], ['northland', 54]]) {
+  const page = join(DIST, `${slug}.html`);
+  if (!existsSync(page)) {
+    fail(`dist/${slug}.html missing`);
+    continue;
+  }
+  const html = readFileSync(page, 'utf8');
+  const ld = html.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/);
+  if (!ld) {
+    fail(`/${slug}: no JSON-LD`);
+    continue;
+  }
+  let parsed;
+  try {
+    parsed = JSON.parse(ld[1]);
+  } catch (e) {
+    fail(`/${slug}: JSON-LD does not parse — ${e.message}`);
+    continue;
+  }
+  const officeId = `${SITE}/#location-${slug}`;
+  const org = (parsed['@graph'] ?? []).find((n) => n['@id'] === `${SITE}/#organization`);
+  const node = (org?.location ?? []).find((n) => n['@id'] === officeId);
+  if (!node) {
+    fail(`/${slug}: office node ${officeId} missing`);
+    continue;
+  }
+  const reviews = node.review ?? [];
+  if (reviews.length === 0) fail(`/${slug}: no Review nodes on the office node`);
+  if (node.aggregateRating?.reviewCount !== expectedCount) {
+    fail(`/${slug}: office aggregate reviewCount is ${node.aggregateRating?.reviewCount}, expected ${expectedCount}`);
+  }
+  for (const r of reviews) {
+    if (r.itemReviewed?.['@id'] !== officeId) {
+      fail(`/${slug}: a Review node does not itemReviewed the office node`);
+    }
+  }
+  notes.push(`/${slug}: ${reviews.length} Review nodes, aggregate ${node.aggregateRating?.ratingValue}/${node.aggregateRating?.reviewCount}`);
 }
 
 // ── 12. Partner redirects generated, all eight live URLs shipped ──────────────

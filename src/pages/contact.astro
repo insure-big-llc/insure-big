@@ -9,7 +9,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import SectionBand from '../components/SectionBand.astro';
 import Breadcrumbs from '../components/Breadcrumbs.astro';
 import ServiceForm from '../components/ServiceForm.astro';
-import { SITE, LOCATIONS, CONTACT } from '../config/site.js';
+import { SITE, LOCATIONS, CONTACT, mapEmbedUrl } from '../config/site.js';
 import { contactPageSchema, breadcrumbSchema } from '../lib/schema.js';
 
 const path = '/contact';
@@ -86,11 +86,28 @@ const schema = [
               <a href={CONTACT.phoneHref} class="font-semibold underline">{CONTACT.phone}</a>
             </p>
             <p class="mt-1 text-sm text-[var(--color-ink-soft)]">{CONTACT.hours.display}</p>
-            <p class="mt-4 text-sm">
-              <a href={`/${loc.slug}`} class="font-semibold underline">
+            <div class="mt-4 flex flex-wrap gap-2">
+              <a
+                href={loc.mapLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="btn btn-secondary"
+              >
+                Get directions<span class="sr-only"> (opens Google Maps)</span>
+              </a>
+              <a href={`/${loc.slug}`} class="btn btn-secondary">
                 More about this office
               </a>
-            </p>
+            </div>
+            <div class="mt-4 overflow-hidden rounded-lg border border-neutral-200">
+              <iframe
+                src={mapEmbedUrl(loc)}
+                title={`Map of ${SITE.name}, ${loc.name}`}
+                loading="lazy"
+                class="h-48 w-full border-0"
+                referrerpolicy="no-referrer-when-downgrade"
+              ></iframe>
+            </div>
           </section>
         ))
       }

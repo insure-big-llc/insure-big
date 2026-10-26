@@ -74,8 +74,11 @@ export const LOCATIONS = [
     /** Verbatim string used in schema and the footer — must not drift. */
     full: "16 SE 3rd Street, Lee's Summit, MO 64063",
     isPrimary: true,
-    /** Geo coordinates are refined in Phase 4 against the Google Business Profile. */
-    geo: { latitude: 38.9108, longitude: -94.3774 },
+    /** Exact pin from the Google Business Profile (client supplied the map link). */
+    geo: { latitude: 38.912387, longitude: -94.3770295 },
+    /** The client's Google Maps place URL for this office. */
+    mapLink:
+      'https://www.google.com/maps/place/Farmers+Insurance+-+Ballentine+Insurance+Group/@38.9123942,-94.3795651,17z/data=!4m15!1m8!3m7!1s0x87c11f8cca9fc2bf:0xd195e5f4af048407!2s16+SE+3rd+St,+Lee\'s+Summit,+MO+64063,+USA!3b1!8m2!3d38.9123901!4d-94.3769902!16s%2Fg%2F11bw412bd4!3m5!1s0x87c11fac5f80e67b:0xa56db49e539ebea3!8m2!3d38.912387!4d-94.3770295!16s%2Fg%2F11f6_prp2n',
   },
   {
     id: 'northland',
@@ -87,9 +90,22 @@ export const LOCATIONS = [
     street: '200 NE 91st Street',
     full: '200 NE 91st Street, Kansas City, MO 64155',
     isPrimary: false,
-    geo: { latitude: 39.2022, longitude: -94.5775 },
+    /** Exact pin from the Google Business Profile (client supplied the map link). */
+    geo: { latitude: 39.259383, longitude: -94.577399 },
+    mapLink:
+      'https://www.google.com/maps/place/Farmers+Insurance+-+Bret+Ballentine/@39.2593871,-94.5799739,17z/data=!4m15!1m8!3m7!1s0x87c0583bd2db3ecf:0x4338d6e8c29e1566!2s200+NE+91+St,+Kansas+City,+MO+64155,+USA!3b1!8m2!3d39.259383!4d-94.577399!16s%2Fg%2F11cshtr74f!3m5!1s0x87c0f71054d5f9c9:0xef1d75cb02fbe777!8m2!3d39.259383!4d-94.577399!16s%2Fg%2F11bw5m8yn2',
   },
 ];
+
+/**
+ * Keyless Google Maps embed for an office, from its exact pin and name. The
+ * embed loads Google's script only when the visitor's browser reaches the
+ * iframe, so the site's own page weight does not grow.
+ */
+export function mapEmbedUrl(loc) {
+  const q = `${loc.geo.latitude},${loc.geo.longitude}(${encodeURIComponent(loc.name)})`;
+  return `https://maps.google.com/maps?q=${q}&z=16&output=embed`;
+}
 
 /** Shared by both offices — confirmed by the client. */
 export const CONTACT = {

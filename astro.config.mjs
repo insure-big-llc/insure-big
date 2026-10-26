@@ -16,6 +16,12 @@ import tailwindcss from '@tailwindcss/vite';
 export default defineConfig({
   site: 'https://insure-big.com',
   trailingSlash: 'never',
+  // The dev toolbar is helpful while developing but it is injected into
+  // `astro preview` pages too, where it pollutes Lighthouse runs (it adds a
+  // "Learn more" link and its own resources to every measured page). The
+  // production build never carries it; this switch keeps preview clean so
+  // measurements stay honest.
+  devToolbar: { enabled: false },
   build: {
     // Emit /personal-insurance/auto.html rather than /personal-insurance/auto/index.html.
     // Cloudflare Pages and Netlify both serve that as /personal-insurance/auto with no

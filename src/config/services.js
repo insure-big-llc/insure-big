@@ -85,7 +85,7 @@ export const HUBS = [  {
     h1: 'Life Insurance and Financial Protection',
     metaTitle: 'Life, Medicare & Estate Planning | Kansas City | BIG',
     metaDescription:
-      'Life insurance, Medicare solutions and estate planning for Kansas City metro families. Mortgage protection, key man and final expense cover.',
+      'Life insurance, Medicare solutions and estate planning for Kansas City metro families. Call (816) 868-1787 for a review.',
     blurb:
       'Life, Medicare and estate planning — protecting the people who depend on you, not just the things you own.',
     form: 'personal',
@@ -345,7 +345,7 @@ export const SERVICES = [
     hub: 'personal-insurance',
     name: 'Landlord & Rental Property Insurance',
     h1: 'Landlord & Rental Property Insurance',
-    metaTitle: 'Landlord & Rental Property Insurance | KC | BIG',
+    metaTitle: 'Landlord & Rental Property Insurance | Kansas City | BIG',
     metaDescription:
       'Insurance for rental properties and landlords. Dwelling, loss of rents, liability and premises cover across the Kansas City metro.',
     blurb: 'For property you rent out — including the rent you lose when it becomes unlivable.',
@@ -379,7 +379,7 @@ export const SERVICES = [
     hub: 'personal-insurance',
     name: 'Motorcycle, RV & Boat Insurance',
     h1: 'Motorcycle, RV & Boat Insurance',
-    metaTitle: 'Motorcycle, RV & Boat Insurance | KC Metro | BIG',
+    metaTitle: 'Motorcycle, RV & Boat Insurance | Kansas City Metro | BIG',
     metaDescription:
       'Motorcycle, RV, motorhome and boat insurance for Kansas City metro owners. Agreed value, roadside and lay-up options available.',
     blurb:
@@ -414,7 +414,7 @@ export const SERVICES = [
     hub: 'personal-insurance',
     name: 'Umbrella Liability Insurance',
     h1: 'Umbrella Liability Insurance',
-    metaTitle: 'Personal Umbrella Liability Insurance | KC | BIG',
+    metaTitle: 'Personal Umbrella Liability Insurance | Kansas City | BIG',
     metaDescription:
       'Personal umbrella liability coverage above your home and auto limits, protecting your assets when a serious claim exceeds them.',
     blurb:
@@ -483,7 +483,7 @@ export const SERVICES = [
     hub: 'personal-insurance',
     name: 'Valuable Articles Coverage',
     h1: 'Valuable Articles Coverage',
-    metaTitle: 'Valuable Articles & Jewelry Insurance | KC | BIG',
+    metaTitle: 'Valuable Articles & Jewelry Insurance | Kansas City | BIG',
     metaDescription:
       'Scheduled coverage for jewelry, watches, art, collectibles and instruments. Agreed value, broader perils, no deductible.',
     blurb:
@@ -695,7 +695,7 @@ export const SERVICES = [
     hub: 'business-insurance',
     name: 'Professional Liability & E&O',
     h1: 'Professional Liability & Errors and Omissions',
-    metaTitle: 'Professional Liability & E&O Insurance | KC | BIG',
+    metaTitle: 'Professional Liability & E&O | Kansas City | BIG',
     metaDescription:
       'Professional liability and errors and omissions insurance for Kansas City professionals. Defence costs and claims from advice.',
     blurb:
@@ -730,7 +730,7 @@ export const SERVICES = [
     hub: 'business-insurance',
     name: 'Cyber Liability, EPLI & D&O',
     h1: 'Cyber Liability, Employment Practices & Directors and Officers',
-    metaTitle: 'Cyber Liability, EPLI & D&O Insurance | KC | BIG',
+    metaTitle: 'Cyber Liability, EPLI & D&O Insurance | Kansas City | BIG',
     metaDescription:
       'Cyber liability, employment practices liability and directors and officers cover for Kansas City businesses. Three key exposures.',
     blurb:
@@ -797,7 +797,7 @@ export const SERVICES = [
     hub: 'business-insurance',
     name: 'Inland Marine & Equipment Coverage',
     h1: 'Inland Marine & Equipment Coverage',
-    metaTitle: 'Inland Marine & Equipment Insurance | KC | BIG',
+    metaTitle: 'Inland Marine & Equipment Insurance | Kansas City | BIG',
     metaDescription:
       'Inland marine coverage for tools, equipment and goods in transit — property that moves, which a property policy will not follow.',
     blurb:
@@ -866,7 +866,7 @@ export const SERVICES = [
     hub: 'business-insurance',
     name: 'Specialized Industry Programs',
     h1: 'Specialized Industry Programs',
-    metaTitle: 'Specialized Industry Insurance Programs | KC | BIG',
+    metaTitle: 'Specialized Industry Insurance Programs | Kansas City | BIG',
     metaDescription:
       'Insurance programs built for specific Kansas City industries: contractors, restaurants, manufacturers, retail, nonprofits and startups.',
     blurb:
@@ -939,7 +939,7 @@ export const SERVICES = [
     hub: 'life-insurance',
     name: 'Medicare Solutions',
     h1: 'Medicare Solutions',
-    metaTitle: 'Medicare Solutions & Supplement Plans | KC | BIG',
+    metaTitle: 'Medicare Solutions & Supplement Plans | Kansas City | BIG',
     metaDescription:
       'Medicare guidance for Kansas City metro residents. Advantage, Supplement and Part D prescription coverage explained plainly.',
     blurb:
@@ -974,7 +974,7 @@ export const SERVICES = [
     hub: 'life-insurance',
     name: 'Estate Planning',
     h1: 'Estate Planning',
-    metaTitle: 'Estate Planning & Legacy Protection | KC | BIG',
+    metaTitle: 'Estate Planning & Legacy Protection | Kansas City | BIG',
     metaDescription:
       'Estate planning support for Kansas City metro families, making sure the protection you have reaches the people you intend.',
     blurb:
@@ -1011,7 +1011,7 @@ export const SERVICES = [
     hub: 'specialty',
     name: 'Surety Bonds',
     h1: 'Surety Bonds',
-    metaTitle: 'Surety Bonds in Missouri & Kansas | KC | BIG',
+    metaTitle: 'Surety Bonds in Missouri & Kansas | Kansas City | BIG',
     metaDescription:
       'Surety bonds for Kansas City contractors and businesses. Licence, permit, performance, payment and court bonds.',
     blurb:
@@ -1185,23 +1185,30 @@ export const SERVICES = [
     hub: 'specialty',
     name: 'Premium Lock',
     h1: 'Premium Lock',
-    metaTitle: 'Premium Lock — Rate Protection | Kansas City | BIG',
+    metaTitle: 'Premium Lock for Home & Auto | Kansas City | BIG',
     metaDescription:
-      'Premium Lock rate protection for Kansas City metro policyholders, so a renewal increase does not arrive unannounced.',
+      'Premium Lock rate protection for Kansas City metro policyholders, now for home and auto, so a renewal increase does not arrive unannounced.',
     blurb:
-      'Rate protection, so a renewal increase does not arrive unannounced.',
+      'Rate protection for home and auto, so a renewal increase does not arrive unannounced.',
     form: 'personal',
     source: 'site:homepage extras',
     covers: [
       'Protection against unexpected renewal increases',
+      'Premium Lock for auto, new for 2026',
       'Terms and eligibility confirmed in writing before you commit',
       'Reviewed annually alongside your other policies',
     ],
     searchIntent: 'premium lock insurance rate protection',
+    newsLink: '/news/premium-lock-for-auto',
+    newsLabel: 'Read the announcement: Premium Lock for Auto is here',
     faq: [
       {
         q: 'What does Premium Lock actually do?',
         a: 'It is a rate-protection product designed to keep your premium predictable at renewal. The exact terms and eligibility depend on the carrier, and we confirm them in writing before you commit rather than describing them loosely.',
+      },
+      {
+        q: 'Does Premium Lock cover auto?',
+        a: 'Yes. Premium Lock for Auto launched in October 2026: available in all 50 states with any admitted lines carrier, on 6- or 12-month policies, creating 3 years of pricing predictability. The average American already pays more to insure their car than their home, so auto is where the guarantee matters most. Quotes come through the Premium Lock portal.',
       },
       {
         q: 'Does it mean my premium can never change?',

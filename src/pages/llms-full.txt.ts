@@ -140,7 +140,10 @@ export const GET: APIRoute = () => {
     );
     out.push('');
   }
-  out.push(`More reviews: ${absoluteUrl('/reviews')}`, '');
+  out.push(
+    `More reviews: ${absoluteUrl('/lees-summit')} (Lee's Summit office) and ${absoluteUrl('/northland')} (Northland office)`,
+    '',
+  );
 
   h(2, 'Company pages');
   out.push(

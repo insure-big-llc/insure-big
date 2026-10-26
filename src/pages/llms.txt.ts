@@ -13,7 +13,6 @@
 import type { APIRoute } from 'astro';
 import { SITE, LOCATIONS, CONTACT, absoluteUrl } from '../config/site.js';
 import { HUBS, SERVICES, SPECIALTY_GROUP } from '../config/services.js';
-import { GOOGLE_REVIEWS } from '../config/reviews.js';
 
 export const prerender = true;
 
@@ -79,7 +78,7 @@ export const GET: APIRoute = () => {
     `- [Get a quote](${absoluteUrl('/get-a-quote')}): Start a personal or business insurance quote.`,
   );
   lines.push(
-    `- [Client reviews](${absoluteUrl('/reviews')}): ${GOOGLE_REVIEWS.rating.toFixed(1)} stars from ${GOOGLE_REVIEWS.count} Google reviews, reproduced in full.`,
+    `- [Client reviews](${absoluteUrl('/lees-summit')} and ${absoluteUrl('/northland')}): 5.0 from 83 Google reviews at the Lee's Summit office, 5.0 from 54 at the Northland office, reproduced in full on each office page.`,
   );
   lines.push(
     `- [Coverage partners](${absoluteUrl('/coverage-partners')}): How we place specialty cover with partner programmes.`,
