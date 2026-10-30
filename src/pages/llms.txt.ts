@@ -83,6 +83,9 @@ export const GET: APIRoute = () => {
   lines.push(
     `- [Coverage partners](${absoluteUrl('/coverage-partners')}): How we place specialty cover with partner programmes.`,
   );
+  lines.push(
+    `- [Blog](${absoluteUrl('/blog')}): Plain answers to the insurance questions Kansas City families ask, one short read per question.`,
+  );
   lines.push(`- [${LOCATIONS[0].name}](${absoluteUrl('/lees-summit')}): ${LOCATIONS[0].full}`);
   lines.push(`- [${LOCATIONS[1].name}](${absoluteUrl('/northland')}): ${LOCATIONS[1].full}`);
   lines.push('');

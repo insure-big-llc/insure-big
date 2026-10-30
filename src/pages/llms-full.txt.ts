@@ -16,6 +16,7 @@
  * what the site actually says. Spec: https://llmstxt.org
  */
 import type { APIRoute } from 'astro';
+import { publishedPosts } from '../lib/blog-posts.js';
 import { SITE, LOCATIONS, CONTACT, absoluteUrl } from '../config/site.js';
 import { HUBS, SERVICES, SPECIALTY_GROUP, servicePath } from '../config/services.js';
 import { GOOGLE_REVIEWS, CUSTOMER_REVIEWS } from '../config/reviews.js';
@@ -151,11 +152,24 @@ export const GET: APIRoute = () => {
     `- [About](${absoluteUrl('/about')}) — who the agency is, and the team`,
     `- [Contact](${absoluteUrl('/contact')}) — phone, email, both offices and hours`,
     `- [Get a quote](${absoluteUrl('/get-a-quote')})`,
+    `- [Blog](${absoluteUrl('/blog')}) — plain answers to insurance questions`,
     `- [${LOCATIONS[0].name}](${absoluteUrl('/lees-summit')})`,
     `- [${LOCATIONS[1].name}](${absoluteUrl('/northland')})`,
     `- [Privacy Policy](${absoluteUrl('/privacy-policy')})`,
     `- [Terms & Conditions](${absoluteUrl('/terms-%26-conditions')})`,
     '',
+  );
+
+  const blogPosts = publishedPosts();
+  if (blogPosts.length > 0) {
+    h(2, 'Blog posts');
+    for (const p of blogPosts) {
+      out.push(`- [${p.title}](${absoluteUrl(`/blog/${p.slug}`)}): ${p.description}`);
+    }
+    out.push('');
+  }
+
+  out.push(
     '## Optional',
     '',
     `- [Facebook](${SITE.facebook})`,

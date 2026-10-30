@@ -17,7 +17,7 @@ import { partnerFor } from '../../config/partners.js';
 import { SPECIALTY_EXPLAINERS } from '../../config/specialty-explainers.js';
 import { HUBS, SERVICES, servicePath } from '../../config/services.js';
 import { SERVICE_CARRIERS } from '../../config/carriers.js';
-import { QUOTE_URL } from '../../config/site.js';
+import { QUOTE_URL, LOCATIONS } from '../../config/site.js';
 import { serviceSchema, faqSchema, breadcrumbSchema } from '../../lib/schema.js';
 
 export function getStaticPaths() {
@@ -153,10 +153,10 @@ const schema = [
             Two offices, one team — Lee's Summit and the Kansas City Northland.
           </p>
           <address class="mt-3 not-italic leading-relaxed text-[var(--color-ink-soft)]">
-            16 SE 3rd Street<br />Lee's Summit, MO 64063
+            {LOCATIONS[0].street}<br />{LOCATIONS[0].locality}, {LOCATIONS[0].region} {LOCATIONS[0].postalCode}
           </address>
           <address class="mt-3 not-italic leading-relaxed text-[var(--color-ink-soft)]">
-            200 NE 91st Street<br />Kansas City, MO 64155
+            {LOCATIONS[1].street}<br />{LOCATIONS[1].locality}, {LOCATIONS[1].region} {LOCATIONS[1].postalCode}
           </address>
           <p class="mt-3">
             <a href="tel:+18168681787" class="font-semibold underline">(816) 868-1787</a><br />

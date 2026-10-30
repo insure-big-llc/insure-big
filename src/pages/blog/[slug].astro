@@ -1,0 +1,94 @@
+---
+/**
+ * /blog/<slug> — a single post. Spec 0004.
+ *
+ * Drafts render at their URL but carry noindex, and stay out of the
+ * listing, sitemap and RSS. Published posts carry BlogPosting schema and a
+ * call to action to the related service page.
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import { getBlogPosts } from '../../lib/blog-posts.js';
+import { SITE } from '../../config/site.js';
+import { SERVICES, servicePath } from '../../config/services.js';
+import { webPageSchema, breadcrumbSchema } from '../../lib/schema.js';
+
+export function getStaticPaths() {
+  const { posts } = getBlogPosts();
+  return posts.map((p) => ({ params: { slug: p.slug }, props: { post: p } }));
+}
+
+const { post } = Astro.props;
+
+const path = `/blog/${post.slug}`;
+const trail = [
+  { name: 'Home', path: '/' },
+  { name: 'Blog', path: '/blog' },
+  { name: post.title, path },
+];
+
+const related = post.service ? SERVICES.find((s) => s.slug === post.service) : null;
+
+const schema = [
+  webPageSchema({
+    path,
+    title: post.title,
+    description: post.description,
+  }),
+  breadcrumbSchema(trail),
+  {
+    '@type': 'BlogPosting',
+    headline: post.title,
+    description: post.description,
+    datePublished: post.pubDate.toISOString().split('T')[0],
+    author: { '@id': `${SITE.url}/#organization` },
+    publisher: { '@id': `${SITE.url}/#organization` },
+    mainEntityOfPage: { '@id': `${SITE.url}${path}` },
+    inLanguage: 'en-US',
+  },
+];
+---
+
+<BaseLayout
+  title={`${post.title} | Kansas City | BIG`}
+  description={post.description}
+  path={path}
+  schema={schema}
+  noindex={post.draft}
+>
+  <Breadcrumbs trail={trail} />
+
+  <article class="container-page py-12">
+    <header class="max-w-3xl">
+      <p class="text-sm font-semibold uppercase tracking-widest text-[var(--color-brand-700)]">
+        {post.pubDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+        {post.draft && ' · Draft'}
+      </p>
+      <h1 class="mt-3 text-3xl leading-tight sm:text-4xl">{post.title}</h1>
+      <p class="mt-3 text-sm text-[var(--color-ink-muted)]">
+        By {post.author}, {SITE.name}
+      </p>
+    </header>
+
+    <div class="prose-page mt-8 max-w-3xl" set:html={post.bodyHtml} />
+
+    {
+      related && (
+        <section class="mt-10 max-w-3xl rounded-xl bg-[var(--color-surface-alt)] p-6">
+          <h2 class="text-lg">{related.name}</h2>
+          <p class="mt-2 text-sm leading-relaxed text-[var(--color-ink-soft)]">
+            {related.blurb}
+          </p>
+          <a href={servicePath(related)} class="btn btn-primary mt-4">
+            About {related.name}
+          </a>
+        </section>
+      )
+    }
+
+    <div class="mt-10 flex flex-wrap gap-2">
+      <a href="/blog" class="btn btn-secondary">All posts</a>
+      <a href="/get-a-quote" class="btn btn-primary">Get a quote</a>
+    </div>
+  </article>
+</BaseLayout>

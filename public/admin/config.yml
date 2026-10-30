@@ -1,0 +1,60 @@
+backend:
+  name: git-gateway
+  branch: main
+
+media_folder: public/blog
+public_folder: /blog
+
+publish_mode: simple
+
+collections:
+  - name: blog
+    label: Blog posts
+    folder: src/content/blog
+    create: true
+    slug: '{{slug}}'
+    summary: '{{title}} — {{pubDate}}'
+    fields:
+      - { label: 'Title', name: title, widget: string }
+      - { label: 'Slug', name: slug, widget: string, hint: 'lowercase, hyphens only, unique. This becomes the web address.' }
+      - { label: 'Summary', name: description, widget: text, hint: 'Shown in listings and search results. 160 characters or fewer.' }
+      - { label: 'Publish date', name: pubDate, widget: datetime, date_format: 'YYYY-MM-DD', time_format: false, format: 'YYYY-MM-DD' }
+      - { label: 'Author', name: author, widget: string, default: 'Ballentine Insurance Group', required: false }
+      - label: 'Related service'
+        name: service
+        widget: select
+        required: false
+        options:
+          - { label: 'Home Insurance', value: home }
+          - { label: 'Auto Insurance', value: auto }
+          - { label: 'Renters Insurance', value: renters }
+          - { label: 'Condo Insurance', value: condo }
+          - { label: 'Landlord & Rental Property Insurance', value: landlord }
+          - { label: 'Motorcycle, RV & Boat Insurance', value: motorcycle-rv-boat }
+          - { label: 'Umbrella Liability Insurance', value: umbrella }
+          - { label: 'Flood Insurance', value: flood }
+          - { label: 'Valuable Articles Coverage', value: valuable-articles }
+          - { label: 'General Liability Insurance', value: general-liability }
+          - { label: 'Business Owners Policy (BOP)', value: bop }
+          - { label: 'Commercial Property Insurance', value: commercial-property }
+          - { label: 'Commercial Auto Insurance', value: commercial-auto }
+          - { label: "Workers' Compensation", value: workers-compensation }
+          - { label: 'Professional Liability & E&O', value: professional-liability-eo }
+          - { label: 'Cyber Liability, EPLI & D&O', value: cyber-epli-do }
+          - { label: 'Commercial Umbrella Insurance', value: commercial-umbrella }
+          - { label: 'Inland Marine & Equipment Coverage', value: inland-marine }
+          - { label: 'Builders Risk Insurance', value: builders-risk }
+          - { label: 'Specialized Industry Programs', value: specialized-industries }
+          - { label: 'Life Insurance', value: life }
+          - { label: 'Medicare Solutions', value: medicare }
+          - { label: 'Estate Planning', value: estate-planning }
+          - { label: 'Surety Bonds', value: surety-bonds }
+          - { label: 'Travel Insurance', value: travel }
+          - { label: 'Pet Insurance', value: pet }
+          - { label: 'Device Protection', value: device-protection }
+          - { label: 'Sola Wind & Hail Coverage', value: sola-wind-hail }
+          - { label: 'Premium Lock', value: premium-lock }
+          - { label: 'Farmers Insurance', value: farmers-insurance }
+      - { label: 'Cover image', name: cover, widget: image, required: false, hint: 'Optional. Uploads to public/blog.' }
+      - { label: 'Draft', name: draft, widget: boolean, default: false, hint: 'Drafts stay out of listings and search until flipped off.' }
+      - { label: 'Body', name: body, widget: markdown }

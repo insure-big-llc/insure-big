@@ -40,6 +40,7 @@ const hasSide = Boolean(image || brand);
     aria-hidden="true"
     class="absolute inset-0 bg-gradient-to-r from-[var(--color-ink)] via-[var(--color-ink)]/90 to-[var(--color-ink)]/60"
   />
+  <div aria-hidden="true" class="hero-glow absolute -top-24 right-0 h-96 w-96 sm:h-[28rem] sm:w-[28rem]" />
   <div class="container-page relative py-16 lg:py-24">
     <div class:list={['grid items-center gap-10', hasSide && 'lg:grid-cols-[minmax(0,1fr)_440px]']}>
       <div class="max-w-2xl">

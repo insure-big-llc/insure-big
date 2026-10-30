@@ -4,6 +4,7 @@ import Hero from '../components/Hero.astro';
 import QuoteBand from '../components/QuoteBand.astro';
 import { TEAM } from '../config/team.js';
 import FaqBlock from '../components/FaqBlock.astro';
+import FeaturedTrio from '../components/FeaturedTrio.astro';
 import { SITE, CONTACT, LOCATIONS } from '../config/site.js';
 import { HUBS, SERVICES, SPECIALTY_GROUP, HOME_OFFER_COPY, HOME_FAQ } from '../config/services.js';
 import { GOOGLE_REVIEWS, LOCATION_PROFILES, CUSTOMER_REVIEWS } from '../config/reviews.js';
@@ -71,7 +72,7 @@ const schema = [
 
   <!-- Proof card: overlaps the hero bottom, the counted numbers up top -->
   <div class="container-page relative z-10 -mt-10 lg:-mt-12">
-    <div class="mx-auto max-w-3xl rounded-xl border border-neutral-200 bg-white p-5 shadow-lg sm:p-6">
+    <div class="proof-edge mx-auto max-w-3xl rounded-xl bg-[var(--color-surface-alt)] p-5 shadow-lg sm:p-6">
       <div class="grid grid-cols-3 divide-x divide-neutral-200 text-center">
         <div class="px-2">
           <p class="flex items-center justify-center gap-1 text-2xl font-bold">
@@ -94,8 +95,10 @@ const schema = [
     </div>
   </div>
 
+  <FeaturedTrio />
+
   <!-- Hubs -->
-  <section class="container-page py-16">
+  <section class="container-page reveal py-16">
     <p class="font-[var(--font-heading)] text-sm font-bold uppercase tracking-widest text-[var(--color-brand-700)]">
       Coverage
     </p>
@@ -108,7 +111,7 @@ const schema = [
     <div class="mt-10 grid gap-8 lg:grid-cols-3">
       {
         HUBS.map((hub) => (
-          <div class="group flex flex-col rounded-xl border border-neutral-200 p-6 transition-all hover:-translate-y-0.5 hover:border-[var(--color-brand-400)] hover:shadow-lg">
+          <div class="card-lift group flex flex-col rounded-xl border border-neutral-200 p-6">
             <span
               aria-hidden="true"
               class="flex h-11 w-11 items-center justify-center rounded-lg bg-[var(--color-brand-50)] text-[var(--color-brand-700)]"
@@ -161,7 +164,7 @@ const schema = [
   <section class="bg-[var(--color-surface-alt)] py-16">
     <div class="container-page">
       <a
-        href="/news/premium-lock-for-auto"
+        href="/blog/premium-lock-for-auto"
         class="inline-flex items-center gap-2 rounded-full bg-white px-3 py-1 text-xs font-bold text-[var(--color-brand-700)] ring-1 ring-[var(--color-brand-300)]"
       >
         New: Premium Lock now covers auto
