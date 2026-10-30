@@ -123,9 +123,9 @@ const schema = [
 
         {service.faq?.length ? <FaqBlock faqs={service.faq} /> : null}
 
-        <section class="reveal mt-14 rounded-xl bg-[var(--color-surface-alt)] p-6">
+        <section class="mt-14 rounded-xl bg-[var(--color-surface-alt)] p-6">
           <h2 class="text-xl">Other specialty cover we write</h2>
-          <ul class="reveal-stagger mt-4 grid gap-2 sm:grid-cols-2">
+          <ul class="mt-4 grid gap-2 sm:grid-cols-2">
             {
               SERVICES.filter((s) => s.hub === 'specialty' && s.slug !== service.slug).map((s) => (
                 <li>

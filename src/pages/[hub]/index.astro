@@ -94,7 +94,7 @@ const schema = [
       )
     }
 
-    <section class="reveal mt-12">
+    <section class="mt-12">
       <h2 class="text-2xl">{hub.title} we write</h2>
       <p class="prose-page mt-3 text-[var(--color-ink-soft)]">
         Every line below has its own page with detail on what is covered and a quote
@@ -102,7 +102,7 @@ const schema = [
         of what we can place.
       </p>
 
-      <ul class="reveal-stagger mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <ul class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {
           children.map((s) => (
             <li class="rounded-xl border border-neutral-200 p-5 transition hover:border-[var(--color-brand-500)]">
@@ -118,7 +118,7 @@ const schema = [
       </ul>
     </section>
 
-    <section class="reveal mt-14">
+    <section class="mt-14">
       <ServiceForm
         form={hub.form ?? 'personal'}
         path={path}
@@ -132,7 +132,7 @@ const schema = [
 
     {
       carriers.length ? (
-        <section class="reveal mt-14">
+        <section class="mt-14">
           <CarrierStrip
             slugs={carriers}
             heading={`Carriers we place ${hub.title.toLowerCase()} with`}

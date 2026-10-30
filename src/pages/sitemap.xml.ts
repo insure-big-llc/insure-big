@@ -14,7 +14,6 @@
  * website-scope.md §5.1.
  */
 import type { APIRoute } from 'astro';
-import { publishedPosts } from '../lib/blog-posts.js';
 import { SITE, absoluteUrl, LOCATIONS } from '../config/site.js';
 import { HUBS, SERVICES, servicePath } from '../config/services.js';
 
@@ -37,17 +36,12 @@ function allPaths(): string[] {
     paths.push(servicePath(s));
   }
 
-  // The blog index and every published post. Drafts stay out. Spec 0004.
-  paths.push('/blog');
-  for (const p of publishedPosts()) {
-    paths.push(`/blog/${p.slug}`);
-  }
-
   // Site pages. Order roughly mirrors importance.
   paths.push('/get-a-quote');
   paths.push('/contact');
   paths.push('/about');
   paths.push('/coverage-partners');
+  paths.push('/news/premium-lock-for-auto');
   for (const loc of LOCATIONS) paths.push(`/${loc.slug}`);
   paths.push('/privacy-policy');
   paths.push('/terms-%26-conditions');

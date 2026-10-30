@@ -45,39 +45,6 @@ const organization = {
     'Life insurance',
     'Medicare',
     'Surety bonds',
-    // The broad capability phrases Bret's AISO memo names, as synonyms for the
-    // granular list above so both wordings resolve to this entity.
-    'Property and Casualty Insurance',
-    'Commercial Risk Management',
-    'Asset Protection',
-    'Estate Planning',
-  ],
-  // Bret's memo: the four core products as explicit InsuranceProduct nodes.
-  makesOffer: [
-    {
-      '@type': 'InsuranceProduct',
-      name: 'Homeowners Insurance',
-      category: 'Home insurance',
-      provider: { '@id': ORG_ID },
-    },
-    {
-      '@type': 'InsuranceProduct',
-      name: 'Automobile Insurance',
-      category: 'Auto insurance',
-      provider: { '@id': ORG_ID },
-    },
-    {
-      '@type': 'InsuranceProduct',
-      name: 'Life Insurance',
-      category: 'Life insurance',
-      provider: { '@id': ORG_ID },
-    },
-    {
-      '@type': 'InsuranceProduct',
-      name: 'Commercial Business Insurance',
-      category: 'Business insurance',
-      provider: { '@id': ORG_ID },
-    },
   ],
   // The two offices. `telephone` intentionally omitted — see note above.
   location: LOCATIONS.map((loc) => ({

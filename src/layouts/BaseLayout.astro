@@ -136,7 +136,6 @@ const fullTitle = title.includes(BRAND_MARKER) ? title : `${title} ${BRAND_MARKE
     <Schema schema={schema} />
   </head>
   <body>
-    <div id="scroll-progress" aria-hidden="true"></div>
     <a href="#main" class="skip-link sr-only">Skip to main content</a>
     <Header />
     <main id="main">
@@ -177,67 +176,6 @@ const fullTitle = title.includes(BRAND_MARKER) ? title : `${title} ${BRAND_MARKE
             window.removeEventListener('scroll', show);
           };
           window.addEventListener('scroll', show, { passive: true });
-        })();
-      }
-    </script>
-    <!--
-      Reveal on scroll (spec 0006). Progressive enhancement: the script adds
-      the `js` class that enables the hidden reveal state, then reveals each
-      .reveal section once as it enters. Without JavaScript nothing is ever
-      hidden, and reduced motion skips the whole choreography. Under 1 KB.
-    -->
-    <script>
-      {
-        (() => {
-          const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-          const targets = document.querySelectorAll('.reveal');
-          if (reduce || !targets.length) return;
-          document.documentElement.classList.add('js');
-          const io = 'IntersectionObserver' in window
-            ? new IntersectionObserver(
-                (entries) => {
-                  for (const entry of entries) {
-                    if (entry.isIntersecting) {
-                      entry.target.classList.add('is-visible');
-                      io.unobserve(entry.target);
-                    }
-                  }
-                },
-                { rootMargin: '0px 0px -8% 0px', threshold: 0.05 },
-              )
-            : null;
-          for (const el of targets) {
-            if (io) io.observe(el);
-            else el.classList.add('is-visible');
-          }
-        })();
-      }
-    </script>
-    <!--
-      Scroll progress bar (vibe layer, spec 0006). A 2px gold hairline that
-      tracks reading progress. Transform-only, rAF-throttled, off under
-      reduced motion.
-    -->
-    <script>
-      {
-        (() => {
-          const bar = document.getElementById('scroll-progress');
-          if (!bar) return;
-          if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-          let raf = 0;
-          const update = () => {
-            raf = 0;
-            const max = document.documentElement.scrollHeight - window.innerHeight;
-            const p = max > 0 ? window.scrollY / max : 0;
-            bar.style.transform = `scaleX(${p})`;
-          };
-          window.addEventListener(
-            'scroll',
-            () => {
-              if (!raf) raf = requestAnimationFrame(update);
-            },
-            { passive: true },
-          );
         })();
       }
     </script>

@@ -4,8 +4,6 @@ import Hero from '../components/Hero.astro';
 import QuoteBand from '../components/QuoteBand.astro';
 import { TEAM } from '../config/team.js';
 import FaqBlock from '../components/FaqBlock.astro';
-import FeaturedTrio from '../components/FeaturedTrio.astro';
-import MarqueeBand from '../components/MarqueeBand.astro';
 import { SITE, CONTACT, LOCATIONS } from '../config/site.js';
 import { HUBS, SERVICES, SPECIALTY_GROUP, HOME_OFFER_COPY, HOME_FAQ } from '../config/services.js';
 import { GOOGLE_REVIEWS, LOCATION_PROFILES, CUSTOMER_REVIEWS } from '../config/reviews.js';
@@ -73,11 +71,11 @@ const schema = [
 
   <!-- Proof card: overlaps the hero bottom, the counted numbers up top -->
   <div class="container-page relative z-10 -mt-10 lg:-mt-12">
-    <div class="proof-edge mx-auto max-w-3xl rounded-xl bg-[var(--color-surface-alt)] p-5 shadow-lg sm:p-6">
+    <div class="mx-auto max-w-3xl rounded-xl border border-neutral-200 bg-white p-5 shadow-lg sm:p-6">
       <div class="grid grid-cols-3 divide-x divide-neutral-200 text-center">
         <div class="px-2">
           <p class="flex items-center justify-center gap-1 text-2xl font-bold">
-            <span data-count="5.0" data-decimals="1">{GOOGLE_REVIEWS.rating.toFixed(1)}</span>
+            {GOOGLE_REVIEWS.rating.toFixed(1)}
             <span aria-hidden="true" class="text-base text-[var(--color-brand-600)]">★</span>
           </p>
           <p class="mt-1 text-xs font-semibold text-[var(--color-ink-soft)]">
@@ -85,7 +83,7 @@ const schema = [
           </p>
         </div>
         <div class="px-2">
-          <p class="text-2xl font-bold"><span data-count="50">50</span>+</p>
+          <p class="text-2xl font-bold">50+</p>
           <p class="mt-1 text-xs font-semibold text-[var(--color-ink-soft)]">carriers compared</p>
         </div>
         <div class="px-2">
@@ -96,46 +94,8 @@ const schema = [
     </div>
   </div>
 
-  <script>
-    {
-      (() => {
-        const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        const els = document.querySelectorAll('[data-count]');
-        if (!els.length || reduce) return;
-        const io = 'IntersectionObserver' in window
-          ? new IntersectionObserver((entries) => {
-              for (const entry of entries) {
-                if (!entry.isIntersecting) continue;
-                const el = entry.target;
-                io.unobserve(el);
-                const target = parseFloat(el.dataset.count);
-                const decimals = parseInt(el.dataset.decimals || '0', 10);
-                const t0 = performance.now();
-                const dur = 900;
-                const tick = (now) => {
-                  const p = Math.min((now - t0) / dur, 1);
-                  const eased = 1 - Math.pow(1 - p, 3);
-                  el.textContent = (target * eased).toFixed(decimals);
-                  if (p < 1) requestAnimationFrame(tick);
-                };
-                requestAnimationFrame(tick);
-              }
-            }, { threshold: 0.6 })
-          : null;
-        for (const el of els) {
-          if (io) io.observe(el);
-          else el.textContent = el.dataset.count;
-        }
-      })();
-    }
-  </script>
-
-  <MarqueeBand />
-
-  <FeaturedTrio />
-
   <!-- Hubs -->
-  <section class="container-page reveal py-16">
+  <section class="container-page py-16">
     <p class="font-[var(--font-heading)] text-sm font-bold uppercase tracking-widest text-[var(--color-brand-700)]">
       Coverage
     </p>
@@ -145,10 +105,10 @@ const schema = [
       don't see what you need, call us — we write coverage well beyond this list.
     </p>
 
-    <div class="reveal-stagger mt-10 grid gap-8 lg:grid-cols-3">
+    <div class="mt-10 grid gap-8 lg:grid-cols-3">
       {
         HUBS.map((hub) => (
-          <div class="card-lift group flex flex-col rounded-xl border border-neutral-200 p-6">
+          <div class="group flex flex-col rounded-xl border border-neutral-200 p-6 transition-all hover:-translate-y-0.5 hover:border-[var(--color-brand-400)] hover:shadow-lg">
             <span
               aria-hidden="true"
               class="flex h-11 w-11 items-center justify-center rounded-lg bg-[var(--color-brand-50)] text-[var(--color-brand-700)]"
@@ -198,10 +158,10 @@ const schema = [
   </section>
 
   <!-- Specialty -->
-  <section class="reveal bg-[var(--color-surface-alt)] py-16">
+  <section class="bg-[var(--color-surface-alt)] py-16">
     <div class="container-page">
       <a
-        href="/blog/premium-lock-for-auto"
+        href="/news/premium-lock-for-auto"
         class="inline-flex items-center gap-2 rounded-full bg-white px-3 py-1 text-xs font-bold text-[var(--color-brand-700)] ring-1 ring-[var(--color-brand-300)]"
       >
         New: Premium Lock now covers auto
@@ -230,7 +190,7 @@ const schema = [
   </section>
 
   <!-- Why BIG -->
-  <section class="reveal container-page py-16">
+  <section class="container-page py-16">
     <div class="grid gap-10 lg:grid-cols-2">
       <div>
         <p class="font-[var(--font-heading)] text-sm font-bold uppercase tracking-widest text-[var(--color-brand-700)]">
@@ -286,7 +246,7 @@ const schema = [
   </section>
 
   <!-- Proof: both offices' real ratings, then the featured reviews in full -->
-  <section class="reveal container-page py-16">
+  <section class="container-page py-16">
     <p class="text-center font-[var(--font-heading)] text-sm font-bold uppercase tracking-widest text-[var(--color-brand-700)]">
       Proof
     </p>
@@ -376,7 +336,7 @@ const schema = [
   </QuoteBand>
 
   <!-- FAQ — the live home FAQ, answers drafted and flagged for review -->
-  <section class="reveal bg-[var(--color-surface-alt)] py-16">
+  <section class="bg-[var(--color-surface-alt)] py-16">
     <div class="container-page">
       <h2 class="text-2xl sm:text-3xl">Frequently asked questions</h2>
       <p class="prose-page mt-3 text-[var(--color-ink-soft)]">
@@ -389,7 +349,7 @@ const schema = [
   </section>
 
   <!-- Already a customer? Renewal and service path -->
-  <section class="reveal container-page py-16">
+  <section class="container-page py-16">
     <div class="rounded-xl border border-neutral-200 p-6 sm:p-8">
       <div class="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
         <div>
@@ -408,7 +368,7 @@ const schema = [
   </section>
 
   <!-- Locations — NAP in body copy, not just the footer -->
-  <section class="reveal bg-[var(--color-ink)] py-16 text-white">
+  <section class="bg-[var(--color-ink)] py-16 text-white">
     <div class="container-page">
       <p class="font-[var(--font-heading)] text-sm font-bold uppercase tracking-widest text-[var(--color-brand-300)]">
         Visit us

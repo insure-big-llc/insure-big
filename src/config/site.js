@@ -70,9 +70,9 @@ export const LOCATIONS = [
     locality: "Lee's Summit",
     region: 'MO',
     postalCode: '64063',
-    street: '16 SE 3rd St',
+    street: '16 SE 3rd Street',
     /** Verbatim string used in schema and the footer — must not drift. */
-    full: "16 SE 3rd St, Lee's Summit, MO 64063",
+    full: "16 SE 3rd Street, Lee's Summit, MO 64063",
     isPrimary: true,
     /** Exact pin from the Google Business Profile (client supplied the map link). */
     geo: { latitude: 38.912387, longitude: -94.3770295 },
@@ -87,8 +87,8 @@ export const LOCATIONS = [
     locality: 'Kansas City',
     region: 'MO',
     postalCode: '64155',
-    street: '200 NE 91 St',
-    full: '200 NE 91 St, Kansas City, MO 64155',
+    street: '200 NE 91st Street',
+    full: '200 NE 91st Street, Kansas City, MO 64155',
     isPrimary: false,
     /** Exact pin from the Google Business Profile (client supplied the map link). */
     geo: { latitude: 39.259383, longitude: -94.577399 },
