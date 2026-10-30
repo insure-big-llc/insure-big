@@ -80,7 +80,7 @@ function specialistPath(slug) {
       <ul class="mt-8 grid gap-6 md:grid-cols-2">
         {
           live.map((p) => (
-            <li class="rounded-xl border border-neutral-200 p-6">
+            <li class="card p-6">
               <h3 class="text-lg">{p.product}</h3>
               {p.programName && p.programName !== p.product && (
                 <p class="mt-1 text-sm text-[var(--color-ink-muted)]">{p.programName}</p>

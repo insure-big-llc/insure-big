@@ -2,9 +2,12 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Hero from '../components/Hero.astro';
 import QuoteBand from '../components/QuoteBand.astro';
+import Icon from '../components/Icon.astro';
+import Stars from '../components/Stars.astro';
+import Art from '../components/Art.astro';
 import { TEAM } from '../config/team.js';
 import FaqBlock from '../components/FaqBlock.astro';
-import { SITE, CONTACT, LOCATIONS } from '../config/site.js';
+import { SITE, CONTACT, LOCATIONS, PHOTOS } from '../config/site.js';
 import { HUBS, SERVICES, SPECIALTY_GROUP, HOME_OFFER_COPY, HOME_FAQ } from '../config/services.js';
 import { GOOGLE_REVIEWS, LOCATION_PROFILES, CUSTOMER_REVIEWS } from '../config/reviews.js';
 import { webPageSchema, reviewsSchema, faqSchema } from '../lib/schema.js';
@@ -20,11 +23,17 @@ const QUOTE_LINES = [
 
 const specialties = SERVICES.filter((s) => s.hub === 'specialty');
 
-/** Minimal coverage icons per hub, matching the research pattern of coverage as a menu. */
+/** One icon per hub, drawn from the shared Icon set. */
 const HUB_ICONS = {
-  'personal-insurance': ['M3 11l9-8 9 8', 'M5 10v10h14V10'],
-  'business-insurance': ['M4 21V8l8-5 8 5v13', 'M8 12h2M14 12h2M8 16h2M14 16h2'],
-  'life-insurance': ['M12 3a9 9 0 0 1 9 9H3a9 9 0 0 1 9-9', 'M12 12v9'],
+  'personal-insurance': 'home',
+  'business-insurance': 'building',
+  'life-insurance': 'umbrella',
+};
+
+/** Initials for the review avatars: first letter of the first and last word. */
+const initials = (name) => {
+  const words = name.replace(/[^A-Za-z\s]/g, '').trim().split(/\s+/);
+  return ((words[0]?.[0] ?? '') + (words.length > 1 ? words[words.length - 1][0] : '')).toUpperCase();
 };
 
 const schema = [
@@ -44,43 +53,59 @@ const schema = [
   description="Independent insurance agency in Lee's Summit and Kansas City. Home, auto, business, life and specialty coverage compared across carriers. Call (816) 868-1787."
   path="/"
   schema={schema}
+  footerFlush
 >
-  <!-- Hero: the shield art stays background only; the BIG mark anchors the right side. -->
+  <!-- Hero: gradient and SVG art behind, the agency's own office photo on the right. -->
   <Hero
     headline={SITE.tagline}
+    emphasis="BIG"
     supporting={`Tailored insurance solutions to fit you — home, auto, business, life and specialty coverage, compared across 50+ top-rated carriers instead of sold from a single shelf.`}
-    brand
+    photo={{
+      ...PHOTOS.officeMeeting,
+      sizes: '(min-width: 1024px) 460px, (min-width: 640px) 448px, 92vw',
+    }}
+    chip={{ rating: GOOGLE_REVIEWS.rating.toFixed(1), label: 'on Google' }}
   >
     <a href="/get-a-quote" class="btn btn-primary">Get a quote</a>
-    <a href={CONTACT.phoneHref} class="btn btn-on-dark">Call {CONTACT.phone}</a>
-    <p class="basis-full text-base font-semibold text-white/85">{SITE.marketStatement}</p>
+    <a href={CONTACT.phoneHref} class="btn btn-ghost-dark">
+      <Icon name="phone" class="h-4 w-4" />
+      Call {CONTACT.phone}
+    </a>
+    <p class="basis-full pt-2 text-base font-semibold text-white/85">{SITE.marketStatement}</p>
     <div class="basis-full">
       <p class="text-sm font-semibold text-white/85">Start your quote:</p>
       <div class="mt-2 flex flex-wrap gap-2">
-        {QUOTE_LINES.map((l) => (
-          <a
-            href={`/get-a-quote?coverage=${l.key}`}
-            class="rounded-full border border-white/30 px-4 py-1.5 text-sm font-semibold text-white transition-colors hover:border-[var(--color-brand-400)] hover:text-[var(--color-brand-300)]"
-          >
-            {l.label} insurance
-          </a>
-        ))}
+        {
+          QUOTE_LINES.map((l) => (
+            <a
+              href={`/get-a-quote?coverage=${l.key}`}
+              class="rounded-full border border-white/20 bg-white/5 px-4 py-1.5 text-sm font-semibold text-white backdrop-blur-sm transition-colors duration-200 hover:border-[var(--color-brand-400)] hover:bg-white/10 hover:text-[var(--color-brand-200)]"
+            >
+              {l.label} insurance
+            </a>
+          ))
+        }
       </div>
     </div>
   </Hero>
 
   <!-- Proof card: overlaps the hero bottom, the counted numbers up top -->
   <div class="container-page relative z-10 -mt-10 lg:-mt-12">
-    <div class="mx-auto max-w-3xl rounded-xl border border-neutral-200 bg-white p-5 shadow-lg sm:p-6">
+    <div
+      class="card relative mx-auto max-w-3xl overflow-hidden p-5 shadow-[var(--shadow-lift)] sm:p-6"
+    >
+      <div
+        aria-hidden="true"
+        class="absolute inset-x-0 top-0 h-[3px] bg-gradient-to-r from-[var(--color-brand-300)] via-[var(--color-brand-500)] to-[var(--color-brand-300)]"
+      >
+      </div>
       <div class="grid grid-cols-3 divide-x divide-neutral-200 text-center">
         <div class="px-2">
-          <p class="flex items-center justify-center gap-1 text-2xl font-bold">
+          <p class="flex items-center justify-center gap-1.5 text-2xl font-bold">
             {GOOGLE_REVIEWS.rating.toFixed(1)}
-            <span aria-hidden="true" class="text-base text-[var(--color-brand-600)]">★</span>
+            <Icon name="star" class="h-5 w-5 icon-gold" />
           </p>
-          <p class="mt-1 text-xs font-semibold text-[var(--color-ink-soft)]">
-            Google rating
-          </p>
+          <p class="mt-1 text-xs font-semibold text-[var(--color-ink-soft)]">Google rating</p>
         </div>
         <div class="px-2">
           <p class="text-2xl font-bold">50+</p>
@@ -95,60 +120,56 @@ const schema = [
   </div>
 
   <!-- Hubs -->
-  <section class="container-page py-16">
-    <p class="font-[var(--font-heading)] text-sm font-bold uppercase tracking-widest text-[var(--color-brand-700)]">
-      Coverage
-    </p>
-    <h2 class="mt-2 text-2xl sm:text-3xl">What we cover</h2>
+  <section class="container-page py-20">
+    <p class="kicker">Coverage</p>
+    <h2 class="mt-3 text-2xl sm:text-3xl">What we cover</h2>
     <p class="prose-page mt-3 text-[var(--color-ink-soft)]">
       Every line below has its own page, and every page has a quote form. If you
       don't see what you need, call us — we write coverage well beyond this list.
     </p>
 
-    <div class="mt-10 grid gap-8 lg:grid-cols-3">
+    <div class="mt-10 grid gap-6 lg:grid-cols-3">
       {
         HUBS.map((hub) => (
-          <div class="group flex flex-col rounded-xl border border-neutral-200 p-6 transition-all hover:-translate-y-0.5 hover:border-[var(--color-brand-400)] hover:shadow-lg">
+          <div class="card card-hover group relative flex flex-col overflow-hidden p-7">
+            <div
+              aria-hidden="true"
+              class="absolute inset-x-0 top-0 h-[3px] origin-left scale-x-0 bg-gradient-to-r from-[var(--color-brand-300)] to-[var(--color-brand-500)] transition-transform duration-500 ease-[var(--ease-out)] group-hover:scale-x-100"
+            />
             <span
               aria-hidden="true"
-              class="flex h-11 w-11 items-center justify-center rounded-lg bg-[var(--color-brand-50)] text-[var(--color-brand-700)]"
+              class="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-[var(--color-brand-50)] to-[var(--color-brand-100)] text-[var(--color-brand-700)] ring-1 ring-[var(--color-brand-200)]"
             >
-              <svg
-                viewBox="0 0 24 24"
-                class="h-6 w-6"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="1.5"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                {HUB_ICONS[hub.slug].map((d) => <path d={d} />)}
-              </svg>
+              <Icon name={HUB_ICONS[hub.slug]} class="h-6 w-6" stroke={1.5} />
             </span>
-            <h3 class="mt-4 text-xl">
-              <a href={`/${hub.slug}`} class="hover:underline hover:text-[var(--color-brand-700)]">
+            <h3 class="mt-5 text-xl">
+              <a href={`/${hub.slug}`} class="transition-colors hover:text-[var(--color-brand-700)]">
                 {hub.title}
               </a>
             </h3>
             <p class="mt-2 text-sm leading-relaxed text-[var(--color-ink-soft)]">
               {HOME_OFFER_COPY[hub.slug] ?? hub.blurb}
             </p>
-            <ul class="mt-5 space-y-2 text-sm">
+            <ul class="mt-5 space-y-0.5 text-sm">
               {SERVICES.filter((s) => s.hub === hub.slug).map((s) => (
                 <li>
                   <a
                     href={`/${hub.slug}/${s.slug}`}
-                    class="text-[var(--color-ink-soft)] hover:underline hover:text-[var(--color-brand-700)]"
+                    class="group/link -mx-2 flex items-center justify-between rounded-lg px-2 py-1.5 text-[var(--color-ink-soft)] transition-colors duration-200 hover:bg-[var(--color-brand-50)] hover:text-[var(--color-ink)]"
                   >
                     {s.name}
+                    <Icon
+                      name="arrow-right"
+                      class="h-3.5 w-3.5 -translate-x-1 text-[var(--color-brand-700)] opacity-0 transition duration-200 group-hover/link:translate-x-0 group-hover/link:opacity-100"
+                    />
                   </a>
                 </li>
               ))}
             </ul>
-            <p class="mt-auto pt-5 text-sm font-semibold text-[var(--color-brand-700)]">
-              <a href={`/${hub.slug}`} class="inline-flex items-center gap-1 hover:underline">
+            <p class="mt-auto pt-6 text-sm font-semibold text-[var(--color-brand-700)]">
+              <a href={`/${hub.slug}`} class="inline-flex items-center gap-1.5 hover:underline">
                 {SERVICES.filter((s) => s.hub === hub.slug).length} cover types
-                <span aria-hidden="true">→</span>
+                <Icon name="arrow-right" class="arrow h-4 w-4" />
               </a>
             </p>
           </div>
@@ -158,18 +179,17 @@ const schema = [
   </section>
 
   <!-- Specialty -->
-  <section class="bg-[var(--color-surface-alt)] py-16">
+  <section class="bg-[var(--color-surface-alt)] py-20">
     <div class="container-page">
       <a
         href="/blog/premium-lock-for-auto"
-        class="inline-flex items-center gap-2 rounded-full bg-white px-3 py-1 text-xs font-bold text-[var(--color-brand-700)] ring-1 ring-[var(--color-brand-300)]"
+        class="group inline-flex items-center gap-2 rounded-full bg-white px-3.5 py-1.5 text-xs font-bold text-[var(--color-brand-700)] shadow-[var(--shadow-soft)] ring-1 ring-[var(--color-brand-300)] transition-shadow hover:shadow-[var(--shadow-lift)]"
       >
         New: Premium Lock now covers auto
+        <Icon name="arrow-right" class="arrow h-3.5 w-3.5" />
       </a>
-      <p class="mt-4 font-[var(--font-heading)] text-sm font-bold uppercase tracking-widest text-[var(--color-brand-700)]">
-        More ways we help
-      </p>
-      <h2 class="mt-2 text-2xl sm:text-3xl">{SPECIALTY_GROUP.title}</h2>
+      <p class="kicker mt-5 flex w-fit">More ways we help</p>
+      <h2 class="mt-3 text-2xl sm:text-3xl">{SPECIALTY_GROUP.title}</h2>
       <p class="prose-page mt-3 text-[var(--color-ink-soft)]">{SPECIALTY_GROUP.blurb}</p>
       <ul class="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {
@@ -177,10 +197,16 @@ const schema = [
             <li>
               <a
                 href={`/specialty/${s.slug}`}
-                class="flex min-h-11 items-center rounded-lg border border-neutral-200 bg-white px-4 py-3 text-sm font-semibold hover:underline hover:border-[var(--color-brand-500)]"
+                class="card card-hover group flex min-h-14 items-center gap-3 px-4 py-3 text-sm font-semibold"
               >
-                <span aria-hidden="true" class="mr-2 text-[var(--color-brand-600)]">◆</span>
-                {s.name}
+                <span
+                  aria-hidden="true"
+                  class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[var(--color-brand-50)] text-[var(--color-brand-700)]"
+                >
+                  <Icon name="diamond" class="h-3.5 w-3.5" stroke={2} />
+                </span>
+                <span class="flex-1">{s.name}</span>
+                <Icon name="arrow-right" class="arrow h-4 w-4 text-[var(--color-brand-700)]" />
               </a>
             </li>
           ))
@@ -190,139 +216,155 @@ const schema = [
   </section>
 
   <!-- Why BIG -->
-  <section class="container-page py-16">
-    <div class="grid gap-10 lg:grid-cols-2">
+  <section class="container-page py-20">
+    <div class="grid items-start gap-12 lg:grid-cols-2">
       <div>
-        <p class="font-[var(--font-heading)] text-sm font-bold uppercase tracking-widest text-[var(--color-brand-700)]">
-          Why BIG
-        </p>
-        <h2 class="mt-2 text-2xl sm:text-3xl">Why clients choose BIG</h2>
-        <ul class="mt-6 space-y-4 text-[var(--color-ink-soft)]">
-          <li class="flex gap-3">
-            <span aria-hidden="true" class="mt-0.5 text-[var(--color-brand-600)]">✓</span>
-            <span>An independent agency representing multiple top-rated insurance companies.</span>
-          </li>
-          <li class="flex gap-3">
-            <span aria-hidden="true" class="mt-0.5 text-[var(--color-brand-600)]">✓</span>
-            <span>Personalised recommendations rather than a one-size-fits-all package.</span>
-          </li>
-          <li class="flex gap-3">
-            <span aria-hidden="true" class="mt-0.5 text-[var(--color-brand-600)]">✓</span>
-            <span>Annual policy reviews, so your cover keeps pace with your life.</span>
-          </li>
-          <li class="flex gap-3">
-            <span aria-hidden="true" class="mt-0.5 text-[var(--color-brand-600)]">✓</span>
-            <span>Claims support from someone who knows you — not a call centre.</span>
-          </li>
+        <p class="kicker">Why BIG</p>
+        <h2 class="mt-3 text-2xl sm:text-3xl">Why clients choose BIG</h2>
+        <ul class="mt-7 space-y-5 text-[var(--color-ink-soft)]">
+          {
+            [
+              'An independent agency representing multiple top-rated insurance companies.',
+              'Personalised recommendations rather than a one-size-fits-all package.',
+              'Annual policy reviews, so your cover keeps pace with your life.',
+              'Claims support from someone who knows you — not a call centre.',
+            ].map((line) => (
+              <li class="flex gap-4">
+                <span
+                  aria-hidden="true"
+                  class="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[var(--color-brand-50)] text-[var(--color-brand-700)] ring-1 ring-[var(--color-brand-200)]"
+                >
+                  <Icon name="check" class="h-4 w-4" stroke={2.25} />
+                </span>
+                <span class="pt-0.5">{line}</span>
+              </li>
+            ))
+          }
         </ul>
-        <a href="/about" class="btn btn-secondary mt-8">More about us</a>
+        <a href="/about" class="btn btn-secondary mt-9">More about us</a>
       </div>
 
-      <div class="rounded-xl border border-neutral-200 bg-white p-5">
+      <div class="card p-6">
         <p class="text-xs font-semibold uppercase tracking-wide text-[var(--color-ink-muted)]">
           The people you'll talk to
         </p>
-        <ul class="mt-4 grid grid-cols-2 gap-4">
-          {TEAM.map((m) => (
-            <li class="text-center">
-              <img
-                src={m.photo}
-                alt={m.name}
-                width="96"
-                height="96"
-                loading="lazy"
-                class="mx-auto h-20 w-20 rounded-full object-cover ring-2 ring-[var(--color-brand-100)]"
-              />
-              <p class="mt-2 text-sm font-semibold">{m.name}</p>
-              <p class="mt-0.5 text-xs text-[var(--color-ink-muted)]">{m.title}</p>
-            </li>
-          ))}
+        <ul class="mt-5 grid grid-cols-2 gap-5">
+          {
+            TEAM.map((m) => (
+              <li class="rounded-xl bg-[var(--color-surface-alt)] p-4 text-center">
+                <img
+                  src={m.photo}
+                  alt={m.name}
+                  width="96"
+                  height="96"
+                  loading="lazy"
+                  class="mx-auto h-20 w-20 rounded-full object-cover ring-2 ring-white shadow-[var(--shadow-soft)]"
+                />
+                <p class="mt-3 text-sm font-semibold">{m.name}</p>
+                <p class="mt-0.5 text-xs text-[var(--color-ink-muted)]">{m.title}</p>
+              </li>
+            ))
+          }
         </ul>
         <p class="mt-5 text-sm">
-          <a href="/about" class="font-semibold underline">Meet the whole team</a>
+          <a href="/about" class="group inline-flex items-center gap-1.5 font-semibold text-[var(--color-brand-700)] hover:underline">
+            Meet the whole team
+            <Icon name="arrow-right" class="arrow h-4 w-4" />
+          </a>
         </p>
       </div>
     </div>
   </section>
 
   <!-- Proof: both offices' real ratings, then the featured reviews in full -->
-  <section class="container-page py-16">
-    <p class="text-center font-[var(--font-heading)] text-sm font-bold uppercase tracking-widest text-[var(--color-brand-700)]">
-      Proof
-    </p>
-    <h2 class="mt-2 text-center text-2xl sm:text-3xl">What our clients say</h2>
-    <p class="prose-page mx-auto mt-3 max-w-2xl text-center text-[var(--color-ink-soft)]">
-      Rated 5.0 on Google at both offices, in their words, unedited.
-    </p>
-    <div class="mt-8 flex flex-wrap justify-center gap-2">
-      {
-        LOCATIONS.map((loc) => {
-          const p = LOCATION_PROFILES[loc.id];
-          return (
-            <a
-              href={loc.mapLink}
-              target="_blank"
-              rel="noopener noreferrer"
-              class="inline-flex items-center gap-2 rounded-full border border-neutral-200 bg-white px-4 py-1.5 text-sm shadow-sm hover:border-[var(--color-brand-500)]"
-            >
-              <span class="font-bold">{p.rating.toFixed(1)}</span>
-              <span aria-hidden="true" class="text-xs text-[var(--color-brand-600)]">★★★★★</span>
-              <span class="text-[var(--color-ink-soft)]">
-                {p.count} Google reviews · {loc.locality}
-              </span>
-            </a>
-          );
-        })
-      }
-    </div>
-    <div class="mt-10 grid gap-6 lg:grid-cols-2">
-      {
-        LOCATIONS.map((loc) => {
-          const p = LOCATION_PROFILES[loc.id];
-          const reviews = loc.id === 'lees-summit' ? p.reviews : CUSTOMER_REVIEWS;
-          return (
-            <section class="rounded-xl bg-[var(--color-surface-alt)] p-6">
-              <header class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
-                <h3 class="text-lg">{loc.name}</h3>
-                <a
-                  href={loc.mapLink}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="text-sm font-semibold underline hover:text-[var(--color-brand-700)]"
-                >
-                  {p.rating.toFixed(1)} ★★★★★ · {p.count} reviews
-                </a>
-              </header>
-              <ul class="mt-5 space-y-4">
-                {
-                  reviews.slice(0, 3).map((r) => (
-                    <li class="rounded-lg border-l-2 border-[var(--color-brand-500)] bg-white p-4">
-                      <p aria-hidden="true" class="text-xs text-[var(--color-brand-600)]">
-                        ★★★★★
-                      </p>
-                      <p class="mt-1 text-sm leading-relaxed text-[var(--color-ink-soft)]">
+  <section class="bg-[var(--color-surface-alt)] py-20">
+    <div class="container-page">
+      <p class="kicker mx-auto flex w-fit">Proof</p>
+      <h2 class="mt-3 text-center text-2xl sm:text-3xl">What our clients say</h2>
+      <p class="prose-page mx-auto mt-3 max-w-2xl text-center text-[var(--color-ink-soft)]">
+        Rated 5.0 on Google at both offices, in their words, unedited.
+      </p>
+      <div class="mt-8 flex flex-wrap justify-center gap-3">
+        {
+          LOCATIONS.map((loc) => {
+            const p = LOCATION_PROFILES[loc.id];
+            return (
+              <a
+                href={loc.mapLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="card card-hover inline-flex items-center gap-2.5 rounded-full px-4 py-2 text-sm"
+              >
+                <span class="font-bold">{p.rating.toFixed(1)}</span>
+                <Stars class="h-3.5 w-3.5" />
+                <span class="text-[var(--color-ink-soft)]">
+                  {p.count} Google reviews · {loc.locality}
+                </span>
+              </a>
+            );
+          })
+        }
+      </div>
+      <div class="mt-10 grid gap-6 lg:grid-cols-2">
+        {
+          LOCATIONS.map((loc) => {
+            const p = LOCATION_PROFILES[loc.id];
+            const reviews = loc.id === 'lees-summit' ? p.reviews : CUSTOMER_REVIEWS;
+            return (
+              <div class="card p-6">
+                <header class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+                  <h3 class="text-lg">{loc.name}</h3>
+                  <a
+                    href={loc.mapLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="inline-flex items-center gap-1.5 text-sm font-semibold hover:text-[var(--color-brand-700)] hover:underline"
+                  >
+                    {p.rating.toFixed(1)}
+                    <Stars class="h-3 w-3" />
+                    · {p.count} reviews
+                  </a>
+                </header>
+                <ul class="mt-5 space-y-4">
+                  {reviews.slice(0, 3).map((r) => (
+                    <li class="relative rounded-xl bg-[var(--color-surface-alt)] p-5">
+                      <Icon
+                        name="quote"
+                        class="absolute right-4 top-4 h-7 w-7 text-[var(--color-brand-200)]"
+                      />
+                      <Stars class="h-3.5 w-3.5" />
+                      <p class="mt-2 pr-6 text-sm leading-relaxed text-[var(--color-ink-soft)]">
                         &ldquo;{r.text}&rdquo;
                       </p>
-                      <p class="mt-2 text-xs font-semibold">
-                        {r.author}
-                        <span class="font-normal text-[var(--color-ink-muted)]">
-                          {' '}
-                          — {r.dateText}
+                      <div class="mt-4 flex items-center gap-3">
+                        <span
+                          aria-hidden="true"
+                          class="flex h-9 w-9 items-center justify-center rounded-full bg-[var(--color-ink)] text-xs font-bold text-[var(--color-brand-200)]"
+                        >
+                          {initials(r.author)}
                         </span>
-                      </p>
+                        <p class="text-xs font-semibold">
+                          {r.author}
+                          <span class="block font-normal text-[var(--color-ink-muted)]">{r.dateText}</span>
+                        </p>
+                      </div>
                     </li>
-                  ))
-                }
-              </ul>
-              <p class="mt-4 text-sm">
-                <a href={`/${loc.slug}`} class="inline-flex min-h-11 items-center rounded px-2 font-semibold underline">
-                  Read all {loc.locality} reviews
-                </a>
-              </p>
-            </section>
-          );
-        })
-      }
+                  ))}
+                </ul>
+                <p class="mt-5 text-sm">
+                  <a
+                    href={`/${loc.slug}`}
+                    class="group inline-flex min-h-11 items-center gap-1.5 rounded font-semibold text-[var(--color-brand-700)] hover:underline"
+                  >
+                    Read all {loc.locality} reviews
+                    <Icon name="arrow-right" class="arrow h-4 w-4" />
+                  </a>
+                </p>
+              </div>
+            );
+          })
+        }
+      </div>
     </div>
   </section>
 
@@ -332,71 +374,101 @@ const schema = [
     copy="One short form, one local team, and quotes from the carriers we would recommend for your risk. No obligation, no single-shelf steering."
   >
     <a href="/get-a-quote" class="btn btn-primary">Get a quote</a>
-    <a href={CONTACT.phoneHref} class="btn btn-secondary">Call {CONTACT.phone}</a>
+    <a href={CONTACT.phoneHref} class="btn btn-secondary">
+      <Icon name="phone" class="h-4 w-4" />
+      Call {CONTACT.phone}
+    </a>
   </QuoteBand>
 
   <!-- FAQ — the live home FAQ, answers drafted and flagged for review -->
-  <section class="bg-[var(--color-surface-alt)] py-16">
+  <section class="py-20">
     <div class="container-page">
       <h2 class="text-2xl sm:text-3xl">Frequently asked questions</h2>
       <p class="prose-page mt-3 text-[var(--color-ink-soft)]">
         Please reach us at {CONTACT.email} if you cannot find an answer to your question.
       </p>
       <div class="mt-6">
-        <FaqBlock faqs={HOME_FAQ} />
+        <FaqBlock faqs={HOME_FAQ} heading={null} />
       </div>
     </div>
   </section>
 
   <!-- Already a customer? Renewal and service path -->
-  <section class="container-page py-16">
-    <div class="rounded-xl border border-neutral-200 p-6 sm:p-8">
-      <div class="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h2 class="text-xl">Already a customer?</h2>
-          <p class="mt-2 text-[var(--color-ink-soft)]">
+  <section class="bg-[var(--color-surface-alt)] py-20">
+    <div class="container-page">
+      <div class="card grid items-center gap-8 overflow-hidden p-0 lg:grid-cols-[minmax(0,5fr)_minmax(0,6fr)]">
+        <div class="aspect-[4/3] lg:aspect-auto lg:h-full">
+          <img
+            src={PHOTOS.agentOnPhone.src}
+            srcset={PHOTOS.agentOnPhone.srcset}
+            sizes="(min-width: 1024px) 520px, 92vw"
+            alt={PHOTOS.agentOnPhone.alt}
+            width={PHOTOS.agentOnPhone.width}
+            height={PHOTOS.agentOnPhone.height}
+            loading="lazy"
+            decoding="async"
+            class="h-full w-full object-cover"
+          />
+        </div>
+        <div class="p-7 sm:p-10 lg:pl-2">
+          <p class="kicker">Existing clients</p>
+          <h2 class="mt-3 text-2xl sm:text-3xl">Already a customer?</h2>
+          <p class="mt-3 text-[var(--color-ink-soft)]">
             Renewals, changes and claims go through us, not a national call centre.
             Call or send a message and a person from this team will get back to you.
           </p>
-        </div>
-        <div class="flex flex-wrap gap-2">
-          <a href={CONTACT.phoneHref} class="btn btn-primary">Call {CONTACT.phone}</a>
-          <a href="/contact" class="btn btn-secondary">Contact your team</a>
+          <div class="mt-7 flex flex-wrap gap-3">
+            <a href={CONTACT.phoneHref} class="btn btn-primary">
+              <Icon name="phone" class="h-4 w-4" />
+              Call {CONTACT.phone}
+            </a>
+            <a href="/contact" class="btn btn-secondary">Contact your team</a>
+          </div>
         </div>
       </div>
     </div>
   </section>
 
   <!-- Locations — NAP in body copy, not just the footer -->
-  <section class="bg-[var(--color-ink)] py-16 text-white">
+  <section class="relative isolate overflow-hidden bg-[var(--color-ink)] py-20 text-white">
+    <div aria-hidden="true" class="dot-grid absolute inset-0 -z-10"></div>
+    <Art kind="shield" class="absolute inset-y-0 right-0 -z-10 hidden h-full w-[60%] opacity-70 lg:block" />
     <div class="container-page">
-      <p class="font-[var(--font-heading)] text-sm font-bold uppercase tracking-widest text-[var(--color-brand-300)]">
-        Visit us
-      </p>
-      <h2 class="mt-2 text-2xl sm:text-3xl">Two offices, one local team</h2>
-      <div class="mt-8 grid gap-8 sm:grid-cols-2">
+      <p class="kicker kicker-on-dark">Visit us</p>
+      <h2 class="mt-3 text-2xl sm:text-3xl">Two offices, one local team</h2>
+      <div class="mt-9 grid gap-5 sm:grid-cols-2 lg:max-w-3xl">
         {
           LOCATIONS.map((loc) => (
-            <div>
-              <h3 class="text-lg">
-                <a href={`/${loc.slug}`} class="hover:underline hover:text-[var(--color-brand-200)]">
-                  {loc.name}
-                </a>
-              </h3>
-              <address class="mt-2 not-italic leading-relaxed text-white/85">
-                {loc.street}<br />
-                {loc.locality}, {loc.region} {loc.postalCode}
-              </address>
+            <div class="glass-chip rounded-2xl p-6">
+              <div class="flex items-start gap-4">
+                <span
+                  aria-hidden="true"
+                  class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[var(--color-brand-500)]/15 text-[var(--color-brand-300)]"
+                >
+                  <Icon name="pin" class="h-5 w-5" />
+                </span>
+                <div>
+                  <h3 class="text-lg">
+                    <a href={`/${loc.slug}`} class="transition-colors hover:text-[var(--color-brand-200)] hover:underline">
+                      {loc.name}
+                    </a>
+                  </h3>
+                  <address class="mt-2 not-italic leading-relaxed text-white/85">
+                    {loc.street}<br />
+                    {loc.locality}, {loc.region} {loc.postalCode}
+                  </address>
+                </div>
+              </div>
             </div>
           ))
         }
       </div>
-      <div class="mt-8 border-t border-white/15 pt-6">
+      <div class="mt-9 flex flex-wrap items-center gap-x-6 gap-y-4 border-t border-white/15 pt-7">
         <p class="text-white/85">
-          Call <a href={CONTACT.phoneHref} class="font-semibold text-[var(--color-brand-300)]">{CONTACT.phone}</a>
+          Call <a href={CONTACT.phoneHref} class="font-semibold text-[var(--color-brand-300)] hover:underline">{CONTACT.phone}</a>
           {' '}· {CONTACT.hours.display}
         </p>
-        <a href="/get-a-quote" class="btn btn-on-dark mt-5">Get a quote</a>
+        <a href="/get-a-quote" class="btn btn-on-dark">Get a quote</a>
       </div>
     </div>
   </section>

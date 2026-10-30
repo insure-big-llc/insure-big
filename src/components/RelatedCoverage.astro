@@ -11,6 +11,7 @@
  * conversation moves ("you have a rental? then you probably also need...").
  */
 import { SERVICES, HUBS, SPECIALTY_GROUP, servicePath } from '../config/services.js';
+import Icon from './Icon.astro';
 
 const {
   /** Current service slug, excluded from its own list. */
@@ -85,9 +86,10 @@ const items = pool.filter((s) => s.slug !== current).slice(0, 4);
           <li>
             <a
               href={servicePath(s)}
-              class="flex min-h-11 items-center rounded-lg border border-neutral-200 px-4 py-3 text-sm font-semibold transition hover:underline hover:border-[var(--color-brand-500)]"
+              class="card card-hover group flex min-h-14 items-center justify-between gap-3 px-4 py-3 text-sm font-semibold"
             >
-              {s.name}
+              <span>{s.name}</span>
+              <Icon name="arrow-right" class="arrow h-4 w-4 shrink-0 text-[var(--color-brand-700)]" />
             </a>
           </li>
         ))}
@@ -95,8 +97,9 @@ const items = pool.filter((s) => s.slug !== current).slice(0, 4);
 
       {hubMeta && (
         <p class="mt-5 text-sm">
-          <a href={`/${hub}`} class="font-semibold underline">
+          <a href={`/${hub}`} class="group inline-flex items-center gap-1.5 font-semibold text-[var(--color-brand-700)] hover:underline">
             See all {hubMeta.title.toLowerCase()}
+            <Icon name="arrow-right" class="arrow h-4 w-4" />
           </a>
         </p>
       )}

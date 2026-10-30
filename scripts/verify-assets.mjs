@@ -209,12 +209,18 @@ for (const file of htmlFiles) {
   }
 }
 
-// ── F. Generated artwork (spec 0002): the hero and band art must survive the
-// build, or the dark sections render as flat ink with no visual anchor.
-for (const art of ['images/art/hero-art.webp', 'images/art/band-art.webp']) {
-  if (!existsSync(join(DIST, art))) errors.push(`dist/${art} missing — run scripts/build-artwork.mjs (it is wired into prebuild)`);
+// ── F. Hero photos (design pass 2): the home hero and the customer band use the
+// agency's own processed photos. A missing file would leave a broken frame.
+for (const photo of [
+  'images/photos/office-meeting-960.webp',
+  'images/photos/office-meeting-640.webp',
+  'images/photos/agent-on-phone-960.webp',
+  'images/photos/agent-on-phone-640.webp',
+  'images/photos/team-storefront-768.webp',
+  'images/photos/team-storefront-480.webp',
+]) {
+  if (!existsSync(join(DIST, photo))) errors.push(`dist/${photo} missing — run scripts/process-photos.mjs and commit the output`);
 }
-
 // ── G. Security headers (netlify deploy readiness): the headers file must
 // reach dist with the baseline protections, or the deploy ships without them.
 const headersPath = join(DIST, '_headers');

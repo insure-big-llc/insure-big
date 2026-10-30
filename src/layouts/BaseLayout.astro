@@ -26,6 +26,8 @@ const {
   /** Optional JSON-LD node(s) built by src/lib/schema.js */
   schema = null,
   noindex = false,
+  /** Drops the footer top margin (pages that end in their own dark band). */
+  footerFlush = false,
 } = Astro.props;
 
 const canonical = absoluteUrl(path);
@@ -141,7 +143,7 @@ const fullTitle = title.includes(BRAND_MARKER) ? title : `${title} ${BRAND_MARKE
     <main id="main">
       <slot />
     </main>
-    <Footer />
+    <Footer flush={footerFlush} />
 
     <!--
       Sticky quote bar (spec 0002): Call and Get a Quote pinned to the bottom
@@ -157,8 +159,8 @@ const fullTitle = title.includes(BRAND_MARKER) ? title : `${title} ${BRAND_MARKE
       style="padding-bottom: env(safe-area-inset-bottom)"
     >
       <div class="container-page flex gap-3 py-1.5">
-        <a href={CONTACT.phoneHref} class="btn btn-on-dark flex-1">Call {CONTACT.phone}</a>
-        <a href={QUOTE_URL} class="btn btn-primary flex-1">Get a Quote</a>
+        <a href={CONTACT.phoneHref} class="btn btn-on-dark flex-[1.5] whitespace-nowrap px-3 text-sm">Call {CONTACT.phone}</a>
+        <a href={QUOTE_URL} class="btn btn-primary flex-1 whitespace-nowrap px-3 text-sm">Get a Quote</a>
       </div>
     </div>
     <script>

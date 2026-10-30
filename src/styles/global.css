@@ -32,6 +32,12 @@
 
   --font-heading: 'Cantarell', ui-sans-serif, system-ui, sans-serif;
   --font-body: 'Poppins', ui-sans-serif, system-ui, sans-serif;
+
+  /* Polish tokens (design pass 2): one easing curve and two shadow depths, so
+     every surface moves and lifts the same way. */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --shadow-soft: 0 1px 2px rgb(26 26 26 / 0.04), 0 6px 20px -8px rgb(26 26 26 / 0.1);
+  --shadow-lift: 0 2px 4px rgb(26 26 26 / 0.05), 0 22px 44px -16px rgb(26 26 26 / 0.22);
 }
 
 /*
@@ -68,6 +74,7 @@
    */
   html {
     font-size: 100%;
+    /* Clears the sticky header on desktop (set per breakpoint below). */
     scroll-padding-top: 1rem;
     -webkit-text-size-adjust: 100%;
     text-size-adjust: 100%;
@@ -249,20 +256,38 @@
     text-align: center;
     text-decoration: none;
     transition:
-      background-color 150ms ease,
-      color 150ms ease,
-      border-color 150ms ease;
+      background-color 200ms ease,
+      color 200ms ease,
+      border-color 200ms ease,
+      box-shadow 260ms var(--ease-out),
+      transform 260ms var(--ease-out);
+  }
+
+  /* A 1px lift on hover and a small press on tap: feedback, not decoration. */
+  .btn:hover {
+    transform: translateY(-1px);
+  }
+
+  .btn:active {
+    transform: translateY(0) scale(0.985);
+    transition-duration: 80ms;
   }
 
   .btn-primary {
     background-color: var(--color-brand-500);
     color: var(--color-ink);
     border: 2px solid var(--color-brand-500);
+    box-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 0.28),
+      0 6px 16px -8px rgb(189 155 1 / 0.7);
   }
 
   .btn-primary:hover {
     background-color: var(--color-brand-400);
     border-color: var(--color-brand-400);
+    box-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 0.35),
+      0 12px 24px -10px rgb(189 155 1 / 0.75);
   }
 
   .btn-secondary {
@@ -274,17 +299,225 @@
   .btn-secondary:hover {
     background-color: var(--color-ink);
     color: #fff;
+    box-shadow: 0 12px 24px -12px rgb(26 26 26 / 0.45);
   }
 
   .btn-on-dark {
     background-color: var(--color-brand-500);
     color: var(--color-ink);
     border: 2px solid var(--color-brand-500);
+    box-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 0.28),
+      0 8px 20px -10px rgb(189 155 1 / 0.8);
   }
 
   .btn-on-dark:hover {
     background-color: var(--color-brand-400);
     border-color: var(--color-brand-400);
+    box-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 0.35),
+      0 14px 28px -12px rgb(189 155 1 / 0.85);
+  }
+
+  /* Ghost button for dark backgrounds (the phone number beside the quote CTA). */
+  .btn-ghost-dark {
+    background-color: rgb(255 255 255 / 0.04);
+    color: #fff;
+    border: 2px solid rgb(255 255 255 / 0.28);
+    backdrop-filter: blur(6px);
+  }
+
+  .btn-ghost-dark:hover {
+    background-color: rgb(255 255 255 / 0.1);
+    border-color: rgb(255 255 255 / 0.55);
+  }
+
+  /*
+   * SURFACES
+   *
+   * `.card` is the one resting surface (soft border, soft shadow, generous
+   * radius). `.card-hover` adds the lift for cards that are links.
+   */
+  .card {
+    background-color: var(--color-surface);
+    border: 1px solid rgb(26 26 26 / 0.08);
+    border-radius: 1rem;
+    box-shadow: var(--shadow-soft);
+  }
+
+  .card-hover {
+    transition:
+      transform 300ms var(--ease-out),
+      box-shadow 300ms var(--ease-out),
+      border-color 200ms ease;
+  }
+
+  .card-hover:hover {
+    transform: translateY(-3px);
+    border-color: var(--color-brand-300);
+    box-shadow: var(--shadow-lift);
+  }
+
+  /* Gold for ICONS and fills only (stars). Never use it for text: 2.6:1 on white. */
+  .icon-gold {
+    color: var(--color-brand-500);
+  }
+
+  /* Section label: a short gold rule then the words. Gold is the rule only; the
+     text stays brand-700 so contrast holds. */
+  .kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.7rem;
+    font-family: var(--font-heading);
+    font-size: 0.875rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-brand-700);
+  }
+
+  .kicker::before {
+    content: '';
+    width: 1.75rem;
+    height: 2px;
+    border-radius: 2px;
+    background: linear-gradient(90deg, var(--color-brand-500), var(--color-brand-300));
+  }
+
+  .kicker-on-dark {
+    color: var(--color-brand-300);
+  }
+
+  /* Arrow that eases forward when its link is hovered. */
+  .arrow {
+    transition: transform 260ms var(--ease-out);
+  }
+
+  a:hover > .arrow,
+  .group:hover .arrow {
+    transform: translateX(4px);
+  }
+
+  /* Animated gold underline for the desktop navigation. */
+  .nav-link {
+    position: relative;
+  }
+
+  .nav-link::after {
+    content: '';
+    position: absolute;
+    inset-inline: 0.75rem;
+    bottom: 0.4rem;
+    height: 2px;
+    border-radius: 2px;
+    background: var(--color-brand-500);
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform 280ms var(--ease-out);
+  }
+
+  .nav-link:hover::after,
+  .group:focus-within > .nav-link::after,
+  .group:hover > .nav-link::after,
+  .nav-link[aria-current='page']::after {
+    transform: scaleX(1);
+  }
+
+  /* Dropdown panel: fades and settles 6px, and leaves the same way. */
+  .nav-panel {
+    visibility: hidden;
+    opacity: 0;
+    transform: translateY(6px);
+    transition:
+      opacity 180ms ease,
+      transform 240ms var(--ease-out),
+      visibility 0s linear 240ms;
+  }
+
+  .group:hover > .nav-panel,
+  .group:focus-within > .nav-panel {
+    visibility: visible;
+    opacity: 1;
+    transform: none;
+    transition-delay: 0s;
+  }
+
+  /*
+   * HEADER
+   *
+   * Sticky on desktop only. On phones the open menu is taller than the
+   * viewport, and a sticky header would trap the page behind it; the sticky
+   * quote bar at the bottom already keeps the call to action in reach there.
+   * The shadow fades in over the first 80px of scroll, with no JavaScript.
+   */
+  .site-header {
+    background-color: rgb(255 255 255 / 0.92);
+    backdrop-filter: saturate(160%) blur(12px);
+  }
+
+  @media (min-width: 64rem) {
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+    }
+
+    html {
+      scroll-padding-top: 6rem;
+    }
+  }
+
+  /* Hero and band backdrops: layered gradients and a hairline dot grid.
+     Pure CSS, so they are razor sharp at any size and add zero image weight. */
+  .hero-bg {
+    background-color: #161616;
+    background-image:
+      radial-gradient(60% 90% at 88% 0%, rgb(189 155 1 / 0.26), transparent 62%),
+      radial-gradient(45% 70% at 0% 100%, rgb(189 155 1 / 0.12), transparent 66%),
+      linear-gradient(180deg, #1d1d1d 0%, #121212 100%);
+  }
+
+  .dot-grid {
+    background-image: radial-gradient(rgb(255 255 255 / 0.1) 1px, transparent 1.4px);
+    background-size: 26px 26px;
+    -webkit-mask-image: radial-gradient(70% 80% at 80% 30%, #000, transparent 75%);
+    mask-image: radial-gradient(70% 80% at 80% 30%, #000, transparent 75%);
+  }
+
+  /* The photo frame used on dark hero sections. */
+  .photo-frame {
+    position: relative;
+    overflow: hidden;
+    border-radius: 1.25rem;
+    border: 1px solid rgb(255 255 255 / 0.14);
+    box-shadow:
+      0 30px 60px -24px rgb(0 0 0 / 0.7),
+      0 0 0 6px rgb(255 255 255 / 0.04);
+  }
+
+  .photo-frame::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(180deg, transparent 55%, rgb(0 0 0 / 0.38));
+  }
+
+  /* Frosted chip that sits on a photo. */
+  .glass-chip {
+    background: rgb(20 20 20 / 0.55);
+    backdrop-filter: blur(10px) saturate(140%);
+    border: 1px solid rgb(255 255 255 / 0.18);
+    color: #fff;
+  }
+
+  /* Light photo frame used on white sections. */
+  .photo-light {
+    overflow: hidden;
+    border-radius: 1.25rem;
+    border: 1px solid rgb(26 26 26 / 0.08);
+    box-shadow: var(--shadow-lift);
   }
 
   .prose-page {
@@ -334,6 +567,35 @@
     margin-block: 0.4rem;
     line-height: 1.7;
   }
+
+  /*
+   * Checked lists (service pages only): the "what this covers" bullets become
+   * small gold-ringed ticks. The tick is an inline data URI, so there is no
+   * extra request and it stays crisp. Legal pages keep plain disc bullets.
+   */
+  .prose-checks ul {
+    list-style: none;
+    padding-inline-start: 0;
+  }
+
+  .prose-checks li {
+    position: relative;
+    padding-inline-start: 2.15rem;
+  }
+
+  .prose-checks li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.28em;
+    width: 1.4rem;
+    height: 1.4rem;
+    border-radius: 9999px;
+    background: var(--color-brand-50)
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23816501' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E")
+      center / 0.8rem no-repeat;
+    box-shadow: inset 0 0 0 1px var(--color-brand-200);
+  }
 }
 
 /* Screen-reader-only, for the skip link and icon labels. */
@@ -364,4 +626,139 @@
   background: var(--color-ink);
   color: #fff;
   border-radius: 0.375rem;
+}
+
+::selection {
+  background: var(--color-brand-200);
+  color: var(--color-ink);
+}
+
+/*
+ * MOTION (design pass 2)
+ *
+ * Deliberately small. The first motion pass was rejected as unprofessional, so
+ * the rules here are: nothing loops, nothing scroll-triggers, nothing hides
+ * content, and every effect has a job (feedback, orientation or one calm
+ * entrance). The hero headline and body copy never animate, so the largest
+ * paint is never delayed.
+ */
+
+/* One calm entrance for the supporting hero pieces. Opacity and a 10px rise. */
+@keyframes enter-up {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* The hero photo settles from a 3.5% zoom, transform only. */
+@keyframes settle {
+  from {
+    transform: scale(1.035);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+.enter {
+  animation: enter-up 700ms var(--ease-out) both;
+  animation-delay: var(--enter-delay, 0ms);
+}
+
+.settle {
+  animation: settle 1400ms var(--ease-out) both;
+}
+
+/* Header shadow tied to scroll position (Chrome and Safari; others skip it). */
+@keyframes header-shadow {
+  from {
+    box-shadow: 0 0 0 0 rgb(26 26 26 / 0);
+    border-color: transparent;
+  }
+  to {
+    box-shadow: 0 10px 28px -14px rgb(26 26 26 / 0.28);
+    border-color: rgb(26 26 26 / 0.06);
+  }
+}
+
+@supports (animation-timeline: scroll()) {
+  .site-header {
+    animation: header-shadow linear both;
+    animation-timeline: scroll(root block);
+    animation-range: 0 90px;
+  }
+}
+
+/* Smooth accordions for the FAQ and the mobile menu where the browser can
+   animate to `auto` height. Everywhere else they simply open instantly. */
+@supports (interpolate-size: allow-keywords) {
+  :root {
+    interpolate-size: allow-keywords;
+  }
+
+  details::details-content {
+    block-size: 0;
+    overflow-y: clip;
+    transition:
+      block-size 320ms var(--ease-out),
+      content-visibility 320ms allow-discrete;
+  }
+
+  details[open]::details-content {
+    block-size: auto;
+  }
+}
+
+summary {
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+summary::-webkit-details-marker {
+  display: none;
+}
+
+/* Page to page: a 160ms cross fade, header and quote bar held still. Browsers
+   without cross document view transitions just navigate normally. */
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition {
+    navigation: auto;
+  }
+
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 160ms;
+  }
+
+  @media (min-width: 64rem) {
+    .site-header {
+      view-transition-name: site-header;
+    }
+  }
+
+  #quote-bar {
+    view-transition-name: quote-bar;
+  }
+}
+
+/* Reduced motion: everything lands in its final state instantly. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    animation-delay: 0ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .site-header {
+    animation: none;
+  }
 }

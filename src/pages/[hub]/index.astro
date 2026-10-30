@@ -14,6 +14,7 @@ import ServiceForm from '../../components/ServiceForm.astro';
 import CarrierStrip from '../../components/CarrierStrip.astro';
 import FaqBlock from '../../components/FaqBlock.astro';
 import RelatedCoverage from '../../components/RelatedCoverage.astro';
+import Icon from '../../components/Icon.astro';
 import { HUBS, SERVICES, HUB_FAQ } from '../../config/services.js';
 import { SERVICE_CARRIERS } from '../../config/carriers.js';
 import { ART } from '../../config/site.js';
@@ -80,12 +81,12 @@ const schema = [
       /* 🔴 The agency's own "Why choose" list — restored verbatim (W4). This is
          their wording from the live pages, not a paraphrase. */
       hub.whyChoose && (
-        <section class="mt-12 rounded-xl bg-[var(--color-surface-alt)] p-6 sm:p-8">
+        <section class="mt-12 rounded-2xl bg-[var(--color-surface-alt)] p-6 sm:p-8">
           <h2 class="text-xl sm:text-2xl">{hub.whyChoose.heading}</h2>
           <ul class="mt-5 grid gap-x-8 gap-y-3 sm:grid-cols-2">
             {hub.whyChoose.items.map((item) => (
               <li class="flex gap-3 text-base leading-relaxed">
-                <span aria-hidden="true" class="mt-0.5 shrink-0 text-[var(--color-brand-600)]">✓</span>
+                <span aria-hidden="true" class="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-white text-[var(--color-brand-700)] ring-1 ring-[var(--color-brand-200)]"><Icon name="check" class="h-3.5 w-3.5" stroke={2.5} /></span>
                 <span>{item}</span>
               </li>
             ))}
@@ -105,9 +106,9 @@ const schema = [
       <ul class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {
           children.map((s) => (
-            <li class="rounded-xl border border-neutral-200 p-5 transition hover:border-[var(--color-brand-500)]">
+            <li class="card card-hover p-5">
               <h3 class="text-lg">
-                <a href={`/${hub.slug}/${s.slug}`} class="hover:underline hover:text-[var(--color-brand-700)]">
+                <a href={`/${hub.slug}/${s.slug}`} class="transition-colors hover:text-[var(--color-brand-700)]">
                   {s.name}
                 </a>
               </h3>

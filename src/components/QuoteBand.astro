@@ -2,17 +2,35 @@
 /**
  * QuoteBand: a light gold tinted call to action band. Spec 0002.
  * The tint keeps it visually distinct from the white and ink sections beside
- * it, which the home page rhythm check asserts.
+ * it, which the home page rhythm check asserts. Design pass 2 adds a soft
+ * radial glow and hairline gold edges, still pure CSS.
  */
+import Icon from './Icon.astro';
+
 const { heading, copy, href, label } = Astro.props;
 ---
 
-<section class="bg-[var(--color-brand-50)] py-14">
+<section class="relative isolate overflow-hidden bg-[var(--color-brand-50)] py-16">
+  <div
+    aria-hidden="true"
+    class="absolute inset-0 -z-10 bg-[radial-gradient(60%_120%_at_50%_0%,rgb(236_203_77_/_0.28),transparent_70%)]"
+  ></div>
+  <div
+    aria-hidden="true"
+    class="absolute inset-x-0 top-0 -z-10 h-px bg-gradient-to-r from-transparent via-[var(--color-brand-400)] to-transparent"
+  ></div>
+  <div
+    aria-hidden="true"
+    class="absolute inset-x-0 bottom-0 -z-10 h-px bg-gradient-to-r from-transparent via-[var(--color-brand-300)] to-transparent"
+  ></div>
   <div class="container-page">
     <div class="mx-auto max-w-2xl text-center">
-      <h2 class="text-2xl sm:text-3xl">{heading}</h2>
+      <span class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-white text-[var(--color-brand-700)] shadow-[var(--shadow-soft)] ring-1 ring-[var(--color-brand-200)]">
+        <Icon name="shield-check" class="h-6 w-6" />
+      </span>
+      <h2 class="mt-5 text-2xl sm:text-3xl">{heading}</h2>
       <p class="prose-page mx-auto mt-5 text-[var(--color-ink-soft)]">{copy}</p>
-      <div class="mt-7 flex flex-wrap justify-center gap-3">
+      <div class="mt-8 flex flex-wrap justify-center gap-3">
         <slot />
       </div>
     </div>

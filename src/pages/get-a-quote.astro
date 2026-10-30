@@ -76,8 +76,8 @@ const schema = [
     <ol class="mt-12 grid gap-6 sm:grid-cols-3">
       {
         steps.map((s) => (
-          <li class="rounded-xl border border-neutral-200 p-6">
-            <p class="font-[var(--font-heading)] text-sm font-bold uppercase tracking-widest text-[var(--color-brand-700)]">
+          <li class="card p-6">
+            <p class="kicker">
               Step {s.n}
             </p>
             <h2 class="mt-2 text-lg">{s.title}</h2>
@@ -95,7 +95,7 @@ const schema = [
 
     <!-- The two live forms, linked directly so they work with JS disabled -->
     <div class="mt-12 grid gap-6 lg:grid-cols-2">
-      <section data-coverage="personal" class="rounded-xl border border-neutral-200 p-6">
+      <section data-coverage="personal" class="card p-6">
         <h2 class="text-xl">Personal &amp; life insurance quote</h2>
         <p class="mt-2 text-sm leading-relaxed text-[var(--color-ink-soft)]">
           Home, auto, renters, condo, landlord, umbrella, flood, life, Medicare and
@@ -109,7 +109,7 @@ const schema = [
         </p>
       </section>
 
-      <section data-coverage="business" class="rounded-xl border border-neutral-200 p-6">
+      <section data-coverage="business" class="card p-6">
         <h2 class="text-xl">Business insurance quote</h2>
         <p class="mt-2 text-sm leading-relaxed text-[var(--color-ink-soft)]">
           General liability, BOP, commercial property and auto, workers'
@@ -128,13 +128,13 @@ const schema = [
       <h2 class="text-lg">Would you rather just talk?</h2>
       <p class="mt-2 text-[var(--color-ink-soft)]">
         Call <a href="tel:+18168681787" class="font-semibold underline">(816) 868-1787</a>
-        {' '}during {`Monday – Friday, 9:00am – 5:00pm`}, or
+        {' '}during {`Monday – Friday, 9:00am – 5:00pm`}, or{' '}
         <a href="/contact" class="font-semibold underline">see both office locations</a>.
       </p>
     </section>
 
     <p class="mt-8 text-xs leading-relaxed text-[var(--color-ink-muted)]">
-      Submitting a form does not commit you to anything. See our
+      Submitting a form does not commit you to anything. See our{' '}
       <a href="/privacy-policy" class="underline">Privacy Policy</a> for how we handle
       your information. Consent is required before any marketing text message; you can
       opt out at any time by replying STOP.

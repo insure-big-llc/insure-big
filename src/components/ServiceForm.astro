@@ -39,7 +39,10 @@ const src = `${base}?${params.toString()}`;
 const uid = `jotform-${path.replace(/[^a-z0-9]+/gi, '-').replace(/^-|-$/g, '')}`;
 ---
 
-<section id="quote" class="rounded-xl border border-neutral-200 bg-[var(--color-surface-alt)] p-6 sm:p-8">
+<section
+  id="quote"
+  class="rounded-2xl border border-neutral-200 border-t-[3px] border-t-[var(--color-brand-500)] bg-[var(--color-surface-alt)] p-6 shadow-[var(--shadow-soft)] sm:p-8"
+>
   <h2 class="text-2xl">Request a {label} quote</h2>
   <p class="prose-page mt-3 text-[var(--color-ink-soft)]">
     Tell us a little about what you need and a licensed agent will come back to
@@ -58,9 +61,7 @@ const uid = `jotform-${path.replace(/[^a-z0-9]+/gi, '-').replace(/^-|-$/g, '')}`
       Open the quote form
     </a>
     <p class="mt-3 text-sm text-[var(--color-ink-muted)]">
-      Opens a secure form in this page. Prefer to talk?
-      <a href="/contact" class="font-semibold underline">Contact us</a> or call
-      <a href="tel:+18168681787" class="font-semibold underline">(816) 868-1787</a>.
+      Opens a secure form in this page. Prefer to talk?{' '}<a href="/contact" class="font-semibold underline">Contact us</a> or call{' '}<a href="tel:+18168681787" class="font-semibold underline">(816) 868-1787</a>.
     </p>
   </div>
 

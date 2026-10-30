@@ -9,17 +9,35 @@
  *
  * No JS. The mobile menu uses a <details> element so it works with JS disabled
  * — a crawler that does not execute JS must still see every link.
+ *
+ * Design pass 2: sticky and frosted on desktop with a scroll tied shadow, an
+ * animated gold underline on the current section, and dropdown panels that
+ * settle into place. See `.site-header`, `.nav-link` and `.nav-panel` in
+ * global.css.
  */
 import { HUBS, SPECIALTY_GROUP, SERVICES, servicesByHub } from '../config/services.js';
 import { CONTACT, QUOTE_URL } from '../config/site.js';
+import Icon from './Icon.astro';
 
 const specialty = SERVICES.filter((s) => s.hub === 'specialty');
+
+const here = Astro.url.pathname.replace(/\/$/, '') || '/';
+const inSection = (slug) => here === `/${slug}` || here.startsWith(`/${slug}/`);
+const is = (path) => here === path;
+
+const linkClass =
+  'nav-link flex min-h-11 items-center px-3 py-2 text-sm font-semibold text-[var(--color-ink)] transition-colors hover:text-[var(--color-brand-700)]';
+const panelClass = 'nav-panel absolute left-0 top-full z-40 w-72 pt-2';
+const panelCard =
+  'rounded-xl border border-neutral-200 bg-white p-2 shadow-[var(--shadow-lift)]';
+const itemClass =
+  'block rounded-lg px-3 py-2 text-sm text-[var(--color-ink-soft)] transition-colors hover:bg-[var(--color-brand-50)] hover:text-[var(--color-ink)]';
 ---
 
-<header class="border-b border-neutral-200 bg-white">
+<header class="site-header border-b border-neutral-200/80">
   <div class="container-page">
     <div class="flex items-center justify-between gap-4 py-3">
-      <a href="/" class="flex items-center gap-2 shrink-0" aria-label="Ballentine Insurance Group — home">
+      <a href="/" class="flex shrink-0 items-center gap-2" aria-label="Ballentine Insurance Group — home">
         <img
           src="/images/big-logo.webp"
           alt="Ballentine Insurance Group"
@@ -39,18 +57,16 @@ const specialty = SERVICES.filter((s) => s.hub === 'specialty');
               <li class="group relative">
                 <a
                   href={`/${hub.slug}`}
-                  class="flex min-h-11 items-center rounded px-3 py-2 text-sm font-semibold text-[var(--color-ink)] hover:underline hover:text-[var(--color-brand-700)]"
+                  class={linkClass}
+                  aria-current={inSection(hub.slug) ? 'page' : undefined}
                 >
                   {hub.title}
                 </a>
-                <div class="invisible absolute left-0 top-full z-40 w-72 rounded-lg border border-neutral-200 bg-white p-2 opacity-0 shadow-lg transition group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
-                  <ul>
+                <div class={panelClass}>
+                  <ul class={panelCard}>
                     {servicesByHub(hub.slug).map((s) => (
                       <li>
-                        <a
-                          href={`/${hub.slug}/${s.slug}`}
-                          class="block rounded px-3 py-2 text-sm text-[var(--color-ink-soft)] hover:bg-[var(--color-surface-alt)]"
-                        >
+                        <a href={`/${hub.slug}/${s.slug}`} class={itemClass}>
                           {s.name}
                         </a>
                       </li>
@@ -63,18 +79,16 @@ const specialty = SERVICES.filter((s) => s.hub === 'specialty');
           <li class="group relative">
             <a
               href="/specialty/surety-bonds"
-              class="flex min-h-11 items-center rounded px-3 py-2 text-sm font-semibold text-[var(--color-ink)] hover:underline hover:text-[var(--color-brand-700)]"
+              class={linkClass}
+              aria-current={inSection('specialty') ? 'page' : undefined}
             >
               Specialty
             </a>
-            <div class="invisible absolute left-0 top-full z-40 w-72 rounded-lg border border-neutral-200 bg-white p-2 opacity-0 shadow-lg transition group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
-              <ul>
+            <div class={panelClass}>
+              <ul class={panelCard}>
                 {specialty.map((s) => (
                   <li>
-                    <a
-                      href={`/specialty/${s.slug}`}
-                      class="block rounded px-3 py-2 text-sm text-[var(--color-ink-soft)] hover:bg-[var(--color-surface-alt)]"
-                    >
+                    <a href={`/specialty/${s.slug}`} class={itemClass}>
                       {s.name}
                     </a>
                   </li>
@@ -83,18 +97,12 @@ const specialty = SERVICES.filter((s) => s.hub === 'specialty');
             </div>
           </li>
           <li>
-            <a
-              href="/about"
-              class="flex min-h-11 items-center rounded px-3 py-2 text-sm font-semibold text-[var(--color-ink)] hover:underline hover:text-[var(--color-brand-700)]"
-            >
+            <a href="/about" class={linkClass} aria-current={is('/about') ? 'page' : undefined}>
               About
             </a>
           </li>
           <li>
-            <a
-              href="/contact"
-              class="flex min-h-11 items-center rounded px-3 py-2 text-sm font-semibold text-[var(--color-ink)] hover:underline hover:text-[var(--color-brand-700)]"
-            >
+            <a href="/contact" class={linkClass} aria-current={is('/contact') ? 'page' : undefined}>
               Contact
             </a>
           </li>
@@ -103,6 +111,7 @@ const specialty = SERVICES.filter((s) => s.hub === 'specialty');
 
       <div class="flex items-center gap-2">
         <a href={CONTACT.phoneHref} class="btn btn-secondary hidden sm:inline-flex">
+          <Icon name="phone" class="h-4 w-4" />
           Call {CONTACT.phone}
         </a>
         <a href={QUOTE_URL} class="btn btn-primary">Get a Quote</a>
@@ -110,26 +119,29 @@ const specialty = SERVICES.filter((s) => s.hub === 'specialty');
     </div>
 
     <!-- Mobile nav: <details> keeps every link in the static HTML, no JS needed. -->
-    <details class="lg:hidden pb-3">
+    <details class="group/menu pb-3 lg:hidden">
       <summary
-        class="flex min-h-11 cursor-pointer list-none items-center justify-between rounded border border-neutral-300 px-4 py-2 text-sm font-semibold"
+        class="flex min-h-11 cursor-pointer list-none items-center justify-between rounded-xl border border-neutral-300 bg-white px-4 py-2 text-sm font-semibold shadow-[var(--shadow-soft)]"
       >
         <span>Browse insurance</span>
-        <span aria-hidden="true">▾</span>
+        <Icon name="chevron-down" class="h-4 w-4 transition-transform duration-300 group-open/menu:rotate-180" />
       </summary>
       <nav aria-label="Mobile" class="mt-2 space-y-2">
         <div class="flex gap-2">
-          <a href={CONTACT.phoneHref} class="btn btn-secondary flex-1">Call {CONTACT.phone}</a>
-          <a href={QUOTE_URL} class="btn btn-primary flex-1">Get a Quote</a>
+          <a href={CONTACT.phoneHref} class="btn btn-secondary flex-[1.5] whitespace-nowrap px-3 text-sm">Call {CONTACT.phone}</a>
+          <a href={QUOTE_URL} class="btn btn-primary flex-1 whitespace-nowrap px-3 text-sm">Get a Quote</a>
         </div>
         {
           HUBS.map((hub) => (
-            <details class="group">
+            <details class="group/hub">
               <summary class="flex min-h-11 cursor-pointer list-none items-center justify-between rounded px-1 py-1.5 text-sm font-bold">
                 <span>{hub.title}</span>
-                <span aria-hidden="true" class="text-[var(--color-brand-700)]">▸</span>
+                <Icon
+                  name="chevron-right"
+                  class="h-4 w-4 text-[var(--color-brand-700)] transition-transform duration-300 group-open/hub:rotate-90"
+                />
               </summary>
-              <ul class="mt-1 ml-2 border-l border-neutral-200 pl-2">
+              <ul class="ml-2 mt-1 border-l border-neutral-200 pl-2">
                 {servicesByHub(hub.slug).map((s) => (
                   <li>
                     <a href={`/${hub.slug}/${s.slug}`} class="block py-1.5 text-sm">
@@ -141,12 +153,15 @@ const specialty = SERVICES.filter((s) => s.hub === 'specialty');
             </details>
           ))
         }
-        <details class="group">
+        <details class="group/hub">
           <summary class="flex min-h-11 cursor-pointer list-none items-center justify-between rounded px-1 py-1.5 text-sm font-bold">
             <span>{SPECIALTY_GROUP.title}</span>
-            <span aria-hidden="true" class="text-[var(--color-brand-700)]">▸</span>
+            <Icon
+              name="chevron-right"
+              class="h-4 w-4 text-[var(--color-brand-700)] transition-transform duration-300 group-open/hub:rotate-90"
+            />
           </summary>
-          <ul class="mt-1 ml-2 border-l border-neutral-200 pl-2">
+          <ul class="ml-2 mt-1 border-l border-neutral-200 pl-2">
             {specialty.map((s) => (
               <li>
                 <a href={`/specialty/${s.slug}`} class="block py-1.5 text-sm">

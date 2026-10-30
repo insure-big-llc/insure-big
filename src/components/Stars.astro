@@ -1,0 +1,14 @@
+---
+/**
+ * Stars: five filled SVG stars in the brand gold. Decorative only; the rating
+ * is always stated in text beside it. Gold is allowed here because it is an
+ * icon fill, not body text (see the contrast note in global.css).
+ */
+import Icon from './Icon.astro';
+
+const { class: className = 'h-4 w-4', count = 5 } = Astro.props;
+---
+
+<span class="inline-flex items-center gap-0.5 icon-gold" aria-hidden="true">
+  {Array.from({ length: count }).map(() => <Icon name="star" class={className} />)}
+</span>

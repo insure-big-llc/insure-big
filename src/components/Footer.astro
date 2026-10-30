@@ -11,12 +11,18 @@
 import { SITE, LOCATIONS, CONTACT } from '../config/site.js';
 import { HUBS, SERVICES, servicesByHub } from '../config/services.js';
 
+// `flush` drops the top margin, for pages that end in a dark band of their own.
+const { flush = false } = Astro.props;
 const year = new Date().getFullYear();
 const specialty = SERVICES.filter((s) => s.hub === 'specialty');
 ---
 
-<footer class="mt-16 bg-[var(--color-ink)] text-white">
-  <div class="container-page py-12">
+<footer class:list={['relative bg-[var(--color-ink)] text-white', !flush && 'mt-16']}>
+  <div
+    aria-hidden="true"
+    class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[var(--color-brand-500)] to-transparent"
+  ></div>
+  <div class="container-page py-14">
     <div class="grid gap-10 md:grid-cols-2 lg:grid-cols-4">
       <!-- Brand + market statement (verbatim, sitewide) -->
       <div>

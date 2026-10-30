@@ -81,10 +81,10 @@ const schema = [
     <div class="grid gap-12 lg:grid-cols-[minmax(0,1fr)_380px]">
       <div>
         <header>
-          <p class="text-sm font-semibold uppercase tracking-widest text-[var(--color-brand-700)]">
+          <p class="kicker">
             Specialty coverage
           </p>
-          <h1 class="mt-3 text-3xl leading-tight sm:text-4xl">{service.h1}</h1>
+          <h1 class="mt-3 text-3xl leading-tight tracking-tight sm:text-4xl">{service.h1}</h1>
           <p class="mt-5 max-w-2xl text-lg leading-relaxed text-[var(--color-ink-soft)]">
             {service.blurb}
           </p>
@@ -93,7 +93,7 @@ const schema = [
           </p>
         </header>
 
-        <div class="prose-page mt-10">
+        <div class="prose-page prose-checks mt-10">
           <h2>What this coverage includes</h2>
           <ul>
             {service.covers.map((item) => <li>{item}</li>)}
@@ -123,7 +123,7 @@ const schema = [
 
         {service.faq?.length ? <FaqBlock faqs={service.faq} /> : null}
 
-        <section class="mt-14 rounded-xl bg-[var(--color-surface-alt)] p-6">
+        <section class="mt-14 rounded-2xl bg-[var(--color-surface-alt)] p-6">
           <h2 class="text-xl">Other specialty cover we write</h2>
           <ul class="mt-4 grid gap-2 sm:grid-cols-2">
             {
@@ -141,7 +141,7 @@ const schema = [
         <RelatedCoverage current={service.slug} hub="specialty" />
       </div>
 
-      <aside class="lg:sticky lg:top-6 lg:self-start">
+      <aside class="lg:sticky lg:top-24 lg:self-start">
         {/* PRIMARY: the on-site form. Captures the lead with consent and attribution
             before anyone leaves for a partner's site. */}
         <ServiceForm

@@ -1,0 +1,92 @@
+---
+/**
+ * Art: the brand line art for dark hero and band backgrounds, drawn as inline
+ * SVG so it stays razor sharp at every size and screen density (the old
+ * version was a small raster stretched to fit, which looked soft).
+ *
+ * Abstract on purpose: a house, a building, an umbrella, a shield. It
+ * decorates with the thing the page sells and never pretends to be a photo.
+ * Static: it does not animate. Positioned by the parent; always aria-hidden.
+ *
+ *   <Art kind="home" />   personal insurance hub
+ *   <Art kind="business" /> business insurance hub
+ *   <Art kind="life" />   life insurance hub
+ *   <Art kind="specialty" />  specialty pages
+ *   <Art kind="shield" />  hero default
+ */
+const { kind = 'shield', class: className = '' } = Astro.props;
+
+const MOTIFS = {
+  home: [
+    'M436 218 L560 112 L684 218',
+    'M466 198 V304 H654 V198',
+    'M534 304 V240 H586 V304',
+    'M618 158 V124 H640 V176',
+    'M492 224 H516 V248 H492 Z',
+  ],
+  business: [
+    'M468 304 V124 H602 V304',
+    'M602 304 V188 H666 V304',
+    'M440 304 H694',
+    'M498 158 H520 M548 158 H570 M498 202 H520 M548 202 H570 M498 246 H520 M548 246 H570',
+    'M628 222 H640 M628 258 H640',
+  ],
+  life: [
+    'M434 214 A126 126 0 0 1 686 214 Z',
+    'M560 88 V214',
+    'M498 106 C492 150 496 186 506 214',
+    'M622 106 C628 150 624 186 614 214',
+    'M560 214 V292 A17 17 0 0 1 526 292',
+  ],
+  specialty: [
+    'M560 104 L664 140 V214 C664 272 620 304 560 328 C500 304 456 272 456 214 V140 Z',
+    'M514 214 L548 248 L612 178',
+  ],
+  shield: [
+    'M560 92 L690 136 V222 C690 292 634 330 560 358 C486 330 430 292 430 222 V136 Z',
+    'M560 138 L646 168 V222 C646 268 610 294 560 314 C510 294 474 268 474 222 V168 Z',
+    'M520 224 L550 254 L604 192',
+  ],
+};
+
+const lines = MOTIFS[kind] ?? MOTIFS.shield;
+const gid = `art-${kind}`;
+---
+
+<svg
+  viewBox="0 0 800 400"
+  preserveAspectRatio="xMaxYMid slice"
+  class:list={['pointer-events-none', className]}
+  aria-hidden="true"
+  focusable="false"
+>
+  <defs>
+    <linearGradient id={`${gid}-stroke`} gradientUnits="userSpaceOnUse" x1="440" y1="90" x2="690" y2="330">
+      <stop offset="0" stop-color="#eccb4d" stop-opacity="0.75"></stop>
+      <stop offset="1" stop-color="#bd9b01" stop-opacity="0.14"></stop>
+    </linearGradient>
+    <radialGradient id={`${gid}-glow`} gradientUnits="userSpaceOnUse" cx="560" cy="210" r="240">
+      <stop offset="0" stop-color="#bd9b01" stop-opacity="0.2"></stop>
+      <stop offset="1" stop-color="#bd9b01" stop-opacity="0"></stop>
+    </radialGradient>
+  </defs>
+
+  <circle cx="560" cy="210" r="240" fill={`url(#${gid}-glow)`}></circle>
+  <g fill="none" stroke="#bd9b01" vector-effect="non-scaling-stroke">
+    <circle cx="560" cy="210" r="132" stroke-opacity="0.16" stroke-width="1" vector-effect="non-scaling-stroke"></circle>
+    <circle cx="560" cy="210" r="204" stroke-opacity="0.1" stroke-width="1" vector-effect="non-scaling-stroke"></circle>
+    <circle cx="560" cy="210" r="278" stroke-opacity="0.06" stroke-width="1" vector-effect="non-scaling-stroke"></circle>
+  </g>
+  <g
+    fill="none"
+    stroke={`url(#${gid}-stroke)`}
+    stroke-width="1.75"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  >
+    {lines.map((d) => <path d={d} vector-effect="non-scaling-stroke"></path>)}
+  </g>
+  <circle cx="560" cy="78" r="3" fill="#eccb4d" fill-opacity="0.8"></circle>
+  <circle cx="692" cy="210" r="2.5" fill="#bd9b01" fill-opacity="0.6"></circle>
+  <circle cx="428" cy="210" r="2.5" fill="#bd9b01" fill-opacity="0.4"></circle>
+</svg>

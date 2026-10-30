@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
-    "prebuild": "node scripts/build-fonts.mjs && node scripts/build-artwork.mjs",
+    "prebuild": "node scripts/build-fonts.mjs",
     "build": "astro build && node scripts/postbuild.mjs",
     "preview": "astro preview",
     "check": "astro check",

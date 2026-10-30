@@ -1,75 +1,105 @@
 ---
 /**
- * Hero: dark ink section with the faint shield artwork behind it. Spec 0002,
- * revised per the client's direction: the shield stays background only, and
- * the BIG brand mark anchors the right side on a white card.
+ * Hero: the home page's first screen (design pass 2).
  *
- * The headline, supporting line, and action come from the caller (the home
- * page reuses its existing copy unchanged). The artwork is a CSS background,
- * so it never occupies layout and cannot shift it.
+ * Dark ink with a soft gold glow, a hairline dot grid and crisp SVG shield art
+ * (all CSS and inline SVG, so nothing is stretched or soft), and the agency's
+ * own office photo framed on the right. The photo is a real shot of the team
+ * at work, replacing the logo on a white card.
  *
- * The photo slot stays available for later: when `image` is set AND the file
- * exists on disk at build time, the photo renders right of the text in a
- * reserved 4:3 aspect box. When it is missing, the hero shows the brand card
- * instead, never a broken box.
+ * Motion is one calm entrance on the supporting pieces (buttons, quote chips,
+ * the rating chip) and a slow settle on the photo. The headline and body copy
+ * never animate, so the largest paint is never delayed.
+ *
+ * Props:
+ *   headline, supporting   copy from the caller
+ *   emphasis               optional word inside the headline to set in gold
+ *   photo                  { src, srcset, sizes, alt, width, height } or null
+ *   chip                   optional { rating, label } shown on the photo
+ *   brand                  fallback logo card when there is no photo
  */
-import { existsSync } from 'node:fs';
-import { join } from 'node:path';
-import { SITE, ART, HERO_IMAGE } from '../config/site.js';
+import Art from './Art.astro';
+import Stars from './Stars.astro';
+import { SITE } from '../config/site.js';
 
-const { headline, supporting, kicker = `${SITE.shortName} — an independent agency`, brand = false } =
-  Astro.props;
+const {
+  headline,
+  supporting,
+  emphasis = null,
+  kicker = `${SITE.shortName} — an independent agency`,
+  photo = null,
+  chip = null,
+  brand = false,
+} = Astro.props;
 
-const requested = Astro.props.image ?? HERO_IMAGE;
-const image = requested && existsSync(join(process.cwd(), 'public', requested)) ? requested : null;
-const art = Astro.props.art ?? ART.hero;
-const hasSide = Boolean(image || brand);
+const hasSide = Boolean(photo || brand);
+
+/** Splits the headline around the emphasised word, if it is present. */
+const parts = emphasis && headline.includes(emphasis) ? headline.split(emphasis) : null;
 ---
 
-<section class="relative overflow-hidden bg-[var(--color-ink)] text-white">
-  <img
-    src={art}
-    alt=""
-    aria-hidden="true"
-    width="1260"
-    height="520"
-    fetchpriority="high"
-    class="absolute inset-0 h-full w-full object-cover"
-  />
-  <div
-    aria-hidden="true"
-    class="absolute inset-0 bg-gradient-to-r from-[var(--color-ink)] via-[var(--color-ink)]/90 to-[var(--color-ink)]/60"
-  />
-  <div class="container-page relative py-16 lg:py-24">
-    <div class:list={['grid items-center gap-10', hasSide && 'lg:grid-cols-[minmax(0,1fr)_440px]']}>
+<section class="hero-bg relative isolate overflow-hidden text-white">
+  <div aria-hidden="true" class="dot-grid absolute inset-0"></div>
+  <Art kind="shield" class="absolute inset-y-0 right-0 hidden h-full w-[78%] opacity-80 lg:block" />
+
+  <div class="container-page relative py-14 sm:py-16 lg:py-24">
+    <div class:list={['grid items-center gap-12', hasSide && 'lg:grid-cols-[minmax(0,1fr)_460px]']}>
       <div class="max-w-2xl">
-        <p class="font-[var(--font-heading)] text-sm font-bold uppercase tracking-widest text-[var(--color-brand-300)]">
-          {kicker}
-        </p>
-        <h1 class="mt-4 text-4xl leading-tight sm:text-5xl lg:text-6xl">{headline}</h1>
+        <p class="kicker kicker-on-dark">{kicker}</p>
+        <h1 class="mt-5 text-4xl leading-[1.08] tracking-tight sm:text-5xl lg:text-6xl">
+          {
+            parts ? (
+              <>
+                {parts[0]}
+                <span class="bg-gradient-to-r from-[var(--color-brand-200)] to-[var(--color-brand-400)] bg-clip-text text-transparent">
+                  {emphasis}
+                </span>
+                {parts[1]}
+              </>
+            ) : (
+              headline
+            )
+          }
+        </h1>
         {supporting && <p class="mt-6 max-w-xl text-lg leading-relaxed text-white/85">{supporting}</p>}
-        <div class="mt-8 flex flex-wrap gap-3">
+        <div class="enter mt-8 flex flex-wrap gap-3" style="--enter-delay: 120ms">
           <slot />
         </div>
       </div>
+
       {
-        image && (
-          <div class="aspect-[4/3] overflow-hidden rounded-xl border border-white/15">
-            <img
-              src={image}
-              alt="Ballentine Insurance Group"
-              width="880"
-              height="660"
-              loading="eager"
-              decoding="async"
-              fetchpriority="high"
-              class="h-full w-full object-cover"
-            />
+        photo && (
+          <div class="relative mx-auto w-full max-w-md lg:max-w-none">
+            <div class="photo-frame aspect-[4/3]">
+              <img
+                src={photo.src}
+                srcset={photo.srcset}
+                sizes={photo.sizes}
+                alt={photo.alt}
+                width={photo.width}
+                height={photo.height}
+                loading="eager"
+                decoding="async"
+                fetchpriority="high"
+                class="settle h-full w-full object-cover"
+              />
+            </div>
+            {chip && (
+              <div
+                class="glass-chip enter absolute -bottom-5 left-5 flex items-center gap-3 rounded-full py-2 pl-4 pr-5 shadow-xl"
+                style="--enter-delay: 420ms"
+              >
+                <Stars class="h-4 w-4" />
+                <span class="text-sm font-semibold">
+                  {chip.rating} {chip.label}
+                </span>
+              </div>
+            )}
           </div>
         )
       }
       {
-        brand && !image && (
+        brand && !photo && (
           <div class="mx-auto flex w-full max-w-md items-center justify-center rounded-2xl bg-white p-8 shadow-2xl lg:p-10">
             <img
               src="/images/big-logo.webp"

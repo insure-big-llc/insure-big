@@ -139,28 +139,50 @@ export const FORMS = {
 };
 
 /**
- * Generated brand artwork (spec 0002). Abstract line drawings, produced by
- * scripts/build-artwork.mjs into public/images/art/. Background images only,
- * so they never occupy layout.
+ * Brand line art per page type. The drawings themselves live in
+ * src/components/Art.astro as inline SVG (crisp at every size); this map only
+ * says which motif each hub and the specialty pages use.
  */
 export const ART = {
-  hero: '/images/art/hero-art.webp',
-  band: '/images/art/band-art.webp',
-  /** Themed per hub and per specialty, drawn from the line the page sells. */
   hub: {
-    'personal-insurance': '/images/art/house-art.webp',
-    'business-insurance': '/images/art/business-art.webp',
-    'life-insurance': '/images/art/life-art.webp',
-    specialty: '/images/art/specialty-art.webp',
+    'personal-insurance': 'home',
+    'business-insurance': 'business',
+    'life-insurance': 'life',
+    specialty: 'specialty',
   },
 };
 
 /**
- * The hero photo slot (spec 0002). null today: the client does not want a
- * person in the hero. When real photos are approved for the hero, set this to
- * the path and drop the file into public/. Missing files fall back to artwork.
+ * The agency's own photos, processed from its public Facebook pictures by
+ * scripts/process-photos.mjs into public/images/photos/. Sizes are real file
+ * dimensions so the browser reserves the right space (no layout shift).
+ *
+ * Alt text describes what is visible and names nobody: we do not label
+ * individuals in photos.
  */
-export const HERO_IMAGE = null;
+export const PHOTOS = {
+  officeMeeting: {
+    src: '/images/photos/office-meeting-960.webp',
+    srcset: '/images/photos/office-meeting-640.webp 640w, /images/photos/office-meeting-960.webp 960w',
+    width: 960,
+    height: 720,
+    alt: 'Two members of the Ballentine Insurance Group team going over a policy together at a desk in the office',
+  },
+  agentOnPhone: {
+    src: '/images/photos/agent-on-phone-960.webp',
+    srcset: '/images/photos/agent-on-phone-640.webp 640w, /images/photos/agent-on-phone-960.webp 960w',
+    width: 960,
+    height: 720,
+    alt: 'A Ballentine Insurance Group agent on the phone with a client at his desk',
+  },
+  teamStorefront: {
+    src: '/images/photos/team-storefront-768.webp',
+    srcset: '/images/photos/team-storefront-480.webp 480w, /images/photos/team-storefront-768.webp 768w',
+    width: 768,
+    height: 1024,
+    alt: "Three members of the Ballentine Insurance Group team standing outside the agency's storefront",
+  },
+};
 
 /**
  * The 7 URLs that are indexed TODAY, in the exact form they appear in
