@@ -42,12 +42,12 @@ const imgClass = (slug) =>
 
 <div>
   <h3 class="text-base font-bold">{heading}</h3>
-  <ul class="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+  <ul class="reveal-stagger mt-5 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
     {
       list.map((carrier) =>
         carrier.logo ? (
           <li
-            class="group flex h-24 items-center justify-center rounded-lg border border-neutral-200 bg-white p-4 transition hover:border-[var(--color-brand-500)]"
+            class="card-lift group flex h-24 items-center justify-center rounded-lg border border-neutral-200 bg-white p-4"
             title={carrier.display}
           >
             <img
@@ -61,7 +61,7 @@ const imgClass = (slug) =>
             />
           </li>
         ) : (
-          <li class="flex h-24 items-center justify-center rounded-lg border border-neutral-200 bg-white p-4 text-center text-sm font-semibold text-[var(--color-ink-soft)]">
+          <li class="card-lift flex h-24 items-center justify-center rounded-lg border border-neutral-200 bg-white p-4 text-center text-sm font-semibold text-[var(--color-ink-soft)]">
             {carrier.display}
           </li>
         ),
