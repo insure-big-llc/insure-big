@@ -12,8 +12,10 @@
 
 # The CMS admin loads Decap from unpkg (pinned version) and talks to DecapBridge
 # (login) and the GitHub API, so its own policy allows exactly those hosts.
+# 'unsafe-eval' is needed by Decap itself to read config.yml; it is granted on
+# /admin/* only and never on the public site.
 /admin/*
-  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://unpkg.com; style-src 'self' 'unsafe-inline' https://unpkg.com; img-src 'self' data: blob: https://*.decapbridge.com https://avatars.githubusercontent.com https://lh3.googleusercontent.com; font-src 'self'; connect-src 'self' https://decapbridge.com https://*.decapbridge.com https://api.github.com; form-action 'self'; base-uri 'self'; frame-ancestors 'none'
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://unpkg.com; style-src 'self' 'unsafe-inline' https://unpkg.com; img-src 'self' data: blob: https://*.decapbridge.com https://avatars.githubusercontent.com https://lh3.googleusercontent.com; font-src 'self'; connect-src 'self' https://decapbridge.com https://*.decapbridge.com https://api.github.com; form-action 'self'; base-uri 'self'; frame-ancestors 'none'
 
 # Immutable, content-hashed build assets can cache for a year.
 /_astro/*
