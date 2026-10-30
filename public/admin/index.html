@@ -5,21 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="robots" content="noindex, nofollow" />
     <title>Content Manager — Ballentine Insurance Group</title>
-    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
-    <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
   </head>
   <body>
-    <!-- Decap mounts its admin interface here. -->
-    <script>
-      if (window.netlifyIdentity) {
-        window.netlifyIdentity.on('init', (user) => {
-          if (!user) {
-            window.netlifyIdentity.on('login', () => {
-              document.location.href = '/admin/';
-            });
-          }
-        });
-      }
-    </script>
+    <!--
+      Decap CMS, pinned to an exact version so an upstream release can never
+      change the editor under the staff. Update on purpose, test, then bump.
+      Login is handled by DecapBridge through config.yml (no Netlify Identity).
+      Version 3.8.4 or newer is needed for "Login with Google / Microsoft".
+    -->
+    <script src="https://unpkg.com/decap-cms@3.17.3/dist/decap-cms.js"></script>
   </body>
 </html>

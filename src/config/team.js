@@ -2,31 +2,8 @@
  * The team. Single source of truth for names, titles, photos and bios, so the
  * about page and the home team strip can never drift apart.
  */
-import { SITE } from './site.js';
 
-export const TEAM = [
-  {
-    name: 'Bret Ballentine',
-    title: 'Founder & Principal Agent',
-    photo: '/team/bret-ballentine.webp',
-    bio: `Bret founded Ballentine Insurance Group in ${SITE.founded} with a mission to provide honest advice, exceptional service, and customized insurance solutions for families and businesses throughout Missouri and Kansas. Specializing in both personal and commercial insurance, he helps clients protect their homes, vehicles, businesses, and financial future. His philosophy is simple: build lasting relationships by educating clients and helping them make confident insurance decisions. Outside the office, Bret enjoys spending time with his wife, Valerie, and their two daughters.`,
-  },
-  {
-    name: 'Pete Carroll',
-    title: 'Agency Director',
-    photo: '/team/pete-carroll.webp',
-    bio: `Pete began his insurance career in 2017 and joined Ballentine Insurance Group in 2018. As Agency Director he oversees agency operations, customer service, and retention, ensuring every client receives the exceptional support BIG is known for. Known for his leadership and problem-solving, Pete has helped maintain a 93%+ client retention rate by building lasting relationships and always putting clients first.`,
-  },
-  {
-    name: 'Dillon Schallenberg',
-    title: 'Personal & Life Insurance Producer',
-    photo: '/team/dillon-schallenberg.webp',
-    bio: `Dillon has been helping clients at Ballentine Insurance Group since 2018, specializing in personal and life insurance. He works closely with individuals and families to find the right coverage at a competitive price while making the insurance process simple and straightforward. Outside the office, Dillon enjoys spending time outdoors hunting, fishing, and golfing.`,
-  },
-  {
-    name: 'Ashley Neugebauer',
-    title: 'Insurance Producer',
-    photo: '/team/ashley-neugebauer.webp',
-    bio: `Ashley joined Ballentine Insurance Group in 2025 with a passion for helping people protect their homes, vehicles, businesses, and financial future. Known for her friendly approach and attention to detail, she is dedicated to providing a smooth, personalized experience from quote to claim.`,
-  },
-];
+import team from '../content/data/team.json';
+
+/** EDITABLE IN THE CMS: src/content/data/team.json. */
+export const TEAM = team.members;

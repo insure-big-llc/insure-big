@@ -1,15 +1,33 @@
+# Decap CMS configuration for insure-big.com.
+#
+# LOGIN: this file uses DecapBridge for sign in (Netlify's Git Gateway is
+# deprecated). Staff are invited by email and never need a GitHub account.
+# After you create the site in the DecapBridge dashboard, it generates a
+# `backend:` block. Replace the block below with it. Setup steps are in
+# docs/cms-setup.md.
 backend:
   name: git-gateway
+  repo: insure-big-llc/insure-big
   branch: main
+  # TODO(DecapBridge): paste the generated values here, for example:
+  # identity_url: https://auth.decapbridge.com/sites/<site-id>
+  # gateway_url: https://gateway.decapbridge.com
+
+site_url: https://insure-big.com
+display_url: https://insure-big.com
 
 media_folder: public/blog
 public_folder: /blog
 
+# Edits commit straight to main. The deploy runs `npm run build:verify`, so a
+# bad edit fails the build and the live site stays on the last good version.
 publish_mode: simple
 
 collections:
+  # ── Blog posts ─────────────────────────────────────────────────────────────
   - name: blog
     label: Blog posts
+    label_singular: Blog post
     folder: src/content/blog
     create: true
     slug: '{{slug}}'
@@ -24,7 +42,7 @@ collections:
         name: service
         widget: select
         required: false
-        options:
+        options: &services
           - { label: 'Home Insurance', value: home }
           - { label: 'Auto Insurance', value: auto }
           - { label: 'Renters Insurance', value: renters }
@@ -58,3 +76,112 @@ collections:
       - { label: 'Cover image', name: cover, widget: image, required: false, hint: 'Optional. Uploads to public/blog.' }
       - { label: 'Draft', name: draft, widget: boolean, default: false, hint: 'Drafts stay out of listings and search until flipped off.' }
       - { label: 'Body', name: body, widget: markdown }
+
+  # ── Site content (single files) ────────────────────────────────────────────
+  # Phone numbers, addresses, page copy and web addresses are deliberately NOT
+  # editable here. They live in the code so every page and the search engine
+  # data always agree. Ask the developer to change those.
+  - name: site
+    label: Site content
+    files:
+      - name: hours
+        label: Office hours
+        file: src/content/data/hours.json
+        format: json
+        description: 'Shared by both offices. Shown on the contact page, footer, location pages and to Google.'
+        fields:
+          - { label: 'Hours as shown to visitors', name: display, widget: string, hint: 'For example: Monday – Friday, 9:00am – 5:00pm. Must match the days and times below.' }
+          - label: 'Open days'
+            name: days
+            widget: select
+            multiple: true
+            options: [Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday]
+          - { label: 'Opens (24 hour)', name: opens, widget: string, pattern: ['^([01][0-9]|2[0-3]):[0-5][0-9]$', 'Use 24 hour time like 09:00'], hint: '09:00 means 9am' }
+          - { label: 'Closes (24 hour)', name: closes, widget: string, pattern: ['^([01][0-9]|2[0-3]):[0-5][0-9]$', 'Use 24 hour time like 17:00'], hint: '17:00 means 5pm' }
+
+      - name: team
+        label: Team members
+        file: src/content/data/team.json
+        format: json
+        media_folder: /public/team
+        public_folder: /team
+        description: 'Shown on the home page and the About page. Square photos, 400 by 400 pixels or larger, work best.'
+        fields:
+          - label: 'Team members'
+            name: members
+            widget: list
+            summary: '{{fields.name}} — {{fields.title}}'
+            fields:
+              - { label: 'Name', name: name, widget: string }
+              - { label: 'Job title', name: title, widget: string }
+              - { label: 'Photo', name: photo, widget: image, choose_url: false }
+              - { label: 'Biography', name: bio, widget: text }
+
+      - name: home-faq
+        label: Home page questions
+        file: src/content/data/home-faq.json
+        format: json
+        description: 'The questions on the home page. Google also reads these, so only add questions customers really ask.'
+        fields:
+          - label: 'Questions'
+            name: items
+            widget: list
+            summary: '{{fields.q}}'
+            fields:
+              - { label: 'Question', name: q, widget: string }
+              - { label: 'Short answer', name: s, widget: text, hint: 'One or two sentences. Shown in bold first.' }
+              - { label: 'Full answer', name: a, widget: text }
+
+      - name: reviews-lees-summit
+        label: Reviews, Lee's Summit office
+        file: src/content/data/reviews-lees-summit.json
+        format: json
+        description: 'Copy reviews word for word from the Google profile. Never edit a customer’s words and never invent a review.'
+        fields:
+          - { label: 'Google profile name', name: profileName, widget: string }
+          - { label: 'Star rating on Google', name: rating, widget: number, value_type: float, min: 1, max: 5 }
+          - { label: 'Number of Google reviews', name: count, widget: number, value_type: int, min: 1, hint: 'The total shown on Google, not just the ones listed here.' }
+          - { label: 'Date these numbers were checked', name: observedOn, widget: string, pattern: ['^20[0-9]{2}-[01][0-9]-[0-3][0-9]$', 'Use YYYY-MM-DD'] }
+          - label: 'Reviews'
+            name: reviews
+            widget: list
+            summary: '{{fields.author}} — {{fields.dateText}}'
+            fields:
+              - { label: 'Reviewer name', name: author, widget: string }
+              - { label: 'When, exactly as Google shows it', name: dateText, widget: string, hint: 'For example: 3 months ago. Do not make up a calendar date.' }
+              - { label: 'Review text, word for word', name: text, widget: text }
+              - { label: 'Our reply (optional)', name: response, widget: text, required: false }
+
+      - name: reviews-northland
+        label: Reviews, Northland office
+        file: src/content/data/reviews-northland.json
+        format: json
+        description: 'Copy reviews word for word from the Google profile. Never edit a customer’s words and never invent a review.'
+        fields:
+          - { label: 'Google profile name', name: profileName, widget: string }
+          - { label: 'Star rating on Google', name: rating, widget: number, value_type: float, min: 1, max: 5 }
+          - { label: 'Number of Google reviews', name: count, widget: number, value_type: int, min: 1, hint: 'The total shown on Google, not just the ones listed here.' }
+          - { label: 'Date these numbers were checked', name: observedOn, widget: string, pattern: ['^20[0-9]{2}-[01][0-9]-[0-3][0-9]$', 'Use YYYY-MM-DD'] }
+          - label: 'Reviews'
+            name: reviews
+            widget: list
+            summary: '{{fields.author}} — {{fields.dateText}}'
+            fields:
+              - { label: 'Reviewer name', name: author, widget: string }
+              - { label: 'Stars', name: rating, widget: number, value_type: int, min: 1, max: 5, default: 5 }
+              - { label: 'When, exactly as Google shows it', name: dateText, widget: string, hint: 'For example: 3 months ago, or 4/7/2026 if Google shows a date.' }
+              - { label: 'Calendar date (only if Google shows one)', name: date, widget: string, required: false, pattern: ['^$|^20[0-9]{2}-[01][0-9]-[0-3][0-9]$', 'Use YYYY-MM-DD or leave blank'], hint: 'Leave blank for "3 months ago" style dates. If filled, the text above must be the same date as M/D/YYYY.' }
+              - { label: 'Review text, word for word', name: text, widget: text }
+              - { label: 'Our reply (optional)', name: ownerResponse, widget: text, required: false }
+              - { label: 'Feature on the home page', name: featured, widget: boolean, default: false }
+              - label: 'Which office'
+                name: locations
+                widget: select
+                multiple: true
+                required: false
+                options:
+                  - { label: 'Northland', value: northland }
+                  - { label: "Lee's Summit", value: lees-summit }
+              - { label: 'Team members named (full names)', name: staffMentioned, widget: list, field: { label: 'Name', name: name, widget: string }, required: false }
+              - { label: 'Related service', name: serviceContext, widget: select, required: false, options: *services }
+              - { label: 'Extra context from Google (optional)', name: ratingContext, widget: string, required: false }

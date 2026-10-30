@@ -10,6 +10,8 @@
  * If a fact changes, it changes HERE and nowhere else.
  */
 
+import hours from '../content/data/hours.json';
+
 export const SITE = {
   /** Bare domain, no www, no trailing slash. Matches sitemap.website.xml. */
   url: 'https://insure-big.com',
@@ -113,18 +115,18 @@ export const CONTACT = {
   phone: '(816) 868-1787',
   phoneHref: 'tel:+18168681787',
   email: 'bret@insure-big.com',
+  /** EDITABLE IN THE CMS: src/content/data/hours.json. */
   hours: {
-    /** Mon–Fri, both offices. */
-    days: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
-    opens: '09:00',
-    closes: '17:00',
-    display: 'Monday – Friday, 9:00am – 5:00pm',
+    days: hours.days,
+    opens: hours.opens,
+    closes: hours.closes,
+    display: hours.display,
     /** schema.org openingHoursSpecification */
     spec: {
       '@type': 'OpeningHoursSpecification',
-      dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
-      opens: '09:00',
-      closes: '17:00',
+      dayOfWeek: hours.days,
+      opens: hours.opens,
+      closes: hours.closes,
     },
   },
 };

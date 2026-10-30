@@ -15,6 +15,8 @@
  * `source` records where the copy came from — nothing is invented (scope §13).
  */
 
+import homeFaq from '../content/data/home-faq.json';
+
 export const HUBS = [  {
     slug: 'personal-insurance',
     title: 'Personal Insurance',
@@ -1411,40 +1413,5 @@ export const HOME_OFFER_COPY = {
  * not captured, so these answers are drafted from the agency's documented
  * facts and flagged for review before they are final. Spec 0003.
  */
-export const HOME_FAQ = [
-  {
-    q: 'What types of insurance do you offer?',
-    s: 'Home, auto, renters, condo, landlord, umbrella, flood, business, life, Medicare, surety bonds, travel, pet, device protection and more.',
-    a: "If you do not see it listed, call us: we write coverage well beyond this list, and the list grows as new programmes come online.",
-  },
-  {
-    q: 'How do I get an insurance quote?',
-    s: 'Fill out the quote form on any page or call (816) 868-1787, and a team member follows up, usually the same business day.',
-    a: "A real person, not a bot, reviews what you send and follows up with your options.",
-  },
-  {
-    q: 'Is getting a quote free?',
-    s: 'Yes, quotes are free and carry no obligation.',
-    a: "You keep the numbers either way, and there is nothing to sign until you choose to move.",
-  },
-  {
-    q: 'How long does it take to receive my quote?',
-    s: 'Most quotes come back within one business day once we have your details.',
-    a: "More complex programmes, like business packages with several lines, can take a little longer, and we tell you when.",
-  },
-  {
-    q: 'What information do I need to prepare?',
-    s: 'Basic details about what you are insuring, your current coverage, and a way to reach you.',
-    a: "For property, that means the address and roughly when it was built; for vehicles, the year, make and model; for a business, what you do and how many people.",
-  },
-  {
-    q: 'Can I customize my insurance coverage?',
-    s: 'Yes; as an independent agency we compare across carriers and build the cover around your needs.',
-    a: "That means deductibles, limits and add-ons chosen for you, not a shelf product, because we are not tied to one carrier.",
-  },
-  {
-    q: 'Will my information be kept confidential?',
-    s: 'Yes; your information is used only to prepare your quotes and is handled per our privacy policy.',
-    a: "Nothing is shared with third parties for marketing, and nothing leaves our team except to the carriers you actually quote with.",
-  },
-];
+/** EDITABLE IN THE CMS: src/content/data/home-faq.json. */
+export const HOME_FAQ = homeFaq.items;
