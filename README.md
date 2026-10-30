@@ -347,6 +347,25 @@ change and is tracked in scope §11.
 
 ---
 
+## The blog and the CMS (spec 0004)
+
+Posts live as markdown in `src/content/blog`, edited in Decap CMS at `/admin`.
+The frontmatter schema in `src/content.config.ts` is the contract: bad
+frontmatter fails the build, duplicate slugs fail the build, and drafts stay
+out of the listing, sitemap, RSS, and search (their pages are noindexed).
+Saving a post in the CMS commits it and Netlify publishes it.
+
+To turn on the editor logins, once the production domain points:
+
+1. In Netlify, Site settings → Identity: enable Identity.
+2. Site settings → Identity → Services: enable Git Gateway.
+3. Invite the editor emails (Bret and staff) under Identity. They sign in at
+   `/admin` with a confirmation email; no GitHub account needed.
+4. Without Git Gateway, the admin loads but saving errors, which is expected.
+
+The admin page is excluded from the site CSP by its own `/admin/*` rule in
+`public/_headers`, which allows exactly the Decap and Netlify Identity CDNs.
+
 ## Still outstanding
 
 Tracked in [`../website-scope.md`](../website-scope.md) §14. The build does not
@@ -358,7 +377,7 @@ block on any of them:
 - Poppins and Cantarell: drop the `.woff2` files into `public/fonts/` (see above)
 - Legal pages need Bret's review, specifically the RingCentral question
 - GitHub + Netlify accounts, then the first deploy
-- Decap CMS — phase 9, deliberately after launch
+- Decap CMS is built; the editor logins go live after launch (see the section above)
 
 ## Deploying for the first time
 

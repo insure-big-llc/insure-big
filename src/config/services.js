@@ -132,67 +132,82 @@ export const HUB_FAQ = {
   'personal-insurance': [
     {
       q: 'Do I need different cover if I live in Missouri but work in Kansas?',
-      a: 'The policy follows where the vehicle is garaged and where you live, not where you commute. But the two states set different minimum liability requirements, and Kansas requires personal injury protection while Missouri does not. If you cross the state line daily, we check your limits against both so you are not under-insured on the Kansas side.',
+    s: 'Your policy follows where the vehicle is garaged and where you live, not your commute, but the two states set different minimums, so we check your limits against both.',
+      a: "Kansas requires personal injury protection while Missouri does not, and the minimum liability requirements differ. If you cross the state line daily, we check your limits against both so you are not under-insured on the Kansas side.",
     },
     {
       q: 'Why is hail such a big deal for home insurance around Kansas City?',
-      a: 'The metro sits in one of the more hail-exposed parts of the country. That shows up in two ways: carriers increasingly apply a separate percentage wind/hail deductible rather than your standard flat deductible, and after a claim or two a carrier may restrict roof cover or refuse to renew. Knowing which deductible structure you have matters more here than almost anywhere.',
+    s: 'The metro sits in one of the most hail-exposed parts of the country, which is why carriers apply separate wind and hail deductibles here, and why knowing your deductible structure matters.',
+      a: "It shows up in two ways: carriers increasingly apply a separate percentage wind and hail deductible rather than your standard flat deductible, and after a claim or two a carrier may restrict roof cover or refuse to renew. Both hit Kansas City harder than almost anywhere.",
     },
     {
       q: 'Am I in a flood zone, and does it matter for insurance?',
-      a: 'Flood is excluded from every standard homeowners policy, so it always needs its own cover. Flood zones set whether your lender requires it, not whether you are at risk — a large share of flood claims come from outside high-risk zones, usually from flash flooding after heavy rain.',
+    s: 'Flood is excluded from every standard homeowners policy and always needs its own cover, and flood zones set whether your lender requires it, not your actual risk.',
+      a: "A large share of flood claims come from outside high-risk zones, usually from flash flooding after heavy rain, which is why the zone map alone is not a reliable guide to your exposure.",
     },
     {
       q: 'Should I insure my home for what I paid or what it would cost to rebuild?',
-      a: 'Rebuild cost, always. Market value includes the land, which does not burn down, and it moves with the housing market rather than with construction costs. Insuring to market value typically leaves you short at exactly the moment you need to rebuild.',
+    s: 'Insure for what it would cost to rebuild, not what you paid, because market value includes the land and moves with housing prices rather than construction costs.',
+      a: "Insuring to market value typically leaves you short at exactly the moment you need to rebuild, because the land does not burn down and construction costs move on their own schedule.",
     },
     {
       q: 'Can I bundle home and auto, and is it actually cheaper?',
-      a: 'Usually yes, and it is the fastest single saving available to most households. But it is not automatic — we quote the bundle against keeping the policies separate, because occasionally separate carriers win. The only way to know is to compare, which is what an independent agency is for.',
+    s: 'Usually yes, and it is the fastest single saving for most households, but not automatic; we quote the bundle against separate policies because occasionally separate carriers win.',
+      a: "The only way to know is to compare, which is what an independent agency is for, and we quote it both ways before you commit.",
     },
   ],
   'business-insurance': [
     {
       q: 'What insurance does a Kansas City small business actually need?',
-      a: 'Almost every business needs general liability, because landlords, general contractors and commercial clients require a certificate before they will let you start. If you have a premises and contents, a Business Owners Policy usually bundles that with liability at a better combined price. Workers compensation becomes required once you have employees, and commercial auto matters the moment anyone drives for the business.',
+    s: 'Almost every business needs general liability, because landlords and clients require a certificate before you start; a Business Owners Policy usually bundles property with liability at a better price.',
+      a: "Once you have employees, workers compensation becomes required, and commercial auto matters the moment anyone drives for the business, so the policy set grows with the business.",
     },
     {
       q: 'Do subcontractors need to be covered under my workers compensation?',
-      a: 'Only if they are on your payroll — but uninsured subcontractors can be reclassified as your employees at audit, which produces an unexpected premium bill. The practical answer is to collect a certificate of insurance from every subcontractor before they start, and we help clients set that process up.',
+    s: 'Only if they are on your payroll, but uninsured subcontractors can be reclassified at audit; collect a certificate of insurance from every one before they start.',
+      a: "A reclassification at audit produces an unexpected premium bill, so we help clients set up the certificate collection process before the first subcontractor starts.",
     },
     {
       q: 'My contracts require a certificate of insurance. How fast can you issue one?',
-      a: 'Usually the same day for an existing policy, and often within the hour if you are already a client and the requirement is standard. Certificates naming a general contractor or landlord as additional insured are routine — send us the contract wording and we handle the rest.',
+    s: 'Usually the same day for an existing policy, often within the hour, and certificates naming a landlord or general contractor are routine.',
+      a: "Send us the contract wording and we handle the rest, including naming a landlord or general contractor as an additional insured.",
     },
     {
       q: 'Does my general liability policy cover a data breach?',
-      a: 'No. Cyber liability is a separate policy, and general liability has no answer for a breach. Small businesses are common targets precisely because attackers assume they are unprepared, and notification and recovery costs arrive whether or not the breach was preventable.',
+    s: 'No; cyber liability is a separate policy, and small businesses are common targets precisely because attackers assume they are unprepared.',
+      a: "General liability has no answer for a breach, and notification and recovery costs arrive whether or not the breach was preventable.",
     },
     {
       q: 'We are a startup that just signed our first lease. What do we need first?',
-      a: 'General liability, almost certainly — your lease and your first client contract will both require it. From there, a BOP adds property cover, and cyber and employment practices liability get layered on as you take on staff and data. Starting early means the programme grows with the business instead of being retrofitted after a claim.',
+    s: 'General liability, almost certainly; your lease and first client contract will require it, then a BOP adds property cover, with cyber and employment practices layered on as you grow.',
+      a: "Starting early means the programme grows with the business instead of being retrofitted after a claim.",
     },
   ],
   'life-insurance': [
     {
       q: 'How much life insurance do I actually need?',
-      a: 'Enough to replace the income your household depends on, clear the debts that would otherwise fall to someone else, and cover the years your children are still dependent. We work from your real numbers rather than a multiple-of-salary rule of thumb, because the rule ignores both your mortgage and your childcare costs.',
+    s: 'Enough to replace the income your household depends on, clear debts that would fall to someone else, and cover the years your children are dependent, worked from your real numbers.',
+      a: "A multiple-of-salary rule of thumb ignores both your mortgage and your childcare costs, which is why we work from your real numbers instead.",
     },
     {
       q: 'When should I start looking at Medicare?',
-      a: 'Several months before you turn 65. Your initial enrolment window is time-limited, and the choices you make in it affect what is available to you later — particularly whether you can be medically underwritten for a Supplement. Starting early costs nothing and avoids a rushed decision.',
+    s: 'Start several months before you turn 65, because your initial enrolment window is time-limited and the choices made in it affect your options later.',
+      a: "The window affects whether you can later be medically underwritten for a Supplement, so starting early costs nothing and avoids a rushed decision.",
     },
     {
       q: 'Is Medicare Advantage or a Medicare Supplement better?',
-      a: 'They trade off differently. Advantage plans usually have lower monthly premiums but network restrictions and variable out-of-pocket costs. Supplements cost more monthly and cover far more predictably. Which is better depends on your doctors, your prescriptions and how much tolerance you have for unpredictable costs.',
+    s: 'Advantage plans usually cost less monthly but carry network restrictions; Supplements cost more monthly and cover far more predictably; which fits depends on your doctors and prescriptions.',
+      a: "The deciding factors are your doctors, your prescriptions, and how much tolerance you have for unpredictable costs, so we walk through your actual situation before choosing.",
     },
     {
       q: 'Do I need a medical exam for life insurance?',
-      a: 'Not always. Some products are available without one, particularly final expense cover. Where an exam is required, we prepare you for it — how you answer matters, and getting it right the first time avoids a declined application on your record.',
+    s: 'Not always; some products need no exam, and where one is required we prepare you so your answers are right the first time.',
+      a: "Where an exam is required, how you answer matters: getting it right the first time avoids a declined application on your record.",
     },
     {
       q: 'Why does the beneficiary wording on my policy matter so much?',
-      a: 'Because a life policy pays to whoever is named on the carriers beneficiary form, regardless of what your will says. A stale or blank designation is one of the most common and most expensive mistakes we find during a review — the money can end up somewhere you never intended.',
+    s: 'A life policy pays whoever is named on the carrier form, not your will, so a stale or blank designation can send the money somewhere you never intended.',
+      a: "A stale or blank designation is one of the most common and most expensive mistakes we find during a review.",
     },
   ],
 };
@@ -225,15 +240,18 @@ export const SERVICES = [
     faq: [
       {
         q: "How much home insurance do I need in Lee's Summit or Kansas City?",
-        a: "Enough to rebuild your home at today's construction costs, not what you paid for it. We review the dwelling limit against local rebuild costs, then set contents and liability around it. That is why an annual review matters — rebuild costs move every year.",
+        s: "Enough to rebuild your home at today's construction costs, not what you paid for it.",
+        a: "We review the dwelling limit against local rebuild costs, then set contents and liability around it. That is why an annual review matters — rebuild costs move every year.",
       },
       {
         q: 'Does home insurance cover flooding?',
-        a: 'No. Flood is excluded from a standard homeowners policy and needs its own policy — usually through the NFIP. We write flood coverage separately, and we can quote it alongside your home policy.',
+        s: "No.",
+        a: "Flood is excluded from a standard homeowners policy and needs its own policy — usually through the NFIP. We write flood coverage separately, and we can quote it alongside your home policy.",
       },
       {
         q: 'Will filing a claim raise my premium?',
-        a: 'It can, depending on the claim type and your carrier. That is why we walk through the claim with you before you file — sometimes a repair is cheaper than the long-term rate impact.',
+        s: "It can, depending on the claim type and your carrier.",
+        a: "That is why we walk through the claim with you before you file — sometimes a repair is cheaper than the long-term rate impact.",
       },
     ],
   },
@@ -260,15 +278,18 @@ export const SERVICES = [
     faq: [
       {
         q: 'What are the minimum car insurance requirements in Missouri?',
-        a: 'Missouri requires liability coverage, and Kansas requires both liability and personal injury protection. Because the two states differ — and Kansas City sits on the border — we check your policy against the rules of the state you actually drive in.',
+        s: "Missouri requires liability coverage, and Kansas requires both liability and personal injury protection.",
+        a: "Because the two states differ — and Kansas City sits on the border — we check your policy against the rules of the state you actually drive in.",
       },
       {
         q: 'Can I bundle my home and auto insurance?',
-        a: 'Yes, and it is usually the single fastest way to reduce what you pay. Most carriers discount the auto policy when the home policy sits with them, and we compare that bundle against keeping them separate.',
+        s: "Yes, and it is usually the single fastest way to reduce what you pay.",
+        a: "Most carriers discount the auto policy when the home policy sits with them, and we compare that bundle against keeping them separate.",
       },
       {
         q: 'Will a ticket or accident raise my rate?',
-        a: 'It usually does, but not always by the amount people expect, and it falls off over time. If you have had a rate increase, bring it to us — we will re-shop the policy rather than let it renew quietly.',
+        s: "It usually does, but not always by the amount people expect, and it falls off over time.",
+        a: "If you have had a rate increase, bring it to us — we will re-shop the policy rather than let it renew quietly.",
       },
     ],
   },
@@ -294,15 +315,18 @@ export const SERVICES = [
     faq: [
       {
         q: "Doesn't my landlord's policy cover my things?",
-        a: 'No. Your landlord insures the building, not your belongings and not your personal liability. If a fire or a burst pipe destroys your furniture, or a guest is injured in your unit, the landlord\u2019s policy does not answer for it.',
+        s: "No.",
+        a: "Your landlord insures the building, not your belongings and not your personal liability. If a fire or a burst pipe destroys your furniture, or a guest is injured in your unit, the landlord\u2019s policy does not answer for it.",
       },
       {
         q: 'Is renters insurance expensive?',
-        a: 'It is one of the cheapest policies you can buy, because the building itself is not your risk to insure. Most renters are surprised by the number.',
+        s: "It is one of the cheapest policies you can buy, because the building itself is not your risk to insure.",
+        a: "Most renters are surprised by the number.",
       },
       {
         q: 'Is my stuff covered if I take my laptop to a coffee shop?',
-        a: 'Usually yes — most renters policies cover personal property away from the residence. We confirm the off-premises limit when we write it, because it varies by carrier.',
+        s: "Usually yes — most renters policies cover personal property away from the residence.",
+        a: "We confirm the off-premises limit when we write it, because it varies by carrier.",
       },
     ],
   },
@@ -328,15 +352,18 @@ export const SERVICES = [
     faq: [
       {
         q: 'How is condo insurance different from homeowners insurance?',
-        a: 'The HOA master policy already insures the building shell and common areas. Your policy picks up from there — the interior finishes, your belongings, and your share of certain shared losses. Getting the split right is the whole job.',
+        s: "The HOA master policy already insures the building shell and common areas.",
+        a: "Your policy picks up from there — the interior finishes, your belongings, and your share of certain shared losses. Getting the split right is the whole job.",
       },
       {
         q: 'What is loss assessment coverage?',
-        a: 'If the HOA suffers a large uninsured loss, it can bill every owner for a share. Loss assessment coverage pays that bill. We check the master policy to see how much you actually need.',
+        s: "If the HOA suffers a large uninsured loss, it can bill every owner for a share.",
+        a: "Loss assessment coverage pays that bill. We check the master policy to see how much you actually need.",
       },
       {
         q: 'Do I need to send you my HOA documents?',
-        a: 'It helps a great deal. The master policy tells us where the HOA\u2019s responsibility ends and yours begins, so we can avoid both gaps and duplicated coverage.',
+        s: "It helps a great deal.",
+        a: "The master policy tells us where the HOA\u2019s responsibility ends and yours begins, so we can avoid both gaps and duplicated coverage.",
       },
     ],
   },
@@ -362,15 +389,18 @@ export const SERVICES = [
     faq: [
       {
         q: 'Why not just use a homeowners policy on a rental?',
-        a: 'Because a homeowners policy is written on the assumption that you live there. Once it is rented out, the occupancy is misrepresented and a claim can be declined. A landlord policy is the correct instrument.',
+        s: "Because a homeowners policy is written on the assumption that you live there.",
+        a: "Once it is rented out, the occupancy is misrepresented and a claim can be declined. A landlord policy is the correct instrument.",
       },
       {
         q: 'Does it cover my tenant\u2019s belongings?',
-        a: 'No — that is what renters insurance is for, and we ask every landlord client to require it in the lease. It protects your tenant and it protects you from being blamed for their loss.',
+        s: "No — that is what renters insurance is for, and we ask every landlord client to require it in the lease.",
+        a: "It protects your tenant and it protects you from being blamed for their loss.",
       },
       {
         q: 'What if the property sits vacant between tenants?',
-        a: 'Tell us. A vacancy changes the risk materially, and most policies restrict coverage after a set number of days empty. We can arrange cover for the gap.',
+        s: "Tell us.",
+        a: "A vacancy changes the risk materially, and most policies restrict coverage after a set number of days empty. We can arrange cover for the gap.",
       },
     ],
   },
@@ -397,15 +427,18 @@ export const SERVICES = [
     faq: [
       {
         q: 'Why are these three on one page?',
-        a: 'Because they are the same conversation. Owners usually have more than one, the policies share discounts, and three near-identical pages saying the same thing would compete with each other in search. One thorough page serves you better.',
+        s: "Because they are the same conversation.",
+        a: "Owners usually have more than one, the policies share discounts, and three near-identical pages saying the same thing would compete with each other in search. One thorough page serves you better.",
       },
       {
         q: 'Is my motorcycle covered in winter if I do not ride it?',
-        a: 'Comprehensive cover still applies while it is stored — theft, fire and storm damage. Many carriers offer a lay-up option that reduces the premium during months you do not ride. Ask us before you store it.',
+        s: "Comprehensive cover still applies while it is stored — theft, fire and storm damage.",
+        a: "Many carriers offer a lay-up option that reduces the premium during months you do not ride. Ask us before you store it.",
       },
       {
         q: 'Does my RV need its own policy or can it go on my auto policy?',
-        a: 'Sometimes it can be added, but a motorhome is a different risk from a car and often does better on a dedicated policy. We compare both.',
+        s: "Sometimes it can be added, but a motorhome is a different risk from a car and often does better on a dedicated policy.",
+        a: "We compare both.",
       },
     ],
   },
@@ -432,15 +465,18 @@ export const SERVICES = [
     faq: [
       {
         q: 'Do I really need an umbrella policy?',
-        a: 'If you have savings, equity in a home, or a future income to protect, the honest answer is usually yes. A serious at-fault accident can exceed auto liability limits quickly, and the difference comes out of your assets rather than the insurer\u2019s.',
+        s: "If you have savings, equity in a home, or a future income to protect, the honest answer is usually yes.",
+        a: "A serious at-fault accident can exceed auto liability limits quickly, and the difference comes out of your assets rather than the insurer\u2019s.",
       },
       {
         q: 'How much does an umbrella policy usually cost?',
-        a: 'Far less than people expect, because it only responds after your underlying policies are exhausted. It is one of the best value-per-dollar policies available.',
+        s: "Far less than people expect, because it only responds after your underlying policies are exhausted.",
+        a: "It is one of the best value-per-dollar policies available.",
       },
       {
         q: 'Are there requirements to qualify?',
-        a: 'Yes — carriers require minimum liability limits on your home and auto policies first. We check your underlying coverage and raise it if it falls short.',
+        s: "Yes — carriers require minimum liability limits on your home and auto policies first.",
+        a: "We check your underlying coverage and raise it if it falls short.",
       },
     ],
   },
@@ -466,15 +502,18 @@ export const SERVICES = [
     faq: [
       {
         q: 'Is flood damage covered by my homeowners policy?',
-        a: 'Almost never. Flood is a named exclusion on standard homeowners and renters policies. It needs a separate policy, and there is normally a waiting period before cover begins — so the time to buy it is before you need it.',
+        s: "Almost never.",
+        a: "Flood is a named exclusion on standard homeowners and renters policies. It needs a separate policy, and there is normally a waiting period before cover begins — so the time to buy it is before you need it.",
       },
       {
         q: 'I am not in a flood zone. Do I need it?',
-        a: 'Flood zones set lending requirements, not risk. A significant share of flood claims come from outside high-risk zones, often from flash flooding that any heavy storm can produce.',
+        s: "Flood zones set lending requirements, not risk.",
+        a: "A significant share of flood claims come from outside high-risk zones, often from flash flooding that any heavy storm can produce.",
       },
       {
         q: 'Should I use NFIP or a private flood carrier?',
-        a: 'It depends on the property, the elevation and the limits you need. We quote both where possible and tell you which one actually fits rather than defaulting to one.',
+        s: "It depends on the property, the elevation and the limits you need.",
+        a: "We quote both where possible and tell you which one actually fits rather than defaulting to one.",
       },
     ],
   },
@@ -502,15 +541,18 @@ export const SERVICES = [
     faq: [
       {
         q: 'Why not rely on my home contents coverage?',
-        a: 'Because standard policies cap categories such as jewellery, silverware and cash at low sub-limits, and they exclude common causes like mysterious disappearance. A scheduled article is insured individually, at an agreed value, against broader perils.',
+        s: "Because standard policies cap categories such as jewellery, silverware and cash at low sub-limits, and they exclude common causes like mysterious disappearance.",
+        a: "A scheduled article is insured individually, at an agreed value, against broader perils.",
       },
       {
         q: 'What do you need from me?',
-        a: 'Usually a receipt, an appraisal, or both, depending on the item and the value. For jewellery, a recent appraisal is normally required.',
+        s: "Usually a receipt, an appraisal, or both, depending on the item and the value.",
+        a: "For jewellery, a recent appraisal is normally required.",
       },
       {
         q: 'Is it covered when I travel or wear it?',
-        a: 'Yes — scheduled coverage follows the item worldwide, which is one of its main advantages over the contents sub-limit.',
+        s: "Yes — scheduled coverage follows the item worldwide, which is one of its main advantages over the contents sub-limit.",
+        a: 'Scheduled coverage follows the item worldwide, which is one of its main advantages over the contents sub-limit. This applies whether you are travelling or simply wearing the piece, so a loss away from home is still covered.',
       },
     ],
   },
@@ -539,15 +581,18 @@ export const SERVICES = [
     faq: [
       {
         q: 'Is general liability required by law?',
-        a: 'Not generally — but it is required by almost everyone you work with. Landlords, general contractors and most commercial clients will not let you start without a certificate of insurance naming them.',
+        s: "Not generally — but it is required by almost everyone you work with.",
+        a: "Landlords, general contractors and most commercial clients will not let you start without a certificate of insurance naming them.",
       },
       {
         q: 'Is general liability the same as a BOP?',
-        a: 'No. A Business Owners Policy bundles general liability with commercial property, usually at a better combined price. If you have a premises and contents to insure, a BOP is often the smarter structure.',
+        s: "No.",
+        a: "A Business Owners Policy bundles general liability with commercial property, usually at a better combined price. If you have a premises and contents to insure, a BOP is often the smarter structure.",
       },
       {
         q: 'Does it cover my work once the job is finished?',
-        a: 'Yes, that is what completed operations coverage is for. It responds to injury or damage caused by your completed work — which is exactly the exposure contractors carry for years after a job.',
+        s: "Yes, that is what completed operations coverage is for.",
+        a: "It responds to injury or damage caused by your completed work — which is exactly the exposure contractors carry for years after a job.",
       },
     ],
   },
@@ -574,15 +619,18 @@ export const SERVICES = [
     faq: [
       {
         q: 'Who is a BOP right for?',
-        a: 'Most small and mid-sized businesses with a premises, contents and modest liability exposure — offices, retailers, restaurants, salons and many contractors. Larger or unusual risks often need a custom package instead.',
+        s: "Most small and mid-sized businesses with a premises, contents and modest liability exposure — offices, retailers, restaurants, salons and many contractors.",
+        a: "Larger or unusual risks often need a custom package instead.",
       },
       {
         q: 'Can I add coverage to a BOP later?',
-        a: 'Yes. Cyber, employment practices liability, commercial auto and umbrella are commonly layered on top as the business grows.',
+        s: "Yes.",
+        a: "Cyber, employment practices liability, commercial auto and umbrella are commonly layered on top as the business grows.",
       },
       {
         q: 'Is a BOP always cheaper than separate policies?',
-        a: 'Usually, but not automatically. We quote it both ways rather than assuming — that is the advantage of working with an independent agency.',
+        s: "Usually, but not automatically.",
+        a: "We quote it both ways rather than assuming — that is the advantage of working with an independent agency.",
       },
     ],
   },
@@ -608,15 +656,18 @@ export const SERVICES = [
     faq: [
       {
         q: 'I lease my space. Do I still need property coverage?',
-        a: 'Yes. Your landlord insures the building, not your contents, equipment or leasehold improvements — and most leases make you contractually responsible for them.',
+        s: "Yes.",
+        a: "Your landlord insures the building, not your contents, equipment or leasehold improvements — and most leases make you contractually responsible for them.",
       },
       {
         q: 'What is business income coverage?',
-        a: 'It replaces the profit you would have earned, and pays continuing expenses, while your premises are unusable after a covered loss. Without it, a fire can end a business that survived the damage itself.',
+        s: "It replaces the profit you would have earned, and pays continuing expenses, while your premises are unusable after a covered loss.",
+        a: "Without it, a fire can end a business that survived the damage itself.",
       },
       {
         q: 'Should I insure at market value or replacement cost?',
-        a: 'Replacement cost, in almost every case. Market value factors in land and depreciation, so it leaves you short at exactly the moment you need to rebuild.',
+        s: "Replacement cost, in almost every case.",
+        a: "Market value factors in land and depreciation, so it leaves you short at exactly the moment you need to rebuild.",
       },
     ],
   },
@@ -643,15 +694,18 @@ export const SERVICES = [
     faq: [
       {
         q: 'Does a personal auto policy cover business use?',
-        a: 'Usually not, or not adequately. Personal policies commonly exclude business use, and if an employee is driving their own car on your behalf, the exposure lands on the business. Hired and non-owned coverage is how you close that gap.',
+        s: "Usually not, or not adequately.",
+        a: "Personal policies commonly exclude business use, and if an employee is driving their own car on your behalf, the exposure lands on the business. Hired and non-owned coverage is how you close that gap.",
       },
       {
         q: 'What is hired and non-owned auto coverage?',
-        a: 'It covers the business when employees drive rental cars or their own vehicles for work. It is one of the most commonly missing coverages we find, and one of the cheapest to add.',
+        s: "It covers the business when employees drive rental cars or their own vehicles for work.",
+        a: "It is one of the most commonly missing coverages we find, and one of the cheapest to add.",
       },
       {
         q: 'Do I need commercial plates to get commercial auto insurance?',
-        a: 'Not necessarily — the coverage follows the use, not the plate. We look at how the vehicles are actually used and title them appropriately.',
+        s: "Not necessarily — the coverage follows the use, not the plate.",
+        a: "We look at how the vehicles are actually used and title them appropriately.",
       },
     ],
   },
@@ -678,15 +732,18 @@ export const SERVICES = [
     faq: [
       {
         q: 'Is workers\u2019 compensation required in Missouri and Kansas?',
-        a: 'Yes, once you have employees — though the thresholds and rules differ slightly between the two states. Because the metro spans both, we check your obligations against where your employees actually work.',
+        s: "Yes, once you have employees — though the thresholds and rules differ slightly between the two states.",
+        a: "Because the metro spans both, we check your obligations against where your employees actually work.",
       },
       {
         q: 'Are subcontractors covered?',
-        a: 'Generally only if they are on your payroll. Uninsured subcontractors can be treated as your employees at audit time, and that produces an unexpected bill. We help you collect certificates up front instead.',
+        s: "Generally only if they are on your payroll.",
+        a: "Uninsured subcontractors can be treated as your employees at audit time, and that produces an unexpected bill. We help you collect certificates up front instead.",
       },
       {
         q: 'What happens if I misreport payroll?',
-        a: 'The carrier audits at year end and adjusts the premium, sometimes significantly. Reporting accurately through the year avoids the surprise.',
+        s: "The carrier audits at year end and adjusts the premium, sometimes significantly.",
+        a: "Reporting accurately through the year avoids the surprise.",
       },
     ],
   },
@@ -713,15 +770,18 @@ export const SERVICES = [
     faq: [
       {
         q: 'How is E&O different from general liability?',
-        a: 'General liability responds to injury and physical damage. E&O responds to financial loss caused by your advice or a service you failed to perform. A consultant or designer can be sued without anyone being hurt, and general liability will not answer it.',
+        s: "General liability responds to injury and physical damage.",
+        a: "E&O responds to financial loss caused by your advice or a service you failed to perform. A consultant or designer can be sued without anyone being hurt, and general liability will not answer it.",
       },
       {
         q: 'Does it cover defence costs?',
-        a: 'Yes, and this matters more than people realise — defending a professional claim frequently costs more than settling it. We check whether the policy pays defence inside or outside the limit, because the difference is substantial.',
+        s: "Yes, and this matters more than people realise — defending a professional claim frequently costs more than settling it.",
+        a: "We check whether the policy pays defence inside or outside the limit, because the difference is substantial.",
       },
       {
         q: 'Are prior acts covered?',
-        a: 'Sometimes, depending on the carrier and your history. It is one of the first things we establish, because a claim rarely arrives in the same year as the work that caused it.',
+        s: "Sometimes, depending on the carrier and your history.",
+        a: "It is one of the first things we establish, because a claim rarely arrives in the same year as the work that caused it.",
       },
     ],
   },
@@ -747,15 +807,18 @@ export const SERVICES = [
     faq: [
       {
         q: 'Why are these three on one page?',
-        a: 'They are the same conversation — management and operational exposures that a general liability policy excludes. Each has its own page-length of detail, but buyers almost always weigh them together. Splitting them into three thin pages would serve nobody.',
+        s: "They are the same conversation — management and operational exposures that a general liability policy excludes.",
+        a: "Each has its own page-length of detail, but buyers almost always weigh them together. Splitting them into three thin pages would serve nobody.",
       },
       {
         q: 'We are small. Does cyber really apply to us?',
-        a: 'Yes. Automated attacks do not target size, they target opportunity — and small businesses are common victims precisely because they are assumed to be unprepared. Notification and recovery costs arrive whether or not you could have prevented the breach.',
+        s: "Yes.",
+        a: "Automated attacks do not target size, they target opportunity — and small businesses are common victims precisely because they are assumed to be unprepared. Notification and recovery costs arrive whether or not you could have prevented the breach.",
       },
       {
         q: 'Does EPLI cover a claim from a former employee?',
-        a: 'That is exactly what it is for. Employment claims most often come from former employees, so the cover is written to respond after the relationship has ended.',
+        s: "That is exactly what it is for.",
+        a: "Employment claims most often come from former employees, so the cover is written to respond after the relationship has ended.",
       },
     ],
   },
@@ -780,15 +843,18 @@ export const SERVICES = [
     faq: [
       {
         q: 'When does a commercial umbrella make sense?',
-        a: 'When a single serious claim could exceed your underlying limits and reach the business itself — which is most businesses with employees, vehicles, or a premises clients visit. The umbrella sits above, not instead of, your other liability policies.',
+        s: "When a single serious claim could exceed your underlying limits and reach the business itself — which is most businesses with employees, vehicles, or a premises clients visit.",
+        a: "The umbrella sits above, not instead of, your other liability policies.",
       },
       {
         q: 'What limits do I need underneath?',
-        a: 'Carriers set minimum underlying limits, and the umbrella only responds once those are used. We review what you already carry before quoting, so the structure actually works at claim time.',
+        s: "Carriers set minimum underlying limits, and the umbrella only responds once those are used.",
+        a: "We review what you already carry before quoting, so the structure actually works at claim time.",
       },
       {
         q: 'Is it expensive?',
-        a: 'It is usually one of the least expensive policies you can buy per dollar of protection, because it only responds after the underlying cover is exhausted.',
+        s: "It is usually one of the least expensive policies you can buy per dollar of protection, because it only responds after the underlying cover is exhausted.",
+        a: 'It is usually one of the least expensive policies you can buy per dollar of protection, because it only responds after the underlying cover is exhausted. The premium stays low precisely because the umbrella is a second layer, not the first.',
       },
     ],
   },
@@ -815,15 +881,18 @@ export const SERVICES = [
     faq: [
       {
         q: 'Why does my property policy not cover my tools?',
-        a: 'Because commercial property policies insure property at a fixed location. The moment your tools are in a truck, on a job site or in transit, they are outside that. Inland marine exists to follow the property instead.',
+        s: "Because commercial property policies insure property at a fixed location.",
+        a: "The moment your tools are in a truck, on a job site or in transit, they are outside that. Inland marine exists to follow the property instead.",
       },
       {
         q: 'Does it cover equipment I rent to others?',
-        a: 'It can, with the right endorsement or scheduled listing. We confirm what leaves your premises and how, because rented equipment is a distinct exposure.',
+        s: "It can, with the right endorsement or scheduled listing.",
+        a: "We confirm what leaves your premises and how, because rented equipment is a distinct exposure.",
       },
       {
         q: 'Is a separate limit needed for high-value items?',
-        a: 'Often yes. Items above a threshold are scheduled individually, which also removes the deductible on those items in most cases.',
+        s: "Often yes.",
+        a: "Items above a threshold are scheduled individually, which also removes the deductible on those items in most cases.",
       },
     ],
   },
@@ -849,15 +918,18 @@ export const SERVICES = [
     faq: [
       {
         q: 'Who buys builders risk — the owner or the contractor?',
-        a: 'It depends on the contract, and getting it wrong leaves a gap. The construction agreement should state it explicitly; we review it with you so the responsibility is clear before work starts.',
+        s: "It depends on the contract, and getting it wrong leaves a gap.",
+        a: "The construction agreement should state it explicitly; we review it with you so the responsibility is clear before work starts.",
       },
       {
         q: 'Does it cover a renovation, or only new builds?',
-        a: 'Both. Renovations and additions typically need it too, because the existing property policy usually restricts cover while the building is under construction.',
+        s: "Both.",
+        a: "Renovations and additions typically need it too, because the existing property policy usually restricts cover while the building is under construction.",
       },
       {
         q: 'When does the cover end?',
-        a: 'At completion, occupancy, or the policy expiry — whichever comes first. We diarise the completion date so the permanent property policy starts before this one stops.',
+        s: "At completion, occupancy, or the policy expiry — whichever comes first.",
+        a: "We diarise the completion date so the permanent property policy starts before this one stops.",
       },
     ],
   },
@@ -885,15 +957,18 @@ export const SERVICES = [
     faq: [
       {
         q: 'Why does industry matter so much to the price?',
-        a: 'Because the exposure differs enormously. A restaurant carries kitchen fire and liquor exposure; a roofer carries height and completed-operations exposure. A program written for the class prices and covers the risks that actually apply.',
+        s: "Because the exposure differs enormously.",
+        a: "A restaurant carries kitchen fire and liquor exposure; a roofer carries height and completed-operations exposure. A program written for the class prices and covers the risks that actually apply.",
       },
       {
         q: 'Do you write contractors specifically?',
-        a: 'Yes — general liability, tools and equipment, commercial auto and workers\u2019 compensation are the four policies contractors most often need together, and we can structure them as one programme.',
+        s: "Yes — general liability, tools and equipment, commercial auto and workers\u2019 compensation are the four policies contractors most often need together, and we can structure them as one programme.",
+        a: 'General liability, tools and equipment, commercial auto and workers\u2019 compensation are the four policies contractors most often need together, and we can structure them as one programme. We also match the cover to the trade, because a roofer and an electrician do not carry the same exposure.',
       },
       {
         q: 'We are a startup. Is it too early for insurance?',
-        a: 'Almost never. Most startups need general liability before their first client or lease, and starting early means the coverage grows with the business rather than being retrofitted after a problem.',
+        s: "Almost never.",
+        a: "Most startups need general liability before their first client or lease, and starting early means the coverage grows with the business rather than being retrofitted after a problem.",
       },
     ],
   },
@@ -922,15 +997,18 @@ export const SERVICES = [
     faq: [
       {
         q: 'How much life insurance do I need?',
-        a: 'Enough to replace the income your household depends on, clear the debts that would otherwise fall to someone else, and cover the years your children are still dependent. We work from your actual numbers rather than a rule of thumb.',
+        s: "Enough to replace the income your household depends on, clear the debts that would otherwise fall to someone else, and cover the years your children are still dependent.",
+        a: "We work from your actual numbers rather than a rule of thumb.",
       },
       {
         q: 'Term or whole life?',
-        a: 'Term covers a set period at the lowest cost per dollar of cover, which suits most young families. Whole life is permanent and builds cash value, which suits estate planning and lifelong obligations. The right answer depends on what the money is for.',
+        s: "Term covers a set period at the lowest cost per dollar of cover, which suits most young families.",
+        a: "Whole life is permanent and builds cash value, which suits estate planning and lifelong obligations. The right answer depends on what the money is for.",
       },
       {
         q: 'Do I need a medical exam?',
-        a: 'Not always. Some products are available without one, particularly for final expense cover. Where an exam is required, we prepare you for it so the underwriting reflects your health accurately.',
+        s: "Not always.",
+        a: "Some products are available without one, particularly for final expense cover. Where an exam is required, we prepare you for it so the underwriting reflects your health accurately.",
       },
     ],
   },
@@ -957,15 +1035,18 @@ export const SERVICES = [
     faq: [
       {
         q: 'When should I start looking at Medicare?',
-        a: 'Several months before you turn 65, because your initial enrolment window is time-limited and the choices you make then affect your options later. Starting early costs nothing and avoids a rushed decision.',
+        s: "Several months before you turn 65, because your initial enrolment window is time-limited and the choices you make then affect your options later.",
+        a: "Starting early costs nothing and avoids a rushed decision.",
       },
       {
         q: 'Advantage or Supplement?',
-        a: 'Advantage plans often have lower monthly premiums but network restrictions and out-of-pocket costs. Supplements cost more monthly and cover more predictably. Which one is better depends on your doctors, prescriptions and tolerance for variable costs.',
+        s: "Advantage plans often have lower monthly premiums but network restrictions and out-of-pocket costs.",
+        a: "Supplements cost more monthly and cover more predictably. Which one is better depends on your doctors, prescriptions and tolerance for variable costs.",
       },
       {
         q: 'Does it cost me anything to review my options with you?',
-        a: 'No. We review what is available in your area, explain the differences, and you decide. There is no pressure and no obligation.',
+        s: "No.",
+        a: "We review what is available in your area, explain the differences, and you decide. There is no pressure and no obligation.",
       },
     ],
   },
@@ -992,15 +1073,18 @@ export const SERVICES = [
     faq: [
       {
         q: 'Do you write wills and trusts?',
-        a: 'No — that is legal work and belongs with your attorney. Our role is the insurance side: making sure the policies and beneficiary designations line up with the plan your attorney has drafted.',
+        s: "No — that is legal work and belongs with your attorney.",
+        a: "Our role is the insurance side: making sure the policies and beneficiary designations line up with the plan your attorney has drafted.",
       },
       {
         q: 'Why does beneficiary wording matter so much?',
-        a: 'Because a policy pays to whoever is named on the form, regardless of what a will says. A stale or blank beneficiary designation is one of the most common and most expensive mistakes we find during a review.',
+        s: "Because a policy pays to whoever is named on the form, regardless of what a will says.",
+        a: "A stale or blank beneficiary designation is one of the most common and most expensive mistakes we find during a review.",
       },
       {
         q: 'When should an estate plan be reviewed?',
-        a: 'After any major life event — marriage, divorce, a birth, a death, or a significant change in assets — and periodically even when nothing obvious has changed.',
+        s: "After any major life event — marriage, divorce, a birth, a death, or a significant change in assets — and periodically even when nothing obvious has changed.",
+        a: 'After any major life event such as a marriage, divorce, birth, death, or a significant change in assets, and periodically even when nothing obvious has changed. A plan written years ago often names people and amounts that no longer match your life, which is exactly what a review catches.',
       },
     ],
   },
@@ -1029,15 +1113,18 @@ export const SERVICES = [
     faq: [
       {
         q: 'How is a surety bond different from insurance?',
-        a: 'An insurance policy transfers risk; a surety bond is a guarantee that you will perform. You remain liable to repay the surety if a claim is paid, which is why underwriting focuses on your financial strength rather than the risk itself.',
+        s: "An insurance policy transfers risk; a surety bond is a guarantee that you will perform.",
+        a: "You remain liable to repay the surety if a claim is paid, which is why underwriting focuses on your financial strength rather than the risk itself.",
       },
       {
         q: 'How long does it take to get a bond?',
-        a: 'Simple licence and permit bonds can be issued the same day. Performance bonds for larger contracts need financial statements and take longer, especially the first time.',
+        s: "Simple licence and permit bonds can be issued the same day.",
+        a: "Performance bonds for larger contracts need financial statements and take longer, especially the first time.",
       },
       {
         q: 'Will I need to pledge collateral?',
-        a: 'Often not for smaller bonds, once the surety knows you. Larger performance bonds may require indemnity or collateral depending on your financial position.',
+        s: "Often not for smaller bonds, once the surety knows you.",
+        a: "Larger performance bonds may require indemnity or collateral depending on your financial position.",
       },
     ],
   },
@@ -1064,15 +1151,18 @@ export const SERVICES = [
     faq: [
       {
         q: 'Is travel insurance worth it?',
-        a: 'For any trip with meaningful prepaid cost, or any destination where your health plan will not follow you, yes. The medical and evacuation element is the part people most often need and least often expect.',
+        s: "For any trip with meaningful prepaid cost, or any destination where your health plan will not follow you, yes.",
+        a: "The medical and evacuation element is the part people most often need and least often expect.",
       },
       {
         q: 'Does my health insurance cover me abroad?',
-        a: 'Rarely in the way people assume. Medicare does not cover care outside the United States, and many private plans limit or exclude it. That gap is what travel medical cover fills.',
+        s: "Rarely in the way people assume.",
+        a: "Medicare does not cover care outside the United States, and many private plans limit or exclude it. That gap is what travel medical cover fills.",
       },
       {
         q: 'When should I buy it?',
-        a: 'When you make your first trip payment. Some benefits, particularly cancellation for a pre-existing condition, depend on buying within a set window of that first deposit.',
+        s: "When you make your first trip payment.",
+        a: "Some benefits, particularly cancellation for a pre-existing condition, depend on buying within a set window of that first deposit.",
       },
     ],
   },
@@ -1099,15 +1189,18 @@ export const SERVICES = [
     faq: [
       {
         q: 'Is pet insurance worth the monthly cost?',
-        a: 'It depends on your tolerance for an unexpected bill. A single emergency surgery commonly runs into four figures, and the value of the cover is that the decision at that moment becomes a medical one rather than a financial one.',
+        s: "It depends on your tolerance for an unexpected bill.",
+        a: "A single emergency surgery commonly runs into four figures, and the value of the cover is that the decision at that moment becomes a medical one rather than a financial one.",
       },
       {
         q: 'Does it cover pre-existing conditions?',
-        a: 'Generally no, which is why enrolling while your pet is young and healthy matters. Conditions that appear after enrolment are typically covered; ones that existed before are not.',
+        s: "Generally no, which is why enrolling while your pet is young and healthy matters.",
+        a: "Conditions that appear after enrolment are typically covered; ones that existed before are not.",
       },
       {
         q: 'Does it cover routine care?',
-        a: 'Basic policies cover accidents and illness. Wellness and routine care is usually an optional add-on, and whether it is worth it depends on how much routine care your pet needs.',
+        s: "Basic policies cover accidents and illness.",
+        a: "Wellness and routine care is usually an optional add-on, and whether it is worth it depends on how much routine care your pet needs.",
       },
     ],
   },
@@ -1134,15 +1227,18 @@ export const SERVICES = [
     faq: [
       {
         q: 'How is this different from my phone carrier\u2019s plan?',
-        a: 'It is a separate policy, so it is not tied to staying with one network and it can cover several devices under one arrangement. Carrier plans also vary a lot in what they actually pay out.',
+        s: "It is a separate policy, so it is not tied to staying with one network and it can cover several devices under one arrangement.",
+        a: "Carrier plans also vary a lot in what they actually pay out.",
       },
       {
         q: 'Does it cover a lost phone?',
-        a: 'Loss and theft are usually covered, sometimes as an optional extension. We confirm which before you buy, because the definitions differ between carriers.',
+        s: "Loss and theft are usually covered, sometimes as an optional extension.",
+        a: "We confirm which before you buy, because the definitions differ between carriers.",
       },
       {
         q: 'Is there a deductible?',
-        a: 'Usually yes, per claim. We tell you the figure up front so you can weigh it against the cost of the device.',
+        s: "Usually yes, per claim.",
+        a: "We tell you the figure up front so you can weigh it against the cost of the device.",
       },
     ],
   },
@@ -1168,15 +1264,18 @@ export const SERVICES = [
     faq: [
       {
         q: 'Why would I need specialist wind and hail cover?',
-        a: 'Because the Kansas City metro sits in a hail-exposed region, and after a claim or two a standard carrier may raise the deductible, restrict roof cover, or decline to renew. A specialist market is built for exactly that situation.',
+        s: "Because the Kansas City metro sits in a hail-exposed region, and after a claim or two a standard carrier may raise the deductible, restrict roof cover, or decline to renew.",
+        a: "A specialist market is built for exactly that situation.",
       },
       {
         q: 'What is a cosmetic damage exclusion?',
-        a: 'It means the policy will not pay to replace a roof that still performs its function, even though it looks marked. This is one of the most important terms in a wind and hail policy, and we read it out to you rather than leaving it in the small print.',
+        s: "It means the policy will not pay to replace a roof that still performs its function, even though it looks marked.",
+        a: "This is one of the most important terms in a wind and hail policy, and we read it out to you rather than leaving it in the small print.",
       },
       {
         q: 'Can I keep my existing policy and add this?',
-        a: 'Sometimes. The right structure depends on what your current carrier has already restricted. We review the existing policy first and tell you honestly whether a change is worth making.',
+        s: "Sometimes.",
+        a: "The right structure depends on what your current carrier has already restricted. We review the existing policy first and tell you honestly whether a change is worth making.",
       },
     ],
   },
@@ -1199,24 +1298,28 @@ export const SERVICES = [
       'Reviewed annually alongside your other policies',
     ],
     searchIntent: 'premium lock insurance rate protection',
-    newsLink: '/news/premium-lock-for-auto',
+    newsLink: '/blog/premium-lock-for-auto',
     newsLabel: 'Read the announcement: Premium Lock for Auto is here',
     faq: [
       {
         q: 'What does Premium Lock actually do?',
-        a: 'It is a rate-protection product designed to keep your premium predictable at renewal. The exact terms and eligibility depend on the carrier, and we confirm them in writing before you commit rather than describing them loosely.',
+        s: "It is a rate-protection product designed to keep your premium predictable at renewal.",
+        a: "The exact terms and eligibility depend on the carrier, and we confirm them in writing before you commit rather than describing them loosely.",
       },
       {
         q: 'Does Premium Lock cover auto?',
-        a: 'Yes. Premium Lock for Auto launched in October 2026: available in all 50 states with any admitted lines carrier, on 6- or 12-month policies, creating 3 years of pricing predictability. The average American already pays more to insure their car than their home, so auto is where the guarantee matters most. Quotes come through the Premium Lock portal.',
+        s: "Yes.",
+        a: "Premium Lock for Auto launched in October 2026: available in all 50 states with any admitted lines carrier, on 6- or 12-month policies, creating 3 years of pricing predictability. The average American already pays more to insure their car than their home, so auto is where the guarantee matters most. Quotes come through the Premium Lock portal.",
       },
       {
         q: 'Does it mean my premium can never change?',
-        a: 'No product can promise that indefinitely — taxes, fees and changes you make to the policy can still affect it. What it addresses is the carrier-initiated increase at renewal. We are precise about this because the difference matters.',
+        s: "No product can promise that indefinitely — taxes, fees and changes you make to the policy can still affect it.",
+        a: "What it addresses is the carrier-initiated increase at renewal. We are precise about this because the difference matters.",
       },
       {
         q: 'Is it available on every policy?',
-        a: 'No. Availability depends on the carrier and the line of business. We check eligibility against your actual policies before recommending it.',
+        s: "No.",
+        a: "Availability depends on the carrier and the line of business. We check eligibility against your actual policies before recommending it.",
       },
     ],
   },
@@ -1242,15 +1345,18 @@ export const SERVICES = [
     faq: [
       {
         q: 'Are you a Farmers agency or an independent agency?',
-        a: 'Both, and it works in your favour. We are a Farmers-appointed agency, and we also hold appointments with a wider panel of carriers. That means we can quote Farmers directly and still tell you honestly when another carrier fits better.',
+        s: "Both, and it works in your favour.",
+        a: "We are a Farmers-appointed agency, and we also hold appointments with a wider panel of carriers. That means we can quote Farmers directly and still tell you honestly when another carrier fits better.",
       },
       {
         q: 'Should I buy Farmers because you are a Farmers agency?',
-        a: 'Only if it is the right answer for you. Our job is to compare, not to steer. Where Farmers is competitive we will say so plainly, and where it is not we will show you what is.',
+        s: "Only if it is the right answer for you.",
+        a: "Our job is to compare, not to steer. Where Farmers is competitive we will say so plainly, and where it is not we will show you what is.",
       },
       {
         q: 'Can I keep my existing Farmers policy and just move it to you?',
-        a: 'In most cases yes, and you keep the continuity of cover. Bring your declarations page and we will review it before anything changes.',
+        s: "In most cases yes, and you keep the continuity of cover.",
+        a: "Bring your declarations page and we will review it before anything changes.",
       },
     ],
   },
@@ -1308,30 +1414,37 @@ export const HOME_OFFER_COPY = {
 export const HOME_FAQ = [
   {
     q: 'What types of insurance do you offer?',
-    a: 'Home, auto, renters, condo, landlord, umbrella, flood, business, life, Medicare, surety bonds, travel, pet, device protection and more. If you do not see it listed, call us: we write coverage well beyond this list.',
+    s: 'Home, auto, renters, condo, landlord, umbrella, flood, business, life, Medicare, surety bonds, travel, pet, device protection and more.',
+    a: "If you do not see it listed, call us: we write coverage well beyond this list, and the list grows as new programmes come online.",
   },
   {
     q: 'How do I get an insurance quote?',
-    a: 'Fill out the quote form on any page or call (816) 868-1787. One of our team follows up, usually the same business day.',
+    s: 'Fill out the quote form on any page or call (816) 868-1787, and a team member follows up, usually the same business day.',
+    a: "A real person, not a bot, reviews what you send and follows up with your options.",
   },
   {
     q: 'Is getting a quote free?',
-    a: 'Yes. Quotes are free and carry no obligation.',
+    s: 'Yes, quotes are free and carry no obligation.',
+    a: "You keep the numbers either way, and there is nothing to sign until you choose to move.",
   },
   {
     q: 'How long does it take to receive my quote?',
-    a: 'Most quotes come back within one business day, once we have your details.',
+    s: 'Most quotes come back within one business day once we have your details.',
+    a: "More complex programmes, like business packages with several lines, can take a little longer, and we tell you when.",
   },
   {
     q: 'What information do I need to prepare?',
-    a: 'Basic details about what you are insuring (property, vehicles, or business), your current coverage, and a way to reach you.',
+    s: 'Basic details about what you are insuring, your current coverage, and a way to reach you.',
+    a: "For property, that means the address and roughly when it was built; for vehicles, the year, make and model; for a business, what you do and how many people.",
   },
   {
     q: 'Can I customize my insurance coverage?',
-    a: 'Yes. As an independent agency we compare across carriers and build the cover around your needs, not a shelf product.',
+    s: 'Yes; as an independent agency we compare across carriers and build the cover around your needs.',
+    a: "That means deductibles, limits and add-ons chosen for you, not a shelf product, because we are not tied to one carrier.",
   },
   {
     q: 'Will my information be kept confidential?',
-    a: 'Yes. Your information is used only to prepare your quotes and is handled per our privacy policy.',
+    s: 'Yes; your information is used only to prepare your quotes and is handled per our privacy policy.',
+    a: "Nothing is shared with third parties for marketing, and nothing leaves our team except to the carriers you actually quote with.",
   },
 ];

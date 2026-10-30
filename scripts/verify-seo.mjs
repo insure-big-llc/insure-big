@@ -86,6 +86,15 @@ function urlPathFor(file) {
 
 const htmlFiles = walkHtml(DIST);
 
+/**
+ * Tool pages, not site pages: the CMS admin lives in public/admin/ and is
+ * excluded from the sitewide page checks (no canonical, no NAP, no schema)
+ * and from the sitemap completeness check.
+ */
+const TOOL_PATHS = ['/admin'];
+
+const siteHtmlFiles = htmlFiles.filter((f) => !TOOL_PATHS.some((p) => urlPathFor(f) === p || urlPathFor(f).startsWith(`${p}/`)));
+
 // ── 1. Indexed URLs must exist ────────────────────────────────────────────────
 if (!existsSync(DIST)) {
   fail('dist/ does not exist — run `npm run build` first.');
@@ -118,7 +127,7 @@ const descriptions = new Map();
 const canonicals = new Map();
 const emitted = new Set();
 
-for (const file of htmlFiles) {
+for (const file of siteHtmlFiles) {
   const urlPath = urlPathFor(file);
   emitted.add(urlPath);
   const html = readFileSync(file, 'utf8');
@@ -150,8 +159,9 @@ for (const file of htmlFiles) {
 
   // 5. NAP present
   if (!html.includes('(816) 868-1787')) fail(`${urlPath}: phone number missing`);
-  if (!html.includes('16 SE 3rd Street')) fail(`${urlPath}: Lee's Summit address missing`);
-  if (!html.includes('200 NE 91st Street')) fail(`${urlPath}: Northland address missing`);
+  // NAP strings match the Google Business Profiles exactly (scope 21).
+  if (!html.includes('16 SE 3rd St')) fail(`${urlPath}: Lee's Summit address missing`);
+  if (!html.includes('200 NE 91 St')) fail(`${urlPath}: Northland address missing`);
 
   // Market statement, verbatim
   if (
@@ -234,7 +244,7 @@ if (!existsSync(sitemapPath)) {
   if (locs.some((l) => l.includes('/404'))) {
     fail('sitemap must not list the 404 page');
   }
-  const nonPage = new Set(['/404', '/llms.txt', '/sitemap.xml']);
+  const nonPage = new Set(['/404', '/llms.txt', '/sitemap.xml', ...TOOL_PATHS]);
   const orphaned = [...emitted].filter(
     (u) => !nonPage.has(u) && !locs.includes(u === '/' ? `${SITE}/` : `${SITE}${u}`),
   );
@@ -287,7 +297,7 @@ notes.push('partner parity: checked against the live URL set in section 12');
 
 // ── 10. Partner links must be safe and labelled ───────────────────────────────
 // A partner link carries noopener/noreferrer, and never leaks a window handle.
-for (const file of htmlFiles) {
+for (const file of siteHtmlFiles) {
   const html = readFileSync(file, 'utf8');
   const urlPath = urlPathFor(file);
   const outbound = [...html.matchAll(/<a\b[^>]*href="\/go\/[^"]*"[^>]*>/g)].map((m) => m[0]);
@@ -477,7 +487,7 @@ if (!builtCss.includes('.skip-link:focus')) {
   fail('built CSS has no .skip-link:focus rule — the skip link could never appear');
 }
 let goldAsText = 0;
-for (const file of htmlFiles) {
+for (const file of siteHtmlFiles) {
   goldAsText += (readFileSync(file, 'utf8').match(/text-\[var\(--color-brand-500\)\]/g) || []).length;
 }
 if (goldAsText > 0) {
@@ -486,7 +496,7 @@ if (goldAsText > 0) {
 notes.push('accessibility: focus-visible rule, skip link rule, and no gold-as-text asserted');
 
 // ── 15. OG IMAGE — every page must carry one ──────────────────────────────────
-for (const file of htmlFiles) {
+for (const file of siteHtmlFiles) {
   const html = readFileSync(file, 'utf8');
   const urlPath = urlPathFor(file);
   if (!/<meta property="og:image"/.test(html)) {
@@ -523,7 +533,7 @@ notes.push(`specialty pages: content floor checked for ${SPECIALIST_SLUGS.length
 // ── 17. PARTNER LINKS — informational labels, never transactional ────────────
 // W3: the live site's intent is "LEARN MORE". "Continue to X" / "Go to X" reads
 // as a transaction. Both labels are banned from partner CTAs.
-for (const file of htmlFiles) {
+for (const file of siteHtmlFiles) {
   const html = readFileSync(file, 'utf8');
   const urlPath = urlPathFor(file);
   for (const banned of ['Continue to', 'Go to']) {
@@ -533,6 +543,101 @@ for (const file of htmlFiles) {
     }
   }
 }
+// ── 13. Blog (spec 0004) ─────────────────────────────────────────────────────
+// Duplicate slugs or malformed frontmatter already fail the build itself
+// (the collection schema and Astro's duplicate path check). This section
+// guards the visibility rules: drafts stay out of the sitemap, published
+// posts appear in it, and the blog index exists.
+const blogContentDir = new URL('../src/content/blog/', import.meta.url).pathname.replace(/^\/([A-Za-z]:)/, '$1');
+const blogIndexHtml = join(DIST, 'blog.html');
+if (!existsSync(blogIndexHtml)) {
+  fail('dist/blog.html missing');
+} else {
+  const sitemapBody = readFileSync(join(DIST, 'sitemap.xml'), 'utf8');
+  if (!sitemapBody.includes(`${SITE}/blog`)) fail('/blog missing from the sitemap');
+  const seen = new Map();
+  for (const name of readdirSync(blogContentDir)) {
+    if (!name.endsWith('.md')) continue;
+    const raw = readFileSync(join(blogContentDir, name), 'utf8');
+    const slug = (raw.match(/^slug:\s*['"]?([\w-]+)/m) ?? [])[1];
+    const draft = /^draft:\s*true/m.test(raw);
+    if (!slug) {
+      fail(`blog post ${name}: no slug in frontmatter`);
+      continue;
+    }
+    if (seen.has(slug)) fail(`blog: duplicate slug "${slug}" (${seen.get(slug)} and ${name})`);
+    seen.set(slug, name);
+    const inSitemap = sitemapBody.includes(`${SITE}/blog/${slug}`);
+    if (draft && inSitemap) fail(`blog: draft post "${slug}" appears in the sitemap`);
+    if (!draft && !inSitemap) fail(`blog: published post "${slug}" missing from the sitemap`);
+    const postHtml = join(DIST, 'blog', `${slug}.html`);
+    if (!existsSync(postHtml)) {
+      fail(`blog: post page dist/blog/${slug}.html missing`);
+      continue;
+    }
+    const html = readFileSync(postHtml, 'utf8');
+    if (draft && !html.includes('name="robots" content="noindex')) {
+      fail(`blog: draft post "${slug}" is not noindexed`);
+    }
+  }
+  if (seen.size) notes.push(`blog posts: ${[...seen.keys()].join(', ')}`);
+}
+
+// ── 12.5. AISO schema and zero-click FAQs (scope 19 and 20) ─────────────────
+// The org node must carry Bret's broad capability phrases and the four
+// InsuranceProduct nodes. Every FAQ on a page must open with a short answer
+// of 45 words or fewer, the zero-click pattern.
+{
+  const homeHtml = readFileSync(join(DIST, 'index.html'), 'utf8');
+  const blocks = [...homeHtml.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)].map((m) => {
+    try {
+      return JSON.parse(m[1]);
+    } catch {
+      return null;
+    }
+  });
+  const flat = blocks.flatMap((b) => (Array.isArray(b) ? b : b?.['@graph'] ?? (b ? [b] : [])));
+  const org = (flat.find((n) => n?.['@id'] === `${SITE}/#organization`) ?? null);
+  if (!org) {
+    fail('org node missing from the homepage graph');
+  } else {
+    const knows = org.knowsAbout ?? [];
+    for (const phrase of ['Commercial Risk Management', 'Asset Protection', 'Estate Planning', 'Property and Casualty Insurance']) {
+      if (!knows.includes(phrase)) fail(`org knowsAbout missing "${phrase}"`);
+    }
+    const offers = org.makesOffer ?? [];
+    if (offers.length !== 4) {
+      fail(`org makesOffer must carry exactly 4 InsuranceProduct nodes, found ${offers.length}`);
+    } else {
+      for (const name of ['Homeowners Insurance', 'Automobile Insurance', 'Life Insurance', 'Commercial Business Insurance']) {
+        if (!offers.some((o) => o['@type'] === 'InsuranceProduct' && o.name === name)) {
+          fail(`org makesOffer missing the InsuranceProduct "${name}"`);
+        }
+      }
+    }
+  }
+}
+
+for (const file of siteHtmlFiles) {
+  const html = readFileSync(file, 'utf8');
+  // Count only inside the FAQ section (the nav also uses details/summary).
+  const faqSections = html.split('<section class="mt-14">').slice(1);
+  for (const section of faqSections) {
+    const detailsCount = (section.match(/<details[\s>]/g) || []).length;
+    const shorts = [...section.matchAll(/<p class="faq-short[^"]*"[^>]*>([\s\S]*?)<\/p>/g)].map((m) =>
+      m[1].replace(/<[^>]+>/g, '').trim(),
+    );
+    const urlPath = urlPathFor(file);
+    if (shorts.length !== detailsCount) {
+      fail(`${urlPath}: ${detailsCount} FAQ question(s) but ${shorts.length} short answer(s) — every FAQ needs a zero-click lead`);
+    }
+    for (const s of shorts) {
+      const words = s.split(/\s+/).filter(Boolean).length;
+      if (words > 45) fail(`${urlPath}: a short answer runs ${words} words (ceiling 45)`);
+    }
+  }
+}
+
 // ── Report ────────────────────────────────────────────────────────────────────
 const n = emitted.size;
 console.log(`\nSEO verification — ${n} page(s) in dist/\n`);
