@@ -1,0 +1,26 @@
+---
+/**
+ * MarqueeBand — the scrolling carrier ribbon (vibe layer, spec 0006).
+ *
+ * A duplicated text track scrolls left forever with a transform-only
+ * keyframe, paused on hover and static under reduced motion. No images,
+ * no layout shift, a few hundred bytes of markup.
+ */
+import { CARRIERS } from '../config/carriers.js';
+
+const names = CARRIERS.map((c) => c.display);
+const track = [...names, ...names];
+---
+
+<div class="marquee border-y border-[var(--color-brand-200)] bg-[var(--color-brand-50)] py-3" aria-hidden="true">
+  <div class="marquee-track">
+    {
+      track.map((name, i) => (
+        <span key={i} class="mx-6 flex items-center gap-6 whitespace-nowrap text-sm font-semibold tracking-wide text-[var(--color-ink-muted)]">
+          {name}
+          <span class="h-1.5 w-1.5 rounded-full bg-[var(--color-brand-500)]"></span>
+        </span>
+      ))
+    }
+  </div>
+</div>

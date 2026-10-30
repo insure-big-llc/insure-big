@@ -496,3 +496,147 @@
     transform: none;
   }
 }
+
+/* ── Vibe layer (client override, spec 0006): pronounced, still transform-only ── */
+
+/* Bigger, visible reveals with a custom curve. */
+.js .reveal {
+  opacity: 0;
+  transform: translateY(26px);
+}
+
+.js .reveal.is-visible {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity 480ms var(--ease-out),
+    transform 480ms var(--ease-out);
+}
+
+/* Staggered children inside a revealed container: 70ms apart. */
+.reveal-stagger > * {
+  opacity: 1;
+}
+
+.js .reveal-stagger > * {
+  opacity: 0;
+  transform: translateY(22px);
+  transition:
+    opacity 480ms var(--ease-out),
+    transform 480ms var(--ease-out);
+}
+
+.js .reveal-stagger.is-visible > * {
+  opacity: 1;
+  transform: none;
+}
+
+.js .reveal-stagger.is-visible > :nth-child(1) { transition-delay: 0ms; }
+.js .reveal-stagger.is-visible > :nth-child(2) { transition-delay: 70ms; }
+.js .reveal-stagger.is-visible > :nth-child(3) { transition-delay: 140ms; }
+.js .reveal-stagger.is-visible > :nth-child(4) { transition-delay: 210ms; }
+.js .reveal-stagger.is-visible > :nth-child(5) { transition-delay: 280ms; }
+.js .reveal-stagger.is-visible > :nth-child(6) { transition-delay: 350ms; }
+
+/* Hero headline word reveal: each word rises in, 90ms apart. */
+.word {
+  display: inline-block;
+  animation: word-rise 560ms var(--ease-out) both;
+  animation-delay: var(--d, 0ms);
+}
+
+@keyframes word-rise {
+  from {
+    opacity: 0;
+    transform: translateY(0.55em);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Slow float for the hero art and the orbs. */
+.float-slow {
+  animation: floaty 8s ease-in-out infinite;
+}
+
+@keyframes floaty {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+/* Pre-blurred gold orbs (no filter, cheap paint). */
+.orb {
+  position: absolute;
+  border-radius: 9999px;
+  background: radial-gradient(closest-side, rgb(189 155 1 / 0.28), transparent 70%);
+  pointer-events: none;
+}
+
+/* Marquee band: duplicated track, translateX only, paused on hover. */
+.marquee {
+  overflow: hidden;
+}
+
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee 34s linear infinite;
+}
+
+@keyframes marquee {
+  to { transform: translateX(-50%); }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .marquee:hover .marquee-track {
+    animation-play-state: paused;
+  }
+}
+
+/* 3D tilt for the featured tiles, hover devices only. */
+.tilt {
+  transform: perspective(900px) rotateX(0deg) rotateY(0deg);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .tilt {
+    transition: transform 260ms var(--ease-out);
+  }
+  .tilt:hover {
+    transform: perspective(900px) rotateX(1.6deg) rotateY(-1.6deg) translateY(-4px);
+  }
+}
+
+/* Scroll progress bar, gold hairline at the very top. */
+#scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--color-brand-500);
+  transform-origin: left;
+  transform: scaleX(0);
+  z-index: 60;
+}
+
+/* Reduced motion: everything above goes static, content fully visible. */
+@media (prefers-reduced-motion: reduce) {
+  .js .reveal,
+  .js .reveal-stagger > *,
+  .word {
+    opacity: 1;
+    transform: none;
+    animation: none;
+    transition: none;
+  }
+  .float-slow,
+  .marquee-track {
+    animation: none;
+  }
+  #scroll-progress {
+    display: none;
+  }
+}
