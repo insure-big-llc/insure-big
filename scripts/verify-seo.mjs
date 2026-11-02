@@ -615,14 +615,42 @@ if (!existsSync(blogIndexHtml)) {
         }
       }
     }
+
+    // Service area (memo point 1): counties and neighborhoods must survive.
+    const areas = (org.areaServed ?? []).map((a) => a?.name);
+    for (const area of [
+      'Jackson County, Missouri',
+      'Cass County, Missouri',
+      'Clay County, Missouri',
+      'Platte County, Missouri',
+      'Johnson County, Kansas',
+      'Wyandotte County, Kansas',
+      "Downtown Lee's Summit",
+      'Northland',
+    ]) {
+      if (!areas.includes(area)) fail(`org areaServed missing "${area}"`);
+    }
+
+    // Canonical listing name (memo point 4): both offices carry the exact same
+    // string, the one on the Lee's Summit Google profile, with an ASCII hyphen.
+    const LISTING_NAME = 'Farmers Insurance - Ballentine Insurance Group';
+    const officeNames = (org.location ?? []).map((l) => l?.name);
+    if (officeNames.length !== 2) fail(`org must carry 2 office nodes, found ${officeNames.length}`);
+    for (const n of officeNames) {
+      if (n !== LISTING_NAME) fail(`office name "${n}" must be exactly "${LISTING_NAME}"`);
+    }
   }
 }
 
 for (const file of siteHtmlFiles) {
   const html = readFileSync(file, 'utf8');
-  // Count only inside the FAQ section (the nav also uses details/summary).
-  const faqSections = html.split('<section class="mt-14">').slice(1);
-  for (const section of faqSections) {
+  // Count only inside the FAQ section (the nav also uses details/summary). The
+  // FaqBlock component marks its section with data-faq so this never depends on
+  // spacing classes.
+  const faqSections = html.split('<section data-faq').slice(1);
+  for (const chunk of faqSections) {
+    // The block has no nested sections, so its first </section> closes it.
+    const section = chunk.split('</section>')[0];
     const detailsCount = (section.match(/<details[\s>]/g) || []).length;
     const shorts = [...section.matchAll(/<p class="faq-short[^"]*"[^>]*>([\s\S]*?)<\/p>/g)].map((m) =>
       m[1].replace(/<[^>]+>/g, '').trim(),

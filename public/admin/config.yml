@@ -150,7 +150,7 @@ collections:
             summary: '{{fields.q}}'
             fields:
               - { label: 'Question', name: q, widget: string }
-              - { label: 'Short answer', name: s, widget: text, hint: 'One or two sentences. Shown in bold first.' }
+              - { label: 'Short answer', name: s, widget: text, hint: 'One or two sentences, under 45 words. Shown in bold first. Google and AI assistants quote this line.' }
               - { label: 'Full answer', name: a, widget: text }
 
       - name: reviews-lees-summit

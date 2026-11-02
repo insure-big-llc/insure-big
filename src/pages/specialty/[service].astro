@@ -121,8 +121,6 @@ const schema = [
           )
         }
 
-        {service.faq?.length ? <FaqBlock faqs={service.faq} /> : null}
-
         <section class="mt-14 rounded-2xl bg-[var(--color-surface-alt)] p-6">
           <h2 class="text-xl">Other specialty cover we write</h2>
           <ul class="mt-4 grid gap-2 sm:grid-cols-2">
@@ -139,6 +137,9 @@ const schema = [
         </section>
 
         <RelatedCoverage current={service.slug} hub="specialty" />
+
+        {/* Memo point 2: the FAQ is the last block of every product page. */}
+        {service.faq?.length ? <FaqBlock faqs={service.faq} /> : null}
       </div>
 
       <aside class="lg:sticky lg:top-24 lg:self-start">

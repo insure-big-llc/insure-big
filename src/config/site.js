@@ -21,6 +21,18 @@ export const SITE = {
   shortName: 'BIG',
 
   /**
+   * CANONICAL LISTING NAME. The one exact string for both offices in every
+   * directory (Google Business Profile, Apple Maps, Bing, Yelp, Trusted Choice,
+   * the Chamber) and on the two LocalBusiness office nodes in the JSON-LD.
+   * It is the Lee's Summit (primary office) Google profile name, with a plain
+   * ASCII hyphen. Never an en dash, never "Ste" style variants.
+   * `name` above stays the website brand and the Organization name.
+   * Decision: Francis, 2 November 2026, pending Farmers' naming rules.
+   * docs/nap-checklist.md carries the directory instructions.
+   */
+  listingName: 'Farmers Insurance - Ballentine Insurance Group',
+
+  /**
    * ⚠️ ENTITY-NAME ALIGNMENT
    *
    * This agency is referred to by four different names across the surfaces an AI
@@ -43,6 +55,7 @@ export const SITE = {
     'Ballentine Insurance',
     'Insure-BIG',
     'Farmers Insurance - Bret Ballentine',
+    'Farmers Insurance - Ballentine Insurance Group',
   ],
 
   /** Verbatim, sitewide. Fixes the old "Kansas" vs "Missouri, Kansas" contradiction. */

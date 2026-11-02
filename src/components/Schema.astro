@@ -83,7 +83,9 @@ const organization = {
   location: LOCATIONS.map((loc) => ({
     '@type': 'LocalBusiness',
     '@id': `${SITE.url}/#location-${loc.id}`,
-    name: `${SITE.name} — ${loc.name}`,
+    // Memo point 4: the exact listing name, identical for both offices and to the
+    // directories. The office is told apart by address, @id, url and geo.
+    name: SITE.listingName,
     parentOrganization: { '@id': ORG_ID },
     address: {
       '@type': 'PostalAddress',

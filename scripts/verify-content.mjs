@@ -79,6 +79,12 @@ if (faq) {
     for (const key of ['q', 's', 'a']) {
       if (!nonEmpty(f?.[key])) fail(`home-faq: question ${i + 1} has an empty ${key === 'q' ? 'question' : key === 's' ? 'short answer' : 'full answer'}`);
     }
+    // Zero click rule: the short answer is what AI assistants quote, so it stays
+    // at 45 words or fewer. verify-seo.mjs re-checks this in the built HTML.
+    if (nonEmpty(f?.s)) {
+      const words = f.s.trim().split(/\s+/).length;
+      if (words > 45) fail(`home-faq: question ${i + 1} short answer is ${words} words, the limit is 45`);
+    }
   }
   notes.push(`home-faq: ${faq.items?.length ?? 0} questions`);
 }

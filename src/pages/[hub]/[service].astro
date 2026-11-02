@@ -106,12 +106,6 @@ const schema = [
         }
 
         {
-          service.faq?.length ? (
-            <FaqBlock faqs={service.faq} />
-          ) : null
-        }
-
-        {
           carriers.length ? (
             <section class="mt-14">
               <h2 class="text-2xl">Carriers we place this with</h2>
@@ -137,6 +131,10 @@ const schema = [
         </section>
 
         <RelatedCoverage current={service.slug} hub={service.hub} />
+
+        {/* Memo point 2: the FAQ is the last block of every product page, so the
+            question and answer pairs read as one clean closing section. */}
+        {service.faq?.length ? <FaqBlock faqs={service.faq} /> : null}
       </div>
 
       <!-- Sidebar: the form, sticky on desktop so it is always one click away -->

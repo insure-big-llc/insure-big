@@ -14,21 +14,49 @@ const ORG_ID = `${SITE.url}/#organization`;
 /**
  * The metro we serve. Used on every Service and Offer node.
  *
- * ⚠️ This list must stay consistent with the market statement. Both offices are
- * in Missouri; the agency is licensed in Missouri and Kansas and the metro spans
- * the state line, which is why `areaServed` carries both states.
+ * THE RULE: anything inside the counties the agency serves is a local area, and
+ * may be listed. The market statement stays "Kansas City metro, Missouri and
+ * Kansas", and this list must never contradict it. Both offices are in Missouri
+ * (Jackson County, Lee's Summit; Clay County, the Northland); the metro spans the
+ * state line, which is why the Kansas counties and both states are here.
+ *
+ * Licensed states are NOT listed: the agency is licensed in more states (see
+ * AgencyZoom) than it markets to locally, and a long state list would dilute the
+ * local signal this markup exists to send.
+ *
+ * Every place named in visible page copy (the two office pages list their
+ * nearby communities) appears here too, so the markup and the page agree.
+ * `verify-seo.mjs` asserts the counties and neighborhoods survive.
  */
 export const AREA_SERVED = [
+  // Cities
   { '@type': 'City', name: 'Kansas City' },
-  { '@type': "City", name: "Lee's Summit" },
+  { '@type': 'City', name: "Lee's Summit" },
   { '@type': 'City', name: 'Blue Springs' },
   { '@type': 'City', name: 'Independence' },
   { '@type': 'City', name: 'Raymore' },
   { '@type': 'City', name: 'Grandview' },
+  { '@type': 'City', name: 'Greenwood' },
   { '@type': 'City', name: 'Liberty' },
   { '@type': 'City', name: 'Gladstone' },
   { '@type': 'City', name: 'Parkville' },
   { '@type': 'City', name: 'North Kansas City' },
+  { '@type': 'City', name: 'Riverside' },
+  { '@type': 'City', name: 'Smithville' },
+  { '@type': 'City', name: 'Kansas City, Kansas' },
+  { '@type': 'City', name: 'Overland Park' },
+  { '@type': 'City', name: 'Olathe' },
+  // Counties
+  { '@type': 'AdministrativeArea', name: 'Jackson County, Missouri' },
+  { '@type': 'AdministrativeArea', name: 'Cass County, Missouri' },
+  { '@type': 'AdministrativeArea', name: 'Clay County, Missouri' },
+  { '@type': 'AdministrativeArea', name: 'Platte County, Missouri' },
+  { '@type': 'AdministrativeArea', name: 'Johnson County, Kansas' },
+  { '@type': 'AdministrativeArea', name: 'Wyandotte County, Kansas' },
+  // Neighborhoods
+  { '@type': 'Place', name: "Downtown Lee's Summit" },
+  { '@type': 'Place', name: 'Northland' },
+  // States
   { '@type': 'State', name: 'Missouri' },
   { '@type': 'State', name: 'Kansas' },
 ];

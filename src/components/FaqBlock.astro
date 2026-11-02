@@ -21,7 +21,7 @@ const { faqs = [], heading = 'Frequently asked questions' } = Astro.props;
 
 {
   faqs.length ? (
-    <section class={heading ? 'mt-14' : ''}>
+    <section data-faq class={heading ? 'mt-14' : undefined}>
       {heading && <h2 class="text-2xl">{heading}</h2>}
       <div class={heading ? 'mt-6 space-y-3' : 'space-y-3'}>
         {faqs.map((faq) => (

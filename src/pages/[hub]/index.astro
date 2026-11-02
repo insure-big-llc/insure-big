@@ -127,8 +127,6 @@ const schema = [
       />
     </section>
 
-    {faq.length > 0 && <FaqBlock faqs={faq} heading={`${hub.title} — common questions`} />}
-
     <RelatedCoverage current="" hub={hub.slug} slugs={children.map((c) => c.slug).slice(0, 4)} />
 
     {
@@ -145,5 +143,8 @@ const schema = [
         </section>
       ) : null
     }
+
+    {/* Memo point 2: the FAQ is the last block of every product page. */}
+    {faq.length > 0 && <FaqBlock faqs={faq} heading={`${hub.title} — common questions`} />}
   </article>
 </BaseLayout>
