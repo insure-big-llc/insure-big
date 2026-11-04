@@ -21,6 +21,10 @@ import Icon from './Icon.astro';
 
 const specialty = SERVICES.filter((s) => s.hub === 'specialty');
 
+// The call buttons show the agency main line, or an office's own number on that
+// office's page (BaseLayout passes it down).
+const { phone = CONTACT.phone, phoneHref = CONTACT.phoneHref } = Astro.props;
+
 const here = Astro.url.pathname.replace(/\/$/, '') || '/';
 const inSection = (slug) => here === `/${slug}` || here.startsWith(`/${slug}/`);
 const is = (path) => here === path;
@@ -110,9 +114,9 @@ const itemClass =
       </nav>
 
       <div class="flex items-center gap-2">
-        <a href={CONTACT.phoneHref} class="btn btn-secondary hidden sm:inline-flex">
+        <a href={phoneHref} class="btn btn-secondary hidden sm:inline-flex">
           <Icon name="phone" class="h-4 w-4" />
-          Call {CONTACT.phone}
+          Call {phone}
         </a>
         <a href={QUOTE_URL} class="btn btn-primary">Get a Quote</a>
       </div>
@@ -128,7 +132,7 @@ const itemClass =
       </summary>
       <nav aria-label="Mobile" class="mt-2 space-y-2">
         <div class="flex gap-2">
-          <a href={CONTACT.phoneHref} class="btn btn-secondary flex-[1.5] whitespace-nowrap px-3 text-sm">Call {CONTACT.phone}</a>
+          <a href={phoneHref} class="btn btn-secondary flex-[1.5] whitespace-nowrap px-3 text-sm">Call {phone}</a>
           <a href={QUOTE_URL} class="btn btn-primary flex-1 whitespace-nowrap px-3 text-sm">Get a Quote</a>
         </div>
         {

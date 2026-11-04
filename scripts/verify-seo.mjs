@@ -162,6 +162,19 @@ for (const file of siteHtmlFiles) {
   // NAP strings match the Google Business Profiles exactly (scope 21).
   if (!html.includes('16 SE 3rd St')) fail(`${urlPath}: Lee's Summit address missing`);
   if (!html.includes('200 NE 91 St')) fail(`${urlPath}: Northland address missing`);
+  // Each office has its OWN number (memo point 4). Both appear on every page in the
+  // footer, next to their own address.
+  if (!html.includes('(816) 272-8786')) fail(`${urlPath}: Northland phone missing`);
+  // An office page shows only its own number in the header and the main content.
+  if (urlPath === '/northland' || urlPath === '/lees-summit') {
+    const own = urlPath === '/northland' ? 'tel:+18162728786' : 'tel:+18168681787';
+    const other = urlPath === '/northland' ? 'tel:+18168681787' : 'tel:+18162728786';
+    for (const [label, re] of [['header', /<header[\s\S]*?<\/header>/], ['main content', /<main[\s\S]*?<\/main>/]]) {
+      const part = html.match(re)?.[0] ?? '';
+      if (!part.includes(own)) fail(`${urlPath}: its own phone link is missing from the ${label}`);
+      if (part.includes(other)) fail(`${urlPath}: shows the other office's phone in the ${label}`);
+    }
+  }
 
   // Market statement, verbatim
   if (
@@ -631,13 +644,25 @@ if (!existsSync(blogIndexHtml)) {
       if (!areas.includes(area)) fail(`org areaServed missing "${area}"`);
     }
 
-    // Canonical listing name (memo point 4): both offices carry the exact same
-    // string, the one on the Lee's Summit Google profile, with an ASCII hyphen.
-    const LISTING_NAME = 'Farmers Insurance - Ballentine Insurance Group';
-    const officeNames = (org.location ?? []).map((l) => l?.name);
-    if (officeNames.length !== 2) fail(`org must carry 2 office nodes, found ${officeNames.length}`);
-    for (const n of officeNames) {
-      if (n !== LISTING_NAME) fail(`office name "${n}" must be exactly "${LISTING_NAME}"`);
+    // Memo point 4: each office is its own Google Business Profile with its own
+    // exact name and its own phone number. Bret does not control the Lee's Summit
+    // profile (Farmers compliance does), so the two names differ on purpose and
+    // the two numbers must never be the same.
+    const OFFICES = {
+      [`${SITE}/#location-lees-summit`]: { name: 'Farmers Insurance - Ballentine Insurance Group', phone: '(816) 868-1787' },
+      [`${SITE}/#location-northland`]: { name: 'Farmers Insurance - Bret Ballentine', phone: '(816) 272-8786' },
+    };
+    if (org.telephone !== '(816) 868-1787') {
+      fail(`org telephone must be the main line (816) 868-1787, found "${org.telephone}"`);
+    }
+    for (const [id, want] of Object.entries(OFFICES)) {
+      const office = (org.location ?? []).find((l) => l?.['@id'] === id);
+      if (!office) {
+        fail(`org location node missing: ${id}`);
+        continue;
+      }
+      if (office.name !== want.name) fail(`office ${id} name "${office.name}" must be exactly "${want.name}"`);
+      if (office.telephone !== want.phone) fail(`office ${id} telephone "${office.telephone}" must be exactly "${want.phone}"`);
     }
   }
 }

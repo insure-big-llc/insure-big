@@ -50,7 +50,7 @@ export const GET: APIRoute = () => {
     '',
     `**Service area:** ${SITE.marketStatement}`,
     '',
-    `**Phone:** ${CONTACT.phone}`,
+    `**Main phone:** ${CONTACT.phone}`,
     '',
     `**Email:** ${CONTACT.email}`,
     '',
@@ -64,7 +64,8 @@ export const GET: APIRoute = () => {
   for (const loc of LOCATIONS) {
     h(3, `${loc.name} — ${loc.full}`);
     out.push(
-      `Phone: ${CONTACT.phone}`,
+      `Listed as: ${loc.listingName}`,
+      `Phone: ${loc.phone}`,
       `Hours: ${CONTACT.hours.display}`,
       `Page: ${absoluteUrl(`/${loc.slug}`)}`,
       '',

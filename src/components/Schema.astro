@@ -2,10 +2,11 @@
 /**
  * JSON-LD structured data. website-scope.md §5.2.
  *
- * One `InsuranceAgency` node carries the ORGANIZATION-level facts — including
- * `telephone`, which is deliberately NOT repeated on each LocalBusiness node.
- * Both offices share one number, and two LocalBusiness nodes each claiming the
- * same telephone reads as conflicting data to validators.
+ * One `InsuranceAgency` node carries the ORGANIZATION-level facts, including the
+ * agency main line as its `telephone`. Each office is its own LocalBusiness node
+ * with its OWN listing name and `telephone`, matching its own Google Business
+ * Profile. The two numbers are different on purpose (a shared number across two
+ * profiles is a duplicate listing risk), so each office page carries only its own.
  *
  * Every node gets a stable `@id` so the graph can reference rather than duplicate.
  */
@@ -79,13 +80,14 @@ const organization = {
       provider: { '@id': ORG_ID },
     },
   ],
-  // The two offices. `telephone` intentionally omitted — see note above.
+  // The two offices, each with its own listing name and telephone.
   location: LOCATIONS.map((loc) => ({
     '@type': 'LocalBusiness',
     '@id': `${SITE.url}/#location-${loc.id}`,
-    // Memo point 4: the exact listing name, identical for both offices and to the
-    // directories. The office is told apart by address, @id, url and geo.
-    name: SITE.listingName,
+    // Memo point 4: each office is its own Google Business Profile, with its own
+    // exact name and phone, identical to the profile and to the directories.
+    name: loc.listingName,
+    telephone: loc.phone,
     parentOrganization: { '@id': ORG_ID },
     address: {
       '@type': 'PostalAddress',

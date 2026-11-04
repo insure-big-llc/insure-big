@@ -9,7 +9,7 @@
  *  - Content is fully prerendered — Astro emits static HTML, no client framework.
  */
 import '../styles/global.css';
-import { SITE, CONTACT, QUOTE_URL, absoluteUrl } from '../config/site.js';
+import { SITE, CONTACT, LOCATIONS, QUOTE_URL, absoluteUrl } from '../config/site.js';
 import { SELF_HOSTED_FONTS } from '../generated/fonts.js';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
@@ -28,9 +28,19 @@ const {
   noindex = false,
   /** Drops the footer top margin (pages that end in their own dark band). */
   footerFlush = false,
+  /**
+   * An office page passes its location id ('lees-summit' | 'northland'), so the
+   * header and the sticky call bar show THAT office's number. Every other page
+   * shows the agency main line.
+   */
+  office = null,
 } = Astro.props;
 
 const canonical = absoluteUrl(path);
+
+const officeLoc = LOCATIONS.find((l) => l.id === office);
+const callPhone = officeLoc?.phone ?? CONTACT.phone;
+const callHref = officeLoc?.phoneHref ?? CONTACT.phoneHref;
 
 /**
  * Title policy.
@@ -139,7 +149,7 @@ const fullTitle = title.includes(BRAND_MARKER) ? title : `${title} ${BRAND_MARKE
   </head>
   <body>
     <a href="#main" class="skip-link sr-only">Skip to main content</a>
-    <Header />
+    <Header phone={callPhone} phoneHref={callHref} />
     <main id="main">
       <slot />
     </main>
@@ -159,7 +169,7 @@ const fullTitle = title.includes(BRAND_MARKER) ? title : `${title} ${BRAND_MARKE
       style="padding-bottom: env(safe-area-inset-bottom)"
     >
       <div class="container-page flex gap-3 py-1.5">
-        <a href={CONTACT.phoneHref} class="btn btn-on-dark flex-[1.5] whitespace-nowrap px-3 text-sm">Call {CONTACT.phone}</a>
+        <a href={callHref} class="btn btn-on-dark flex-[1.5] whitespace-nowrap px-3 text-sm">Call {callPhone}</a>
         <a href={QUOTE_URL} class="btn btn-primary flex-1 whitespace-nowrap px-3 text-sm">Get a Quote</a>
       </div>
     </div>

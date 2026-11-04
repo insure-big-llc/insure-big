@@ -12,7 +12,7 @@
  * parameters so submissions carry their own source. Without this, "which policy
  * line produces the best leads" is unanswerable — which is the current state.
  */
-import { FORMS, absoluteUrl } from '../config/site.js';
+import { FORMS, CONTACT, absoluteUrl } from '../config/site.js';
 
 const {
   /** 'personal' | 'business' */
@@ -21,6 +21,9 @@ const {
   path,
   /** Human label for what is being quoted. */
   label = 'insurance',
+  /** Office pages pass their own number; everywhere else it is the main line. */
+  phone = CONTACT.phone,
+  phoneHref = CONTACT.phoneHref,
 } = Astro.props;
 
 const base = FORMS[form];
@@ -61,7 +64,7 @@ const uid = `jotform-${path.replace(/[^a-z0-9]+/gi, '-').replace(/^-|-$/g, '')}`
       Open the quote form
     </a>
     <p class="mt-3 text-sm text-[var(--color-ink-muted)]">
-      Opens a secure form in this page. Prefer to talk?{' '}<a href="/contact" class="font-semibold underline">Contact us</a> or call{' '}<a href="tel:+18168681787" class="font-semibold underline">(816) 868-1787</a>.
+      Opens a secure form in this page. Prefer to talk?{' '}<a href="/contact" class="font-semibold underline">Contact us</a> or call{' '}<a href={phoneHref} class="font-semibold underline">{phone}</a>.
     </p>
   </div>
 

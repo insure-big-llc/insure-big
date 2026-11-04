@@ -21,24 +21,12 @@ export const SITE = {
   shortName: 'BIG',
 
   /**
-   * CANONICAL LISTING NAME. The one exact string for both offices in every
-   * directory (Google Business Profile, Apple Maps, Bing, Yelp, Trusted Choice,
-   * the Chamber) and on the two LocalBusiness office nodes in the JSON-LD.
-   * It is the Lee's Summit (primary office) Google profile name, with a plain
-   * ASCII hyphen. Never an en dash, never "Ste" style variants.
-   * `name` above stays the website brand and the Organization name.
-   * Decision: Francis, 2 November 2026, pending Farmers' naming rules.
-   * docs/nap-checklist.md carries the directory instructions.
-   */
-  listingName: 'Farmers Insurance - Ballentine Insurance Group',
-
-  /**
    * ⚠️ ENTITY-NAME ALIGNMENT
    *
    * This agency is referred to by four different names across the surfaces an AI
    * or a search engine reads:
    *
-   *   insurer's website + GBP ... "Farmers Insurance – Bret Ballentine"
+   *   insurer's website + GBP ... "Farmers Insurance - Bret Ballentine"
    *   the website + this file ..... "Ballentine Insurance Group"
    *   Downtown LS directory ....... "Ballentine Insurance Agency"
    *   Microsoft/Google tenant ..... "Insure-BIG"
@@ -71,11 +59,21 @@ export const SITE = {
 };
 
 /**
- * Two locations, shared phone and shared hours (confirmed).
+ * Two offices, each with its OWN Google Business Profile, listing name and
+ * phone number (the hours are shared). Every surface publishes an office under
+ * its own exact name and number: the Google profile, each directory, the office
+ * page, the footer and the JSON-LD. They must not be merged or made identical.
  *
- * `telephone` is emitted ONCE at Organization level in the JSON-LD and NOT repeated
- * on each LocalBusiness node, because two LocalBusiness nodes sharing one number
- * reads as conflicting data to validators. See website-scope.md §5.2.
+ * - Lee's Summit: the profile is controlled by Farmers compliance and Bret is
+ *   only a manager. Its name and number are whatever that profile shows. Do not
+ *   change them here until the profile itself changes.
+ * - Northland (Kansas City): Bret's own profile. (816) 272-8786 is the Front Desk
+ *   line, forwarded to Bret in the phone system.
+ *
+ * `CONTACT` below is the agency main line (the Lee's Summit number). It is used
+ * for the Organization and for pages that are not about one office.
+ * docs/nap-checklist.md carries the strings for the directories.
+ * Decision: Francis, 5 November 2026.
  */
 export const LOCATIONS = [
   {
@@ -89,6 +87,10 @@ export const LOCATIONS = [
     /** Verbatim string used in schema and the footer — must not drift. */
     full: "16 SE 3rd St, Lee's Summit, MO 64063",
     isPrimary: true,
+    /** The exact Google Business Profile name. ASCII hyphen. */
+    listingName: 'Farmers Insurance - Ballentine Insurance Group',
+    phone: '(816) 868-1787',
+    phoneHref: 'tel:+18168681787',
     /** Exact pin from the Google Business Profile (client supplied the map link). */
     geo: { latitude: 38.912387, longitude: -94.3770295 },
     /** The client's Google Maps place URL for this office. */
@@ -105,6 +107,10 @@ export const LOCATIONS = [
     street: '200 NE 91 St',
     full: '200 NE 91 St, Kansas City, MO 64155',
     isPrimary: false,
+    /** The exact Google Business Profile name. ASCII hyphen. */
+    listingName: 'Farmers Insurance - Bret Ballentine',
+    phone: '(816) 272-8786',
+    phoneHref: 'tel:+18162728786',
     /** Exact pin from the Google Business Profile (client supplied the map link). */
     geo: { latitude: 39.259383, longitude: -94.577399 },
     mapLink:
@@ -122,7 +128,7 @@ export function mapEmbedUrl(loc) {
   return `https://maps.google.com/maps?q=${q}&z=16&output=embed`;
 }
 
-/** Shared by both offices — confirmed by the client. */
+/** The agency main line (the Lee's Summit number), the email and the hours both offices share. */
 export const CONTACT = {
   /** Display form. `tel` below is the machine form. */
   phone: '(816) 868-1787',

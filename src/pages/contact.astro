@@ -50,7 +50,7 @@ const schema = [
     <!-- Primary contact details, front and centre -->
     <div class="mt-10 grid gap-6 sm:grid-cols-3">
       <div class="rounded-xl bg-[var(--color-surface-alt)] p-6">
-        <h2 class="text-base font-bold uppercase tracking-wide text-[var(--color-brand-700)]">Phone</h2>
+        <h2 class="text-base font-bold uppercase tracking-wide text-[var(--color-brand-700)]">Main line</h2>
         <p class="mt-3 text-lg">
           <a href={CONTACT.phoneHref} class="font-semibold underline">{CONTACT.phone}</a>
         </p>
@@ -78,12 +78,13 @@ const schema = [
         LOCATIONS.map((loc) => (
           <section class="card p-6">
             <h3 class="text-lg">{loc.name}</h3>
+            <p class="mt-1 text-sm text-[var(--color-ink-muted)]">{loc.listingName}</p>
             <address class="mt-3 not-italic leading-relaxed text-[var(--color-ink-soft)]">
               {loc.street}<br />
               {loc.locality}, {loc.region} {loc.postalCode}
             </address>
             <p class="mt-3">
-              <a href={CONTACT.phoneHref} class="font-semibold underline">{CONTACT.phone}</a>
+              <a href={loc.phoneHref} class="font-semibold underline">{loc.phone}</a>
             </p>
             <p class="mt-1 text-sm text-[var(--color-ink-soft)]">{CONTACT.hours.display}</p>
             <div class="mt-4 flex flex-wrap gap-2">
@@ -102,7 +103,7 @@ const schema = [
             <div class="mt-4 overflow-hidden rounded-lg border border-neutral-200">
               <iframe
                 src={mapEmbedUrl(loc)}
-                title={`Map of ${SITE.name}, ${loc.name}`}
+                title={`Map of ${loc.listingName}`}
                 loading="lazy"
                 class="h-48 w-full border-0"
                 referrerpolicy="no-referrer-when-downgrade"

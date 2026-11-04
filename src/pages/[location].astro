@@ -52,7 +52,7 @@ const LOCAL = {
     heading: 'Insurance in the Kansas City Northland',
     metaTitle: 'Insurance in the Kansas City Northland | BIG',
     metaDescription:
-      'Ballentine Insurance Group serves the Kansas City Northland from our 91st Street office. Home, auto, business and life insurance. Call (816) 868-1787.',
+      `Ballentine Insurance Group serves the Kansas City Northland from our 91st Street office. Home, auto, business and life insurance. Call ${LOCATIONS.find((l) => l.id === 'northland').phone}.`,
     lead:
       'Our Northland office on NE 91st Street serves clients across the northern corridor — from the river up through Gladstone, Liberty and beyond.',
     body: [
@@ -97,6 +97,7 @@ const isPrimary = loc.isPrimary;
   description={copy.metaDescription}
   path={path}
   schema={schema}
+  office={loc.id}
 >
   <Breadcrumbs trail={trail} />
 
@@ -118,7 +119,7 @@ const isPrimary = loc.isPrimary;
         <section class="card mt-10 p-6">
           <h2 class="text-xl">Find this office</h2>
           <address class="mt-3 not-italic leading-relaxed">
-            <strong>{SITE.name}</strong><br />
+            <strong>{loc.listingName}</strong><br />
             {loc.street}<br />
             {loc.locality}, {loc.region} {loc.postalCode}
           </address>
@@ -126,7 +127,7 @@ const isPrimary = loc.isPrimary;
             <div>
               <dt class="font-semibold">Phone</dt>
               <dd>
-                <a href={CONTACT.phoneHref} class="underline">{CONTACT.phone}</a>
+                <a href={loc.phoneHref} class="underline">{loc.phone}</a>
               </dd>
             </div>
             <div>
@@ -147,7 +148,7 @@ const isPrimary = loc.isPrimary;
           <div class="mt-5 overflow-hidden rounded-xl border border-neutral-200 shadow-[var(--shadow-soft)]">
             <iframe
               src={mapEmbedUrl(loc)}
-              title={`Map of ${SITE.name}, ${loc.name}`}
+              title={`Map of ${loc.listingName}`}
               loading="lazy"
               class="h-64 w-full border-0"
               referrerpolicy="no-referrer-when-downgrade"
@@ -245,7 +246,7 @@ const isPrimary = loc.isPrimary;
       </div>
 
       <aside class="lg:sticky lg:top-24 lg:self-start">
-        <ServiceForm form="personal" path={path} label="insurance" />
+        <ServiceForm form="personal" path={path} label="insurance" phone={loc.phone} phoneHref={loc.phoneHref} />
       </aside>
     </div>
   </article>

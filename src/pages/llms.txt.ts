@@ -26,7 +26,7 @@ export const GET: APIRoute = () => {
   lines.push('');
   lines.push(`**Business:** ${SITE.name} (${SITE.shortName})`);
   lines.push(`**Website:** ${SITE.url}/`);
-  lines.push(`**Phone:** ${CONTACT.phone}`);
+  lines.push(`**Main phone:** ${CONTACT.phone}`);
   lines.push(`**Email:** ${CONTACT.email}`);
   lines.push(`**Hours:** ${CONTACT.hours.display}`);
   lines.push(`**Service area:** ${SITE.marketStatement}`);
@@ -38,7 +38,8 @@ export const GET: APIRoute = () => {
   for (const loc of LOCATIONS) {
     lines.push(`### ${loc.name}`);
     lines.push(`Address: ${loc.full}`);
-    lines.push(`Phone: ${CONTACT.phone}`);
+    lines.push(`Listed as: ${loc.listingName}`);
+    lines.push(`Phone: ${loc.phone}`);
     lines.push(`Hours: ${CONTACT.hours.display}`);
     lines.push(`Page: ${absoluteUrl(`/${loc.slug}`)}`);
     lines.push('');

@@ -79,14 +79,14 @@ const specialty = SERVICES.filter((s) => s.hub === 'specialty');
                   {loc.street}<br />
                   {loc.locality}, {loc.region} {loc.postalCode}
                 </address>
+                <a href={loc.phoneHref} class="mt-1 inline-block font-semibold text-white hover:underline hover:text-[var(--color-brand-200)]">
+                  {loc.phone}
+                </a>
               </li>
             ))
           }
           <li>
-            <a href={CONTACT.phoneHref} class="font-semibold text-white hover:underline hover:text-[var(--color-brand-200)]">
-              {CONTACT.phone}
-            </a>
-            <p class="mt-1 text-white/85">{CONTACT.hours.display}</p>
+            <p class="text-white/85">{CONTACT.hours.display}</p>
           </li>
         </ul>
       </div>
