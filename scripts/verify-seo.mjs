@@ -558,18 +558,62 @@ notes.push(`specialty pages: content floor checked for ${SPECIALIST_SLUGS.length
   }
 }
 
-// ── 17. PARTNER LINKS — informational labels, never transactional ────────────
-// W3: the live site's intent is "LEARN MORE". "Continue to X" / "Go to X" reads
-// as a transaction. Both labels are banned from partner CTAs.
-for (const file of siteHtmlFiles) {
-  const html = readFileSync(file, 'utf8');
-  const urlPath = urlPathFor(file);
-  for (const banned of ['Continue to', 'Go to']) {
-    const m = html.match(new RegExp(`<a[^>]*href="/go/[^"]*"[^>]*>[^<]*${banned}`));
-    if (m) {
-      fail(`${urlPath}: partner link uses transactional label "${banned}" — must be "Learn more at"`);
+// ── 17. PARTNER PRODUCT PAGES: no form, one referral button ──────────────────
+// Rule (6 Nov 2026): each of the eight partner product pages carries ONE quote
+// button that goes straight to the partner's referral link, opens in a new tab,
+// is rel="sponsored noopener noreferrer", and has no on-site form in front of it.
+// Medicare and Estate Planning live under /life-insurance but are also listed in
+// the Specialty menu. "Continue to" / "Go to" labels stay banned.
+{
+  const decode = (s) => s.replace(/&#38;|&amp;/g, '&');
+  const PARTNER_PAGES = {
+    '/specialty/device-protection': 'https://protect.likewize.com/farmers/electronic-device-insurance?refid=ball00q&utm_medium=agent',
+    '/specialty/travel': 'https://www.travelinsurance.com/?utm_source=pap&a_aid=65f07b225c0a4',
+    '/specialty/pet': 'https://www.petsbest.com/enroll/step1?qv1=8849P4&qv2=AGENTLINK&ci=FIGAGTLNK',
+    '/life-insurance/medicare': 'https://chrisbellinsurance.com/',
+    '/life-insurance/estate-planning': 'https://fastwill.com/advisors/invite/aa4afaab2b',
+    '/specialty/surety-bonds': 'https://14089f.propeller.insure/axelerator-public/',
+    '/specialty/sola-wind-hail': 'https://solainsurance.com/quote-application/get-quote?email=bballentine%40farmersagent.com',
+    '/specialty/premium-lock': 'https://eventualclimate.com/request-quote/4ddde0ee-b28b-4015-918c-6d4b853d00d6',
+  };
+  for (const [pagePath, url] of Object.entries(PARTNER_PAGES)) {
+    const file = join(DIST, pagePath.slice(1) + '.html');
+    if (!existsSync(file)) { fail(`partner page ${pagePath} is missing`); continue; }
+    const html = decode(readFileSync(file, 'utf8'));
+    const ctas = [...html.matchAll(/<a\b[^>]*data-partner-cta[^>]*>/g)].map((m) => m[0]);
+    if (ctas.length === 0) { fail(`${pagePath}: no partner quote button`); continue; }
+    for (const tag of ctas) {
+      if (!tag.includes(`href="${url}"`)) fail(`${pagePath}: partner button does not go to ${url}`);
+      if (!/rel="[^"]*sponsored[^"]*"/.test(tag) || !/rel="[^"]*noopener/.test(tag)) {
+        fail(`${pagePath}: partner button must be rel="sponsored noopener noreferrer"`);
+      }
+      if (!/target="_blank"/.test(tag)) fail(`${pagePath}: partner button must open in a new tab`);
+    }
+    if (/data-quote-cta|id="quote-form"|<form\b/.test(html)) fail(`${pagePath}: a partner page must not carry an on-site form or quote card`);
+    if (/jotform/i.test(html)) fail(`${pagePath}: still references Jotform`);
+  }
+  // Non partner product pages must NOT carry a partner button.
+  const nonPartner = join(DIST, 'personal-insurance', 'home.html');
+  if (existsSync(nonPartner) && /data-partner-cta/.test(readFileSync(nonPartner, 'utf8'))) {
+    fail('/personal-insurance/home: a non partner page carries a partner button');
+  }
+  // Specialty menu lists Medicare and Estate Planning.
+  const homeHtml = readFileSync(join(DIST, 'index.html'), 'utf8');
+  const menuStart = homeHtml.indexOf('href="/specialty/surety-bonds"');
+  const menuEnd = homeHtml.indexOf('href="/about"', menuStart);
+  const menu = menuStart >= 0 && menuEnd > menuStart ? homeHtml.slice(menuStart, menuEnd) : '';
+  for (const need of ['/specialty/device-protection', '/life-insurance/medicare', '/life-insurance/estate-planning']) {
+    if (!menu.includes(`href="${need}"`)) fail(`Specialty menu is missing ${need}`);
+  }
+  for (const file of siteHtmlFiles) {
+    const html = readFileSync(file, 'utf8');
+    for (const banned of ['Continue to', 'Go to']) {
+      if (new RegExp(`<a[^>]*data-partner-cta[^>]*>[^<]*${banned}`).test(html)) {
+        fail(`${urlPathFor(file)}: partner button uses transactional label "${banned}"`);
+      }
     }
   }
+  notes.push('partner pages: 8 pages carry one referral button and no form; Specialty menu cross lists Medicare and Estate Planning');
 }
 // ── 13. Blog (spec 0004) ─────────────────────────────────────────────────────
 // Duplicate slugs or malformed frontmatter already fail the build itself

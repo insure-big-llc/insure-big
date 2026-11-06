@@ -15,11 +15,12 @@
  * settle into place. See `.site-header`, `.nav-link` and `.nav-panel` in
  * global.css.
  */
-import { HUBS, SPECIALTY_GROUP, SERVICES, servicesByHub } from '../config/services.js';
+import { HUBS, SPECIALTY_GROUP, servicesByHub, specialtyLinks } from '../config/services.js';
 import { CONTACT, QUOTE_URL } from '../config/site.js';
 import Icon from './Icon.astro';
 
-const specialty = SERVICES.filter((s) => s.hub === 'specialty');
+// Seven specialty pages plus Medicare and Estate Planning, which live under Life.
+const specialty = specialtyLinks();
 
 // The call buttons show the agency main line, or an office's own number on that
 // office's page (BaseLayout passes it down).
@@ -92,7 +93,7 @@ const itemClass =
               <ul class={panelCard}>
                 {specialty.map((s) => (
                   <li>
-                    <a href={`/specialty/${s.slug}`} class={itemClass}>
+                    <a href={s.path} class={itemClass}>
                       {s.name}
                     </a>
                   </li>
@@ -168,7 +169,7 @@ const itemClass =
           <ul class="ml-2 mt-1 border-l border-neutral-200 pl-2">
             {specialty.map((s) => (
               <li>
-                <a href={`/specialty/${s.slug}`} class="block py-1.5 text-sm">
+                <a href={s.path} class="block py-1.5 text-sm">
                   {s.name}
                 </a>
               </li>

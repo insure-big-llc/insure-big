@@ -1,0 +1,47 @@
+﻿---
+/**
+ * "Get your quote" card for every page that is NOT a partner product page
+ * (service, hub, office, contact). It replaces the old embedded Jotform: the
+ * visitor goes to the one quote form at /get-a-quote, with the type and the line
+ * already chosen. No JavaScript, so it adds nothing to page weight.
+ *
+ * Partner product pages use PartnerCta instead.
+ */
+import { CONTACT } from '../config/site.js';
+
+const {
+  /** 'personal' | 'business' */
+  form = 'personal',
+  /** Site-relative path of the page the visitor is on, kept for attribution. */
+  path = '/',
+  /** Human label for what is being quoted. */
+  label = 'insurance',
+  /** Service slug, so the form can preselect it. */
+  line = '',
+  phone = CONTACT.phone,
+  phoneHref = CONTACT.phoneHref,
+} = Astro.props;
+
+const params = new URLSearchParams({ type: form === 'business' ? 'business' : 'personal' });
+if (line) params.set('line', line);
+params.set('from', path);
+const href = `/get-a-quote?${params.toString()}`;
+---
+
+<section
+  id="quote"
+  class="rounded-2xl border border-neutral-200 border-t-[3px] border-t-[var(--color-brand-500)] bg-[var(--color-surface-alt)] p-6 shadow-[var(--shadow-soft)] sm:p-8"
+>
+  <h2 class="text-2xl">Request a {label} quote</h2>
+  <p class="prose-page mt-3 text-[var(--color-ink-soft)]">
+    Tell us a little about what you need and a licensed agent will come back to you
+    with options compared across multiple carriers. No obligation.
+  </p>
+  <a href={href} class="btn btn-primary mt-6 w-full sm:w-auto" data-quote-cta>
+    Start your quote
+  </a>
+  <p class="mt-3 text-sm text-[var(--color-ink-muted)]">
+    Takes about two minutes. Prefer to talk? <a href="/contact" class="font-semibold underline">Contact us</a>
+    {' '}or call <a href={phoneHref} class="font-semibold underline">{phone}</a>.
+  </p>
+</section>

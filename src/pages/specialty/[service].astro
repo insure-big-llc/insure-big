@@ -9,10 +9,11 @@
  */
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Breadcrumbs from '../../components/Breadcrumbs.astro';
-import ServiceForm from '../../components/ServiceForm.astro';
+import PartnerCta from '../../components/PartnerCta.astro';
+import QuoteCta from '../../components/QuoteCta.astro';
 import FaqBlock from '../../components/FaqBlock.astro';
 import RelatedCoverage from '../../components/RelatedCoverage.astro';
-import { SERVICES, SPECIALTY_GROUP, servicePath } from '../../config/services.js';
+import { SERVICES, SPECIALTY_GROUP, servicePath, specialtyLinks } from '../../config/services.js';
 import { partnerFor } from '../../config/partners.js';
 import { SPECIALTY_EXPLAINERS } from '../../config/specialty-explainers.js';
 import {
@@ -36,10 +37,9 @@ const path = servicePath(service);
  * Some specialty lines are placed through a partner platform rather than written
  * directly. See src/config/partners.js.
  *
- * ⚠️ The ON-SITE FORM IS ALWAYS THE PRIMARY CTA. Where a destination carries no
- * Ballentine identity — or where the arrangement is unconfirmed — the form is the
- * only path that guarantees the agency keeps the customer AND records consent for
- * follow-up. The partner link is secondary and always labelled.
+ * A partner product page has no on-site form: its one quote button goes to the
+ * partner's referral link (PartnerCta). A specialty line we write ourselves
+ * (Farmers Insurance) sends the visitor to /get-a-quote (QuoteCta).
  */
 const partner = partnerFor(service.slug);
 const showPartnerLink = Boolean(partner?.shipsLink && partner?.url);
@@ -125,9 +125,9 @@ const schema = [
           <h2 class="text-xl">Other specialty cover we write</h2>
           <ul class="mt-4 grid gap-2 sm:grid-cols-2">
             {
-              SERVICES.filter((s) => s.hub === 'specialty' && s.slug !== service.slug).map((s) => (
+              specialtyLinks().filter((s) => s.slug !== service.slug).map((s) => (
                 <li>
-                  <a href={`/specialty/${s.slug}`} class="text-sm font-semibold underline">
+                  <a href={s.path} class="text-sm font-semibold underline">
                     {s.name}
                   </a>
                 </li>
@@ -143,64 +143,18 @@ const schema = [
       </div>
 
       <aside class="lg:sticky lg:top-24 lg:self-start">
-        {/* PRIMARY: the on-site form. Captures the lead with consent and attribution
-            before anyone leaves for a partner's site. */}
-        <ServiceForm
-          form={service.form ?? 'personal'}
-          path={path}
-          label={service.name.replace(/ Insurance$/i, '').toLowerCase()}
-        />
-
-        {partner && (
-          <div class="mt-6 rounded-xl border border-neutral-200 p-5 text-sm">
-            <h2 class="text-base font-bold">
-              {showPartnerLink ? `About ${partner.partner}` : 'How this cover is placed'}
-            </h2>
-
-            <p class="mt-2 leading-relaxed text-[var(--color-ink-soft)]">{partner.disclosure}</p>
-
-            {partner.highlight && (
-              <p class="mt-3 text-sm font-semibold text-[var(--color-brand-700)]">
-                {partner.highlight}
-              </p>
-            )}
-
-            {partner.agentOfRecord === null && (
-              <p class="mt-3 leading-relaxed text-[var(--color-ink-soft)]">
-                This is a third-party programme, and their application is theirs. If you
-                would like us involved, start with the form above or call us.
-              </p>
-            )}
-
-            {showPartnerLink ? (
-              /*
-               * INFORMATIONAL, not transactional — matching the live site's
-               * "LEARN MORE" intent. The label says exactly what the link does.
-               */
-              <a
-                href={partner.url}
-                class="btn btn-secondary mt-4 w-full"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Learn more at {partner.partner}
-                <span class="sr-only">(opens {partner.partner}'s website in a new tab)</span>
-              </a>
-            ) : (
-              <p class="mt-4 text-[var(--color-ink-muted)]">
-                No external application for this cover — we place it for you directly.
-                Call <a href="tel:+18168681787" class="font-semibold underline">(816) 868-1787</a>
-                {' '}and we will take it from there.
-              </p>
-            )}
-
-            <p class="mt-3 text-xs text-[var(--color-ink-muted)]">
-              <a href="/coverage-partners" class="underline">
-                How our partner programmes work
-              </a>
-            </p>
-          </div>
-        )}
+        {
+          showPartnerLink ? (
+            <PartnerCta partner={partner} />
+          ) : (
+            <QuoteCta
+              form={service.form ?? 'personal'}
+              path={path}
+              line={service.slug}
+              label={service.name.replace(/ Insurance$/i, '').toLowerCase()}
+            />
+          )
+        }
       </aside>
     </div>
   </article>

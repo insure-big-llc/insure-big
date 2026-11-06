@@ -112,9 +112,10 @@ function specialistPath(slug) {
                   href={p.url}
                   target="_blank"
                   class="btn btn-primary"
-                  rel="noopener noreferrer"
+                  rel="sponsored noopener noreferrer"
+                  data-partner-cta
                 >
-                  Learn more at {p.partner}<span class="sr-only"> (leaves this site)</span>
+                  {p.ctaLabel}<span class="sr-only"> (opens {p.partner} in a new tab)</span>
                 </a>
               </div>
             </li>
@@ -133,13 +134,14 @@ function specialistPath(slug) {
       <h2 class="text-xl">How our partner links work</h2>
       <ul class="prose-page mt-4 space-y-3 text-[var(--color-ink-soft)]">
         <li>
-          <strong>Your first step is always here.</strong> Every specialty page has our
-          own form. Completing it puts you in our pipeline with your consent recorded
-          — it does not commit you to anything.
+          <strong>One button, straight to the partner.</strong> A partner product page
+          has no form of ours in the way. Its quote button takes you to the partner's
+          own application, in a new tab. If you would rather deal with us first, call and
+          we will take it from there.
         </li>
         <li>
-          <strong>Partner links are labelled.</strong> Where we send you to a partner's
-          own application, we tell you before you click, because it is a different
+          <strong>Partner links are labelled.</strong> The page tells you before you
+          click that you will finish on the partner's site, because it is a different
           website with its own privacy policy.
         </li>
         <li>

@@ -1,32 +1,32 @@
 /**
- * Partner programmes — the cover lines we place through a third party.
+ * Partner programmes: the cover lines we place through a third party.
  *
- * WHY THIS FILE EXISTS
- * The eight specialist products below are written through partner platforms, and
- * on the live site the ONLY destination for them is the partner's own domain. That
- * means the indexed destination for "surety bonds Kansas City" is a partner site
- * carrying no Ballentine identity — the agency builds the search intent and the
- * partner captures the brand.
+ * THE RULE (decided 6 November 2026)
+ * A partner product page has NO on-site form. Its one quote button goes straight
+ * to the partner's referral link (`url` below), because the application, the
+ * pricing and the underwriting all happen on the partner's platform and an extra
+ * form in front of it only adds a step. The button is labelled with what it does
+ * (`ctaLabel`), opens in a new tab and carries rel="sponsored noopener noreferrer"
+ * because it is a paid referral link. The page still ranks and qualifies: the
+ * original explainer, the disclosure and the FAQ stay on insure-big.com.
  *
- * The fix is a separation of jobs, not a removal of links:
- *   - insure-big.com is the page that RANKS and QUALIFIES
- *   - the partner application is the TRANSACTIONAL destination, reached from it
- *   - the on-site Jotform stays the PRIMARY call to action, so a lead is captured
- *     with consent and attribution before anyone leaves the site
+ * Every other page (service, hub, office, contact) sends the visitor to the
+ * on-site quote form at /get-a-quote instead.
  *
- * ⚠️ `agentOfRecord` and `returnPath` are NULL where not yet confirmed. Templates
- * must render a neutral default and must NOT assert ownership. Confirming later is
- * a one-line edit here, with no page changes.
+ * `agentOfRecord` and `returnPath` are NULL where not yet confirmed. Templates
+ * must render a neutral default and must NOT assert ownership.
  *
- * ⚠️ Consent note: the on-site Jotform carries the agency's TCPA consent block. A
- * prospect sent straight to a partner gives the agency NO documented consent — yet
- * if the partner emails that lead back, the agency owes a follow-up with no consent
- * record. That is a second, independent reason the on-site form leads.
+ * Consent note: a prospect sent straight to a partner gives the agency no
+ * documented consent of its own. The page therefore says plainly that the
+ * application finishes on the partner's site, and offers the phone as an
+ * alternative so a client can still deal with the agency directly.
  */
 
 export const PARTNERS = {
   'device-protection': {
     product: 'Device Protection',
+    /** The one quote button on this partner's page. */
+    ctaLabel: "Get a Device Protection Quote",
     partner: 'Likewize',
     programName: "Farmers' Device Protection",
     url: 'https://protect.likewize.com/farmers/electronic-device-insurance?refid=ball00q&utm_medium=agent',
@@ -43,6 +43,8 @@ export const PARTNERS = {
 
   'surety-bonds': {
     product: 'Surety Bonds',
+    /** The one quote button on this partner's page. */
+    ctaLabel: "Request a Bond Quote",
     partner: 'Propeller',
     programName: 'Farmers Surety Bonds, powered by Propeller',
     url: 'https://14089f.propeller.insure/axelerator-public/',
@@ -58,6 +60,8 @@ export const PARTNERS = {
 
   'sola-wind-hail': {
     product: 'Sola Wind & Hail',
+    /** The one quote button on this partner's page. */
+    ctaLabel: "Get a Wind & Hail Quote",
     partner: 'Sola Insurance',
     programName: 'Sola Wind & Hail',
     url: 'https://solainsurance.com/quote-application/get-quote?email=bballentine%40farmersagent.com',
@@ -80,6 +84,8 @@ export const PARTNERS = {
 
   'premium-lock': {
     product: 'Premium Lock',
+    /** The one quote button on this partner's page. */
+    ctaLabel: "Get a Premium Lock Quote",
     partner: 'Eventual Climate',
     programName: 'Premium Lock — 3-year price guarantee for home and auto',
     url: 'https://eventualclimate.com/request-quote/4ddde0ee-b28b-4015-918c-6d4b853d00d6',
@@ -96,6 +102,8 @@ export const PARTNERS = {
 
   'estate-planning': {
     product: 'Estate Planning',
+    /** The one quote button on this partner's page. */
+    ctaLabel: "Start Your Estate Plan",
     partner: 'FastWill',
     programName: 'FastWill attorney-designed estate plans',
     url: 'https://fastwill.com/advisors/invite/aa4afaab2b',
@@ -118,6 +126,8 @@ export const PARTNERS = {
 
   pet: {
     product: 'Pet Insurance',
+    /** The one quote button on this partner's page. */
+    ctaLabel: "Get a Pet Insurance Quote",
     partner: 'Pets Best',
     programName: 'Pets Best pet health insurance',
     url: 'https://www.petsbest.com/enroll/step1?qv1=8849P4&qv2=AGENTLINK&ci=FIGAGTLNK',
@@ -131,16 +141,12 @@ export const PARTNERS = {
       'Pet insurance is underwritten and administered by Pets Best. Completing their application does not make Ballentine Insurance Group your agent of record.',
     highlight: 'Pets Best can cover up to 90% of eligible vet bills.',
     shipsLink: true,
-    /**
-     * Because the destination carries no agency identity, the on-site form is the
-     * ONLY guaranteed path by which the agency keeps the customer and the consent
-     * record. Templates must present the form first and prominently.
-     */
-    formMustLead: true,
   },
 
   travel: {
     product: 'Travel Insurance',
+    /** The one quote button on this partner's page. */
+    ctaLabel: "Compare Travel Plans",
     partner: 'TravelInsurance.com',
     programName: 'TravelInsurance.com',
     url: 'https://www.travelinsurance.com/?utm_source=pap&a_aid=65f07b225c0a4',
@@ -153,11 +159,12 @@ export const PARTNERS = {
       'Travel insurance is compared and sold through TravelInsurance.com. Completing their application does not make Ballentine Insurance Group your agent of record.',
     highlight: 'Compare travel insurance plans from multiple providers and buy online.',
     shipsLink: true,
-    formMustLead: true,
   },
 
   medicare: {
     product: 'Medicare',
+    /** The one quote button on this partner's page. */
+    ctaLabel: "Explore Medicare Options",
     partner: 'Chris Bell Insurance',
     programName: 'Medicare solutions',
     /**
@@ -175,7 +182,6 @@ export const PARTNERS = {
       'Medicare plans are offered through Chris Bell Insurance, a licensed Medicare specialist. Call us and we will guide you through your options.',
     highlight: 'Medicare information, enrollment, and alternative plan options.',
     shipsLink: true,
-    formMustLead: true,
     pendingConfirmation: false,
   },
 };

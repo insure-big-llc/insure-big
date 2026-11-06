@@ -13,7 +13,7 @@
  */
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Breadcrumbs from '../components/Breadcrumbs.astro';
-import ServiceForm from '../components/ServiceForm.astro';
+import QuoteCta from '../components/QuoteCta.astro';
 import Icon from '../components/Icon.astro';
 import Stars from '../components/Stars.astro';
 import { SITE, LOCATIONS, CONTACT, PHOTOS, absoluteUrl, mapEmbedUrl } from '../config/site.js';
@@ -246,7 +246,7 @@ const isPrimary = loc.isPrimary;
       </div>
 
       <aside class="lg:sticky lg:top-24 lg:self-start">
-        <ServiceForm form="personal" path={path} label="insurance" phone={loc.phone} phoneHref={loc.phoneHref} />
+        <QuoteCta form="personal" path={path} label="insurance" phone={loc.phone} phoneHref={loc.phoneHref} />
         {isPrimary && (
           <figure class="mt-6">
             <div class="photo-light">

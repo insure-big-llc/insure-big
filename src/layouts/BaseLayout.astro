@@ -140,9 +140,8 @@ const fullTitle = title.includes(BRAND_MARKER) ? title : `${title} ${BRAND_MARKE
       ))
     }
 
-    <!-- Preconnect only to hosts we actually load from. The Jotform embed is
-         deferred until interaction (see ServiceForm.astro), so it is not
-         preconnected here — preconnecting would cost bytes for nothing. -->
+    {/* Preconnect only to hosts we actually load from. Third party embeds are
+         loaded on interaction, so nothing is preconnected here. */}
     <meta name="theme-color" content="#ffffff" />
 
     <Schema schema={schema} />
