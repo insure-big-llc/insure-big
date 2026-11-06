@@ -9,3 +9,6 @@ AGENTS.md
 CLAUDE.md
 skills-lock.json
 .netlify/
+.env
+.env.*
+!.env.example

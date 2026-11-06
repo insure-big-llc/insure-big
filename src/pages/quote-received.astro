@@ -1,0 +1,42 @@
+---
+/**
+ * /quote-received: where a plain form post (JavaScript off) lands after the
+ * lead has been sent. The normal path never visits it, the form confirms in
+ * place. Noindex, kept out of the sitemap.
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SectionBand from '../components/SectionBand.astro';
+import { CONTACT } from '../config/site.js';
+---
+
+<BaseLayout
+  title="Quote Request Received | BIG"
+  description="Your quote request has been received by Ballentine Insurance Group."
+  path="/quote-received"
+  noindex={true}
+>
+  <SectionBand title="Thank you. We have it." kicker="Request received" />
+  <section class="container-page py-12">
+    <div class="max-w-2xl">
+      <p class="text-lg leading-relaxed text-[var(--color-ink-soft)]">
+        A licensed agent reviews your details, usually the same business day, and comes
+        back with options compared across our carriers. Nothing is bound and nothing is
+        charged until you say yes.
+      </p>
+      <p class="mt-5 text-lg" id="ref-line" hidden>
+        Your reference is <strong id="ref"></strong>. Quote it if you call.
+      </p>
+      <p class="mt-5">
+        Need something sooner? Call <a href={CONTACT.phoneHref} class="font-semibold underline">{CONTACT.phone}</a>.
+      </p>
+      <p class="mt-8"><a href="/" class="btn btn-secondary">Back to the home page</a></p>
+    </div>
+  </section>
+  <script>
+    const ref = new URLSearchParams(location.search).get('ref');
+    if (ref && /^BIG-[A-Z0-9-]{4,20}$/.test(ref)) {
+      document.getElementById('ref').textContent = ref;
+      document.getElementById('ref-line').hidden = false;
+    }
+  </script>
+</BaseLayout>

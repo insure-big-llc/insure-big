@@ -4,3 +4,7 @@
   publish = "dist"
   command = "npm run build:verify"
   environment = { NODE_VERSION = "22" }
+
+# The quote form posts to /api/lead (netlify/functions/lead.mts).
+[functions]
+  directory = "netlify/functions"

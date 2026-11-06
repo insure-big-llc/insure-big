@@ -257,7 +257,7 @@ if (!existsSync(sitemapPath)) {
   if (locs.some((l) => l.includes('/404'))) {
     fail('sitemap must not list the 404 page');
   }
-  const nonPage = new Set(['/404', '/llms.txt', '/sitemap.xml', ...TOOL_PATHS]);
+  const nonPage = new Set(['/404', '/quote-received', '/llms.txt', '/sitemap.xml', ...TOOL_PATHS]);
   const orphaned = [...emitted].filter(
     (u) => !nonPage.has(u) && !locs.includes(u === '/' ? `${SITE}/` : `${SITE}${u}`),
   );

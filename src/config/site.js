@@ -153,12 +153,6 @@ export const CONTACT = {
 /** The one quote route every action points at (spec 0002, shared constant). */
 export const QUOTE_URL = "/get-a-quote";
 
-/** The two Jotform endpoints (website-scope.md §2, decision 8). */
-export const FORMS = {
-  personal: 'https://form.jotform.com/212725697286165',
-  business: 'https://form.jotform.com/222544643652052',
-};
-
 /**
  * Brand line art per page type. The drawings themselves live in
  * src/components/Art.astro as inline SVG (crisp at every size); this map only

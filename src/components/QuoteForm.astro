@@ -1,0 +1,654 @@
+---
+/**
+ * The quote form: personal and business, three steps each, one component.
+ *
+ * Replaces the two Jotforms. Fields come from src/config/forms.js (the same file
+ * the server validates against), and the form posts to /api/lead.
+ *
+ * WITHOUT JAVASCRIPT it is still a working form: both panels show, every step
+ * shows, and a plain POST to /api/lead redirects to /quote-received.
+ * WITH JAVASCRIPT it becomes a stepped form with a progress bar, inline
+ * validation, a phone number that formats as you type, a draft kept in
+ * sessionStorage (never the date of birth, FEIN or consent), and an in page
+ * confirmation.
+ *
+ * Phones first: 48px tall inputs at 16px text so iOS does not zoom, the right
+ * `type`, `inputmode` and `autocomplete` on every field, chips instead of tiny
+ * checkboxes, and a Next button that nothing covers.
+ */
+import { QUOTE_FORMS, CONSENT } from '../config/forms.js';
+import { CONTACT } from '../config/site.js';
+
+const widthClass = { full: 'qf-w-full', half: 'qf-w-half', quarter: 'qf-w-quarter' };
+const forms = Object.values(QUOTE_FORMS);
+---
+
+<div data-quote-form data-phone={CONTACT.phone} data-phone-href={CONTACT.phoneHref}>
+  <div class="qf-switch" role="group" aria-label="What do you need to insure?" data-qf-switch>
+    {
+      forms.map((f) => (
+        <button type="button" class="qf-switch-btn" data-type-btn={f.id} aria-pressed="false">
+          <span class="qf-switch-title">{f.label}</span>
+          <span class="qf-switch-blurb">{f.blurb}</span>
+        </button>
+      ))
+    }
+  </div>
+
+  <p class="qf-notice" data-qf-retry hidden role="alert">
+    We could not send that. Please check the details and try again, or call us on{' '}
+    <a href={CONTACT.phoneHref}>{CONTACT.phone}</a>.
+  </p>
+
+  {
+    forms.map((f) => (
+      <section class="qf-panel" data-panel={f.id} aria-labelledby={`qf-title-${f.id}`}>
+        <h2 id={`qf-title-${f.id}`} class="qf-panel-title">{f.label} quote</h2>
+
+        <form method="post" action="/api/lead" novalidate data-qf data-type={f.id} class="qf-form">
+          <input type="hidden" name="formType" value={f.id} />
+          <input type="hidden" name="renderedAt" value="" data-rendered-at />
+          <input type="hidden" name="pageFrom" value="" data-page-from />
+          <input type="hidden" name="landingUrl" value="" data-landing-url />
+          {['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content'].map((n) => (
+            <input type="hidden" name={n} value="" data-utm={n} />
+          ))}
+          <div class="qf-hp" aria-hidden="true">
+            <label>
+              Leave this empty
+              <input type="text" name="hp_website" tabindex="-1" autocomplete="off" />
+            </label>
+          </div>
+
+          <ol class="qf-progress" aria-label="Progress">
+            {f.steps.map((s, i) => (
+              <li data-progress={i} class="qf-progress-item">
+                <span class="qf-progress-bar" aria-hidden="true" />
+                <span class="qf-progress-label">
+                  <span class="qf-progress-num">{i + 1}</span>
+                  {s.title}
+                </span>
+              </li>
+            ))}
+          </ol>
+
+          <div data-qf-body>
+            {f.steps.map((step, si) => (
+              <fieldset class="qf-step" data-step={si}>
+                <legend class="qf-legend" tabindex="-1">{step.title}</legend>
+                <p class="qf-intro">{step.intro}</p>
+                <div class="qf-grid">
+                  {step.fields.map((field) => {
+                    const id = `${f.id}-${field.name}`;
+                    const hintId = field.hint ? `${id}-hint` : undefined;
+                    const errId = `${id}-err`;
+                    const describedBy = [hintId, errId].filter(Boolean).join(' ');
+                    const group = field.type === 'radio' || field.type === 'checkbox-group';
+                    return (
+                      <div class={`qf-field ${widthClass[field.width ?? 'full']}`} data-field={field.name}>
+                        {group ? (
+                          <fieldset class="qf-group" aria-describedby={describedBy}>
+                            <legend class="qf-label">
+                              {field.label}
+                              {field.required ? <span class="qf-req" aria-hidden="true"> *</span> : <span class="qf-opt"> Optional</span>}
+                            </legend>
+                            <div class="qf-chips">
+                              {field.options.map((opt) => (
+                                <label class="qf-chip">
+                                  <input
+                                    type={field.type === 'radio' ? 'radio' : 'checkbox'}
+                                    name={field.name}
+                                    value={opt}
+                                    data-first={opt === field.options[0] ? '' : undefined}
+                                  />
+                                  <span>{opt}</span>
+                                </label>
+                              ))}
+                            </div>
+                          </fieldset>
+                        ) : (
+                          <>
+                            <label for={id} class="qf-label">
+                              {field.label}
+                              {field.required ? <span class="qf-req" aria-hidden="true"> *</span> : <span class="qf-opt"> Optional</span>}
+                            </label>
+                            {field.type === 'select' ? (
+                              <select id={id} name={field.name} class="qf-input" aria-required={field.required ? 'true' : undefined} aria-describedby={describedBy}>
+                                <option value="">{field.placeholder ?? 'Select one'}</option>
+                                {field.options.map((opt) => <option value={opt}>{opt}</option>)}
+                              </select>
+                            ) : field.type === 'textarea' ? (
+                              <textarea
+                                id={id}
+                                name={field.name}
+                                rows="4"
+                                maxlength={field.maxLength}
+                                placeholder={field.placeholder}
+                                class="qf-input qf-textarea"
+                                aria-describedby={describedBy}
+                              />
+                            ) : (
+                              <input
+                                id={id}
+                                name={field.name}
+                                type={field.type}
+                                autocomplete={field.autocomplete ?? 'off'}
+                                inputmode={field.inputmode}
+                                maxlength={field.maxLength}
+                                placeholder={field.placeholder}
+                                class="qf-input"
+                                data-pattern={field.pattern}
+                                data-sensitive={field.sensitive ? '' : undefined}
+                                spellcheck={field.type === 'email' ? 'false' : undefined}
+                                aria-required={field.required ? 'true' : undefined}
+                                aria-describedby={describedBy}
+                              />
+                            )}
+                          </>
+                        )}
+                        {field.hint && <p id={hintId} class="qf-hint">{field.hint}</p>}
+                        <p id={errId} class="qf-error" role="alert" hidden data-err />
+                      </div>
+                    );
+                  })}
+                </div>
+
+                {si === f.steps.length - 1 && (
+                  <div class="qf-consent-block">
+                    <label class="qf-consent">
+                      <input type="checkbox" name="consent" value="true" data-sensitive />
+                      <span>
+                        <strong>{CONSENT.label}.</strong>
+                        <span class="qf-consent-text">{CONSENT.text}</span>
+                      </span>
+                    </label>
+                    <p class="qf-fine">
+                      Sending this does not commit you to anything. See our{' '}
+                      <a href="/privacy-policy">Privacy Policy</a> for how we handle your information.
+                    </p>
+                  </div>
+                )}
+              </fieldset>
+            ))}
+          </div>
+
+          <p class="qf-status" role="status" aria-live="polite" data-qf-status />
+
+          <div class="qf-actions">
+            <button type="button" class="btn btn-secondary qf-back" data-qf-back hidden>Back</button>
+            <button type="button" class="btn btn-primary qf-next" data-qf-next hidden>Next</button>
+            <button type="submit" class="btn btn-primary qf-submit" data-qf-submit>
+              <span data-qf-submit-label>Send my quote request</span>
+            </button>
+          </div>
+        </form>
+
+        <div class="qf-success" data-qf-success hidden tabindex="-1">
+          <p class="kicker">Request received</p>
+          <h3 class="qf-success-title" data-success-title>Thank you. We have it.</h3>
+          <p class="qf-success-ref">
+            Your reference is <strong data-ref>BIG</strong>. Quote it if you call.
+          </p>
+          <ul class="qf-success-list">
+            <li>A licensed agent reviews your details, usually the same business day.</li>
+            <li>We compare options across our carriers and come back with a recommendation, not just a price.</li>
+            <li>Nothing is bound and nothing is charged until you say yes.</li>
+          </ul>
+          <p>
+            Need something sooner? Call <a href={CONTACT.phoneHref} class="font-semibold underline">{CONTACT.phone}</a>.
+          </p>
+        </div>
+      </section>
+    ))
+  }
+</div>
+
+<script>
+  import { QUOTE_FORMS, allFields, validateField, formatPhone, LINE_MAP } from '../config/forms.js';
+
+  const root = document.querySelector('[data-quote-form]');
+  if (root) {
+    document.documentElement.classList.add('qf-js');
+    const params = new URLSearchParams(location.search);
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const phone = root.getAttribute('data-phone');
+    const phoneHref = root.getAttribute('data-phone-href');
+    const forms = Array.from(root.querySelectorAll('form[data-qf]'));
+    const panels = Array.from(root.querySelectorAll('[data-panel]'));
+    const typeButtons = Array.from(root.querySelectorAll('[data-type-btn]'));
+    let dirty = false;
+    let submitted = false;
+
+    /** The page the visitor came from, kept for attribution. Paths only. */
+    const from = params.get('from');
+    const pageFrom = from && /^\/[A-Za-z0-9/_\-%.]{0,160}$/.test(from) ? from : '';
+
+    // ── Which form is showing ────────────────────────────────────────────────
+    const line = params.get('line') || '';
+    const mapped = LINE_MAP[line];
+    let current = params.get('type') === 'business' ? 'business' : 'personal';
+    if (mapped) current = mapped[0];
+
+    function showType(type) {
+      current = type;
+      for (const p of panels) p.hidden = p.getAttribute('data-panel') !== type;
+      for (const b of typeButtons) {
+        b.setAttribute('aria-pressed', String(b.getAttribute('data-type-btn') === type));
+      }
+    }
+
+    // ── Reading and showing values ──────────────────────────────────────────
+    function fieldsOf(form) {
+      return allFields(form.getAttribute('data-type'));
+    }
+    function valueOf(form, field) {
+      const els = form.elements[field.name];
+      if (field.type === 'checkbox-group') {
+        return Array.from(form.querySelectorAll(`input[name="${field.name}"]:checked`)).map((e) => e.value);
+      }
+      if (field.type === 'radio') {
+        const checked = form.querySelector(`input[name="${field.name}"]:checked`);
+        return checked ? checked.value : '';
+      }
+      return els ? els.value : '';
+    }
+    function wrapperOf(form, name) {
+      return form.querySelector(`[data-field="${name}"]`);
+    }
+    function showError(form, field, message) {
+      const wrap = wrapperOf(form, field.name);
+      if (!wrap) return;
+      const err = wrap.querySelector('[data-err]');
+      const control = wrap.querySelector('input:not([type=hidden]), select, textarea');
+      err.textContent = message;
+      err.hidden = !message;
+      wrap.classList.toggle('qf-invalid', Boolean(message));
+      if (field.type !== 'radio' && field.type !== 'checkbox-group' && control) {
+        if (message) control.setAttribute('aria-invalid', 'true');
+        else control.removeAttribute('aria-invalid');
+      }
+    }
+    function firstControl(form, field) {
+      const wrap = wrapperOf(form, field.name);
+      return wrap && wrap.querySelector('input:not([type=hidden]), select, textarea');
+    }
+    /** Validate some fields, paint the errors, return the failing ones. */
+    function check(form, fields) {
+      const failing = [];
+      for (const f of fields) {
+        const message = validateField(f, valueOf(form, f));
+        showError(form, f, message);
+        if (message) failing.push(f);
+      }
+      return failing;
+    }
+
+    // ── Steps ────────────────────────────────────────────────────────────────
+    function setStep(form, index, { focus = true } = {}) {
+      const steps = Array.from(form.querySelectorAll('[data-step]'));
+      form._step = index;
+      steps.forEach((s, i) => (s.hidden = i !== index));
+      form.querySelectorAll('[data-progress]').forEach((li, i) => {
+        li.classList.toggle('is-done', i < index);
+        li.classList.toggle('is-current', i === index);
+        if (i === index) li.setAttribute('aria-current', 'step');
+        else li.removeAttribute('aria-current');
+      });
+      const last = index === steps.length - 1;
+      form.querySelector('[data-qf-back]').hidden = index === 0;
+      form.querySelector('[data-qf-next]').hidden = last;
+      form.querySelector('[data-qf-submit]').hidden = !last;
+      form.querySelector('[data-qf-status]').textContent = '';
+      if (focus) {
+        const legend = steps[index].querySelector('.qf-legend');
+        legend.focus({ preventScroll: true });
+        form.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+      }
+    }
+
+    function stepFields(form, index) {
+      return fieldsOf(form).filter((f) => f.stepIndex === index);
+    }
+
+    function focusFirst(form, failing) {
+      if (!failing.length) return;
+      const el = firstControl(form, failing[0]);
+      if (el) el.focus();
+    }
+
+    // ── Draft in sessionStorage ──────────────────────────────────────────────
+    const draftKey = (type) => `big-quote-draft-${type}`;
+    function saveDraft(form) {
+      const type = form.getAttribute('data-type');
+      const data = {};
+      for (const f of fieldsOf(form)) {
+        if (f.sensitive) continue;
+        data[f.name] = valueOf(form, f);
+      }
+      try {
+        sessionStorage.setItem(draftKey(type), JSON.stringify(data));
+      } catch {
+        /* private mode: no draft, no problem */
+      }
+    }
+    function restoreDraft(form) {
+      const type = form.getAttribute('data-type');
+      let data;
+      try {
+        data = JSON.parse(sessionStorage.getItem(draftKey(type)) || 'null');
+      } catch {
+        data = null;
+      }
+      if (!data) return;
+      for (const f of fieldsOf(form)) {
+        const v = data[f.name];
+        if (v == null || f.sensitive) continue;
+        if (f.type === 'checkbox-group') {
+          form.querySelectorAll(`input[name="${f.name}"]`).forEach((e) => (e.checked = v.includes(e.value)));
+        } else if (f.type === 'radio') {
+          form.querySelectorAll(`input[name="${f.name}"]`).forEach((e) => (e.checked = e.value === v));
+        } else if (form.elements[f.name]) {
+          form.elements[f.name].value = v;
+        }
+      }
+    }
+    function clearDrafts() {
+      try {
+        for (const t of Object.keys(QUOTE_FORMS)) sessionStorage.removeItem(draftKey(t));
+      } catch {
+        /* nothing to clear */
+      }
+    }
+
+    // ── Wire each form ───────────────────────────────────────────────────────
+    for (const form of forms) {
+      const type = form.getAttribute('data-type');
+      form.setAttribute('data-js', '');
+      form.querySelector('[data-rendered-at]').value = String(Date.now());
+      form.querySelector('[data-page-from]').value = pageFrom;
+      form.querySelector('[data-landing-url]').value = location.origin + location.pathname;
+      form.querySelectorAll('[data-utm]').forEach((el) => {
+        el.value = (params.get(el.getAttribute('data-utm')) || '').slice(0, 120);
+      });
+
+      restoreDraft(form);
+
+      // Tick the line the visitor came from.
+      if (mapped && mapped[0] === type) {
+        const box = Array.from(form.querySelectorAll('input[name="lines"]')).find((e) => e.value === mapped[1]);
+        if (box) box.checked = true;
+      }
+
+      setStep(form, 0, { focus: false });
+
+      form.addEventListener('input', (event) => {
+        dirty = true;
+        const el = event.target;
+        if (el.type === 'tel') el.value = formatPhone(el.value);
+        if (el.getAttribute && el.getAttribute('data-pattern') === 'fein') {
+          const d = el.value.replace(/\D/g, '').slice(0, 9);
+          el.value = d.length > 2 ? `${d.slice(0, 2)}-${d.slice(2)}` : d;
+        }
+        if (el.getAttribute && el.getAttribute('data-pattern') === 'state') el.value = el.value.toUpperCase();
+        // Clear an error as soon as the visitor starts fixing it.
+        const wrap = el.closest ? el.closest('[data-field]') : null;
+        if (wrap && wrap.classList.contains('qf-invalid')) {
+          const f = fieldsOf(form).find((x) => x.name === wrap.getAttribute('data-field'));
+          if (f) showError(form, f, validateField(f, valueOf(form, f)));
+        }
+        saveDraft(form);
+      });
+      // Validate a text field when the visitor leaves it.
+      form.addEventListener('focusout', (event) => {
+        const el = event.target;
+        if (!el.name || el.type === 'checkbox' || el.type === 'radio' || el.name === 'hp_website') return;
+        const f = fieldsOf(form).find((x) => x.name === el.name);
+        if (f && (el.value || f.required) && el.value !== '') showError(form, f, validateField(f, valueOf(form, f)));
+      });
+
+      form.querySelector('[data-qf-next]').addEventListener('click', () => {
+        const i = form._step;
+        const failing = check(form, stepFields(form, i));
+        const status = form.querySelector('[data-qf-status]');
+        if (failing.length) {
+          status.textContent = failing.length === 1 ? 'One thing needs a look.' : `${failing.length} things need a look.`;
+          focusFirst(form, failing);
+          return;
+        }
+        setStep(form, i + 1);
+      });
+      form.querySelector('[data-qf-back]').addEventListener('click', () => setStep(form, form._step - 1));
+
+      form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const all = fieldsOf(form);
+        const failing = check(form, all);
+        const status = form.querySelector('[data-qf-status]');
+        if (failing.length) {
+          setStep(form, failing[0].stepIndex, { focus: false });
+          status.textContent = failing.length === 1 ? 'One thing needs a look.' : `${failing.length} things need a look.`;
+          focusFirst(form, failing);
+          return;
+        }
+
+        const submit = form.querySelector('[data-qf-submit]');
+        const label = form.querySelector('[data-qf-submit-label]');
+        const original = label.textContent;
+        submit.disabled = true;
+        submit.setAttribute('aria-busy', 'true');
+        label.textContent = 'Sending…';
+        status.textContent = '';
+
+        const payload = {};
+        for (const f of all) payload[f.name] = valueOf(form, f);
+        for (const n of ['formType', 'renderedAt', 'pageFrom', 'landingUrl', 'hp_website', 'utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content']) {
+          payload[n] = form.elements[n] ? form.elements[n].value : '';
+        }
+        payload.consent = Boolean(form.elements.consent && form.elements.consent.checked);
+
+        try {
+          const res = await fetch('/api/lead', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload),
+          });
+          const data = await res.json().catch(() => ({}));
+          if (res.ok && data.ok) {
+            submitted = true;
+            clearDrafts();
+            const panel = form.closest('[data-panel]');
+            const success = panel.querySelector('[data-qf-success]');
+            const first = String(payload.fullName || '').trim().split(/\s+/)[0];
+            success.querySelector('[data-success-title]').textContent = first ? `Thank you, ${first}. We have it.` : 'Thank you. We have it.';
+            success.querySelector('[data-ref]').textContent = data.ref || 'BIG';
+            form.hidden = true;
+            root.querySelector('[data-qf-switch]').hidden = true;
+            success.hidden = false;
+            success.focus();
+            success.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+            return;
+          }
+          if (res.status === 422 && data.errors) {
+            const bad = all.filter((f) => data.errors[f.name]);
+            for (const f of bad) showError(form, f, data.errors[f.name]);
+            if (bad.length) {
+              setStep(form, bad[0].stepIndex, { focus: false });
+              focusFirst(form, bad);
+              status.textContent = 'Please check the details marked below.';
+            }
+          } else {
+            status.innerHTML = `We could not send that just now. Please call us on <a href="${phoneHref}" class="font-semibold underline">${phone}</a> and we will take it from here.`;
+          }
+        } catch {
+          status.innerHTML = `We could not reach the server. Please try again, or call us on <a href="${phoneHref}" class="font-semibold underline">${phone}</a>.`;
+        }
+        submit.disabled = false;
+        submit.removeAttribute('aria-busy');
+        label.textContent = original;
+      });
+    }
+
+    // ── Type switch ──────────────────────────────────────────────────────────
+    for (const btn of typeButtons) {
+      btn.addEventListener('click', () => showType(btn.getAttribute('data-type-btn')));
+    }
+    showType(current);
+
+    if (params.get('retry') === '1') {
+      const notice = root.querySelector('[data-qf-retry]');
+      if (notice) notice.hidden = false;
+    }
+
+    window.addEventListener('beforeunload', (event) => {
+      if (dirty && !submitted) {
+        event.preventDefault();
+        event.returnValue = '';
+      }
+    });
+  }
+</script>
+
+<style is:global>
+  .qf-switch {
+    display: grid;
+    gap: 0.75rem;
+    grid-template-columns: 1fr;
+  }
+  .qf-js .qf-switch { grid-template-columns: 1fr 1fr; }
+  .qf-switch { display: none; }
+  .qf-js .qf-switch { display: grid; }
+  .qf-switch-btn {
+    text-align: left;
+    padding: 0.9rem 1rem;
+    min-height: 3.5rem;
+    border: 1.5px solid #8a8a8a;
+    border-radius: 0.9rem;
+    background: var(--color-surface);
+    cursor: pointer;
+    touch-action: manipulation;
+    transition: border-color 200ms ease, background-color 200ms ease, box-shadow 200ms ease;
+  }
+  .qf-switch-btn:hover { border-color: var(--color-ink); }
+  .qf-switch-btn[aria-pressed='true'] {
+    border-color: var(--color-brand-500);
+    background: var(--color-brand-50);
+    box-shadow: 0 0 0 1px var(--color-brand-500);
+  }
+  .qf-switch-title { display: block; font-weight: 700; color: var(--color-ink); }
+  .qf-switch-blurb { display: block; font-size: 0.9375rem; color: var(--color-ink-muted); margin-top: 0.15rem; }
+  @media (max-width: 480px) { .qf-switch-blurb { display: none; } }
+
+  .qf-notice {
+    margin-top: 1rem; padding: 0.8rem 1rem; border-radius: 0.75rem;
+    background: #fdecea; color: #7a1a12; border: 1px solid #f1b8b2;
+  }
+  .qf-notice a { text-decoration: underline; font-weight: 600; }
+
+  .qf-panel { margin-top: 1.5rem; scroll-margin-top: 6rem; }
+  .qf-panel[hidden], .qf-form[hidden], .qf-success[hidden] { display: none; }
+  .qf-panel-title { font-size: 1.5rem; }
+  .qf-js .qf-panel-title { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+  .qf-form { margin-top: 1rem; scroll-margin-top: 6rem; }
+  .qf-hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+
+  .qf-progress { display: none; gap: 0.5rem; margin: 0 0 1.5rem; padding: 0; list-style: none; }
+  .qf-js .qf-progress { display: flex; }
+  .qf-progress-item { flex: 1; min-width: 0; }
+  .qf-progress-bar { display: block; height: 4px; border-radius: 4px; background: #d9d9d9; transition: background-color 250ms ease; }
+  .qf-progress-item.is-done .qf-progress-bar,
+  .qf-progress-item.is-current .qf-progress-bar { background: var(--color-brand-500); }
+  .qf-progress-label { display: flex; align-items: center; gap: 0.4rem; margin-top: 0.5rem; font-size: 0.9375rem; color: var(--color-ink-muted); }
+  .qf-progress-item.is-current .qf-progress-label { color: var(--color-ink); font-weight: 700; }
+  .qf-progress-num {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 1.5rem; height: 1.5rem; border-radius: 999px; font-size: 0.8125rem; font-weight: 700;
+    background: #ececec; color: var(--color-ink);
+  }
+  .qf-progress-item.is-current .qf-progress-num { background: var(--color-brand-500); }
+  @media (max-width: 560px) {
+    .qf-progress-item:not(.is-current) .qf-progress-label { visibility: hidden; }
+  }
+
+  .qf-step { border: 0; margin: 0 0 2rem; padding: 0; min-width: 0; }
+  .qf-step[hidden] { display: none; }
+  .qf-step + .qf-step { margin-top: 2.5rem; }
+  .qf-js .qf-step + .qf-step { margin-top: 0; }
+  .qf-legend { font-family: var(--font-heading); font-size: 1.375rem; font-weight: 700; padding: 0; outline-offset: 4px; }
+  .qf-intro { margin: 0.35rem 0 1.25rem; color: var(--color-ink-soft); font-size: 1rem; }
+
+  .qf-grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 1.1rem 1rem; }
+  .qf-field { min-width: 0; }
+  .qf-w-full, .qf-w-half { grid-column: span 12; }
+  .qf-w-quarter { grid-column: span 6; }
+  @media (min-width: 640px) {
+    .qf-w-half { grid-column: span 6; }
+    .qf-w-quarter { grid-column: span 3; }
+  }
+
+  .qf-label { display: block; font-weight: 600; font-size: 1rem; color: var(--color-ink); margin-bottom: 0.4rem; padding: 0; }
+  .qf-req { color: #b42318; }
+  .qf-opt { font-weight: 400; color: var(--color-ink-muted); font-size: 0.9375rem; }
+  .qf-input {
+    display: block; width: 100%; min-height: 3rem; padding: 0.65rem 0.9rem;
+    font: inherit; font-size: 1rem; color: var(--color-ink);
+    background: #fff; border: 1.5px solid #8a8a8a; border-radius: 0.75rem;
+    transition: border-color 150ms ease, box-shadow 150ms ease;
+    touch-action: manipulation; appearance: none;
+  }
+  select.qf-input {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' stroke='%231a1a1a' stroke-width='2' viewBox='0 0 24 24'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 0.9rem center; padding-right: 2.5rem;
+  }
+  .qf-textarea { min-height: 7rem; resize: vertical; }
+  .qf-input:hover { border-color: var(--color-ink); }
+  .qf-input:focus-visible { border-color: var(--color-ink); box-shadow: 0 0 0 3px rgb(189 155 1 / 0.45); outline: none; }
+  .qf-invalid .qf-input { border-color: #b42318; }
+  .qf-hint { margin: 0.35rem 0 0; font-size: 0.9375rem; color: var(--color-ink-muted); }
+  .qf-error { margin: 0.35rem 0 0; font-size: 0.9375rem; font-weight: 600; color: #b42318; }
+  .qf-error[hidden] { display: none; }
+
+  .qf-group { border: 0; margin: 0; padding: 0; min-width: 0; }
+  .qf-chips { display: flex; flex-wrap: wrap; gap: 0.6rem; }
+  .qf-chip {
+    position: relative; display: inline-flex; align-items: center; min-height: 2.9rem;
+    padding: 0.55rem 1.05rem; border: 1.5px solid #8a8a8a; border-radius: 999px;
+    background: #fff; cursor: pointer; font-size: 1rem; color: var(--color-ink);
+    transition: border-color 150ms ease, background-color 150ms ease, box-shadow 150ms ease;
+    touch-action: manipulation;
+  }
+  .qf-chip input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
+  .qf-chip:hover { border-color: var(--color-ink); }
+  .qf-chip:has(input:checked) { border-color: var(--color-brand-500); background: var(--color-brand-50); box-shadow: 0 0 0 1px var(--color-brand-500); font-weight: 600; }
+  .qf-chip:has(input:focus-visible) { box-shadow: 0 0 0 3px rgb(189 155 1 / 0.45); border-color: var(--color-ink); }
+  .qf-invalid .qf-chip { border-color: #b42318; }
+
+  .qf-consent-block { margin-top: 1.75rem; padding: 1rem 1.1rem; border-radius: 0.9rem; background: var(--color-surface-alt); }
+  .qf-consent { display: flex; gap: 0.75rem; align-items: flex-start; cursor: pointer; }
+  .qf-consent input { flex: none; width: 1.4rem; height: 1.4rem; margin-top: 0.15rem; accent-color: var(--color-brand-700); }
+  .qf-consent strong { display: block; font-size: 1rem; }
+  .qf-consent-text { display: block; margin-top: 0.3rem; font-size: 0.9375rem; line-height: 1.55; color: var(--color-ink-soft); }
+  .qf-fine { margin: 0.9rem 0 0; font-size: 0.9375rem; color: var(--color-ink-muted); }
+  .qf-fine a { text-decoration: underline; }
+
+  .qf-status { min-height: 1.5rem; margin: 0 0 0.75rem; font-weight: 600; color: #b42318; }
+  .qf-status a { text-decoration: underline; }
+  .qf-actions { display: flex; flex-wrap: wrap; gap: 0.75rem; }
+  .qf-actions [hidden] { display: none; }
+  .qf-actions .btn { min-width: 8rem; }
+  .qf-submit[disabled] { opacity: 0.7; cursor: progress; }
+  @media (max-width: 480px) {
+    .qf-actions { position: sticky; bottom: 0; padding: 0.75rem 0; background: linear-gradient(to top, #fff 70%, rgb(255 255 255 / 0)); }
+    .qf-actions .btn { flex: 1; }
+  }
+
+  .qf-success { padding: 1.75rem; border-radius: 1.1rem; border: 1px solid #e3e3e3; border-top: 3px solid var(--color-brand-500); background: var(--color-surface-alt); outline: none; }
+  .qf-success-title { font-size: 1.6rem; margin: 0.4rem 0 0.6rem; }
+  .qf-success-ref { font-size: 1.0625rem; }
+  .qf-success-list { margin: 1rem 0; padding-left: 1.2rem; list-style: disc; display: grid; gap: 0.4rem; }
+  .qf-success-list li { font-size: 1.0625rem; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .qf-switch-btn, .qf-input, .qf-chip, .qf-progress-bar { transition: none; }
+  }
+</style>

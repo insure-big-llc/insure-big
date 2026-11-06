@@ -2,14 +2,20 @@
 /**
  * /get-a-quote
  *
- * 🔴 INDEXED URL — must stay at exactly this path (website-scope.md §4).
+ * 🔴 INDEXED URL, must stay at exactly this path (website-scope.md §4).
  *
- * The live page has a visible copy bug: three consecutive headings all read
- * "Step 2". This is the corrected three-step version (scope §10).
+ * The one place a quote is requested. Every service, hub, office and contact page
+ * links here with the type and the line already chosen (?type=&line=&from=), and
+ * the form (src/components/QuoteForm.astro) posts to /api/lead. Partner product
+ * pages do not come here: their button goes to the partner's referral link.
+ *
+ * The live page had three headings that all read "Step 2". This keeps the
+ * corrected three step explanation, now beside the form instead of above it.
  */
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Breadcrumbs from '../components/Breadcrumbs.astro';
-import { FORMS } from '../config/site.js';
+import QuoteForm from '../components/QuoteForm.astro';
+import { CONTACT } from '../config/site.js';
 import { webPageSchema, breadcrumbSchema } from '../lib/schema.js';
 
 const path = '/get-a-quote';
@@ -18,28 +24,21 @@ const trail = [
   { name: 'Get a Quote', path },
 ];
 
-/**
- * The hero selector on the home page sends its choice here as ?coverage=.
- * Static output cannot read query strings at build time, so a small inline
- * script (below) shows the confirmation and emphasises the matching form.
- * Without JavaScript the page still works exactly as before.
- */
-
 const steps = [
   {
     n: 1,
     title: 'Tell us what you need',
-    body: 'Pick the type of cover below — personal, business or life. It takes a couple of minutes and there is no obligation.',
+    body: 'Choose personal or business, then pick the cover you are after. It takes about two minutes.',
   },
   {
     n: 2,
     title: 'Share the details',
-    body: 'Answer a few questions about what you are protecting, from your home and vehicles to your commercial operations.',
+    body: 'A few questions about what you are protecting, from your home and vehicles to your operations.',
   },
   {
     n: 3,
     title: 'Get your quote',
-    body: 'A licensed agent compares options across multiple carriers and comes back to you with a recommendation, not just a price.',
+    body: 'A licensed agent compares options across multiple carriers and comes back with a recommendation, not just a price.',
   },
 ];
 
@@ -59,6 +58,7 @@ const schema = [
   description="Start a personal, business or life insurance quote with Ballentine Insurance Group. Serving the Kansas City metro and communities throughout Missouri and Kansas."
   path={path}
   schema={schema}
+  hideCallBar
 >
   <Breadcrumbs trail={trail} />
 
@@ -66,109 +66,45 @@ const schema = [
     <header class="max-w-3xl">
       <h1 class="text-3xl leading-tight sm:text-4xl">Start your quote the BIG way</h1>
       <p class="mt-5 text-lg leading-relaxed text-[var(--color-ink-soft)]">
-        Pick the type of quote you need below. A licensed agent will compare options
-        across multiple carriers and come back to you with a recommendation — not just
-        a price.
+        Tell us what you need and a licensed agent will compare options across multiple
+        carriers and come back to you with a recommendation, not just a price.
       </p>
     </header>
 
-    <!-- Three steps — the live page shows "Step 2" three times (scope §10) -->
-    <ol class="mt-12 grid gap-6 sm:grid-cols-3">
-      {
-        steps.map((s) => (
-          <li class="card p-6">
-            <p class="kicker">
-              Step {s.n}
-            </p>
-            <h2 class="mt-2 text-lg">{s.title}</h2>
-            <p class="mt-2 text-sm leading-relaxed text-[var(--color-ink-soft)]">{s.body}</p>
-          </li>
-        ))
-      }
-    </ol>
+    <div class="mt-10 grid items-start gap-12 lg:grid-cols-[minmax(0,1fr)_340px]">
+      <div class="card p-6 sm:p-8">
+        <QuoteForm />
+      </div>
 
-    <p
-      id="coverage-note"
-      class="mt-10 rounded-lg bg-[var(--color-surface-alt)] px-4 py-3 text-sm font-semibold"
-      hidden
-    ></p>
+      <aside class="space-y-6 lg:sticky lg:top-24">
+        <section class="card p-6">
+          <h2 class="text-lg">What happens next</h2>
+          <ol class="mt-4 space-y-4">
+            {
+              steps.map((s) => (
+                <li class="flex gap-3">
+                  <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[var(--color-brand-500)] text-sm font-bold">
+                    {s.n}
+                  </span>
+                  <span>
+                    <span class="block font-semibold">{s.title}</span>
+                    <span class="mt-0.5 block text-sm leading-relaxed text-[var(--color-ink-soft)]">{s.body}</span>
+                  </span>
+                </li>
+              ))
+            }
+          </ol>
+        </section>
 
-    <!-- The two live forms, linked directly so they work with JS disabled -->
-    <div class="mt-12 grid gap-6 lg:grid-cols-2">
-      <section data-coverage="personal" class="card p-6">
-        <h2 class="text-xl">Personal &amp; life insurance quote</h2>
-        <p class="mt-2 text-sm leading-relaxed text-[var(--color-ink-soft)]">
-          Home, auto, renters, condo, landlord, umbrella, flood, life, Medicare and
-          the rest of our personal lines.
-        </p>
-        <a href={FORMS.personal} class="btn btn-primary mt-5 w-full sm:w-auto" rel="noopener">
-          Start a personal quote
-        </a>
-        <p class="mt-3 text-xs text-[var(--color-ink-muted)]">
-          Opens our secure Jotform in a new tab.
-        </p>
-      </section>
-
-      <section data-coverage="business" class="card p-6">
-        <h2 class="text-xl">Business insurance quote</h2>
-        <p class="mt-2 text-sm leading-relaxed text-[var(--color-ink-soft)]">
-          General liability, BOP, commercial property and auto, workers'
-          compensation, professional liability and surety bonds.
-        </p>
-        <a href={FORMS.business} class="btn btn-primary mt-5 w-full sm:w-auto" rel="noopener">
-          Start a business quote
-        </a>
-        <p class="mt-3 text-xs text-[var(--color-ink-muted)]">
-          Opens our secure Jotform in a new tab.
-        </p>
-      </section>
+        <section class="rounded-xl bg-[var(--color-surface-alt)] p-6">
+          <h2 class="text-lg">Would you rather just talk?</h2>
+          <p class="mt-2 text-[var(--color-ink-soft)]">
+            Call <a href={CONTACT.phoneHref} class="font-semibold underline">{CONTACT.phone}</a>
+            {' '}during {CONTACT.hours.display}, or{' '}
+            <a href="/contact" class="font-semibold underline">see both office locations</a>.
+          </p>
+        </section>
+      </aside>
     </div>
-
-    <section class="mt-12 rounded-xl bg-[var(--color-surface-alt)] p-6">
-      <h2 class="text-lg">Would you rather just talk?</h2>
-      <p class="mt-2 text-[var(--color-ink-soft)]">
-        Call <a href="tel:+18168681787" class="font-semibold underline">(816) 868-1787</a>
-        {' '}during {`Monday – Friday, 9:00am – 5:00pm`}, or{' '}
-        <a href="/contact" class="font-semibold underline">see both office locations</a>.
-      </p>
-    </section>
-
-    <p class="mt-8 text-xs leading-relaxed text-[var(--color-ink-muted)]">
-      Submitting a form does not commit you to anything. See our{' '}
-      <a href="/privacy-policy" class="underline">Privacy Policy</a> for how we handle
-      your information. Consent is required before any marketing text message; you can
-      opt out at any time by replying STOP.
-    </p>
   </section>
-
-  <style>
-    .quote-card-selected {
-      border-color: var(--color-brand-500);
-      box-shadow: 0 0 0 1px var(--color-brand-500);
-    }
-  </style>
-  <script>
-    (function () {
-      var labels = {
-        home: 'Home insurance',
-        auto: 'Auto insurance',
-        business: 'Business insurance',
-        life: 'Life insurance',
-        other: 'Other coverage',
-      };
-      var key = new URLSearchParams(location.search).get('coverage');
-      var label = labels[key];
-      if (!label) return;
-      var note = document.getElementById('coverage-note');
-      if (note) {
-        note.hidden = false;
-        note.textContent =
-          'You asked about: ' + label + '. The right form for that is highlighted below.';
-      }
-      var card = document.querySelector(
-        '[data-coverage="' + (key === 'business' ? 'business' : 'personal') + '"]',
-      );
-      if (card) card.classList.add('quote-card-selected');
-    })();
-  </script>
 </BaseLayout>

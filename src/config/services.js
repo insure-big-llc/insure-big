@@ -10,7 +10,7 @@
  * the three Farmers-led lines in the same way, and inventing a 4th hub risked
  * competing with the three indexed URLs.
  *
- * `form` selects which Jotform the page posts to (website-scope.md §2, decision 8).
+ * `form` selects which quote form type (personal or business) the page opens at /get-a-quote.
  * `searchIntent` and `faq` drive the on-page copy and the FAQPage JSON-LD.
  * `source` records where the copy came from — nothing is invented (scope §13).
  */

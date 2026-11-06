@@ -168,6 +168,9 @@
     body {
       padding-bottom: calc(var(--quote-bar-height) + env(safe-area-inset-bottom));
     }
+    body.no-call-bar {
+      padding-bottom: 0;
+    }
   }
 
   /*

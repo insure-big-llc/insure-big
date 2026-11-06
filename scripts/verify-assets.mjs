@@ -167,7 +167,9 @@ for (const file of htmlFiles) {
   }
 
   // Inputs must be labelled or explicitly aria-labelled.
-  const inputs = [...html.matchAll(/<input\b[^>]*>/g)].map((m) => m[0]);
+  // An input wrapped in a <label> is labelled by it, so those are set aside first.
+  const unwrapped = html.replace(/<label\b[\s\S]*?<\/label>/g, '');
+  const inputs = [...unwrapped.matchAll(/<input\b[^>]*>/g)].map((m) => m[0]);
   const unlabelled = inputs.filter(
     (t) => !/\b(aria-label|aria-labelledby|id=)/.test(t) && !/type="(hidden|submit)"/.test(t),
   );
