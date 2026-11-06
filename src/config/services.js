@@ -1379,25 +1379,6 @@ export function servicePath(service) {
     : `/${service.hub}/${service.slug}`;
 }
 
-/**
- * Everything a visitor looks for under "Specialty": the seven /specialty pages
- * plus the two partner placed lines that live under the Life hub (Medicare and
- * Estate Planning). Those two keep their /life-insurance URLs, so no redirects
- * are needed; they are only listed here as well.
- */
-export function specialtyLinks() {
-  const own = SERVICES.filter((s) => s.hub === 'specialty').map((s) => ({
-    name: s.name,
-    slug: s.slug,
-    path: servicePath(s),
-  }));
-  const crossListed = ['estate-planning', 'medicare']
-    .map((slug) => SERVICES.find((s) => s.slug === slug))
-    .filter(Boolean)
-    .map((s) => ({ name: s.name, slug: s.slug, path: servicePath(s) }));
-  return [...own, ...crossListed];
-}
-
 /** The specialty group page copy. */
 export const SPECIALTY_GROUP = {
   slug: 'specialty',

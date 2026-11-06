@@ -8,7 +8,7 @@ import Art from '../components/Art.astro';
 import { TEAM } from '../config/team.js';
 import FaqBlock from '../components/FaqBlock.astro';
 import { SITE, CONTACT, LOCATIONS, PHOTOS } from '../config/site.js';
-import { HUBS, SERVICES, SPECIALTY_GROUP, HOME_OFFER_COPY, HOME_FAQ, specialtyLinks } from '../config/services.js';
+import { HUBS, SERVICES, SPECIALTY_GROUP, HOME_OFFER_COPY, HOME_FAQ } from '../config/services.js';
 import { GOOGLE_REVIEWS, LOCATION_PROFILES, CUSTOMER_REVIEWS } from '../config/reviews.js';
 import { webPageSchema, reviewsSchema, faqSchema } from '../lib/schema.js';
 
@@ -21,7 +21,7 @@ const QUOTE_LINES = [
   { key: 'other', label: 'Other' },
 ];
 
-const specialties = specialtyLinks();
+const specialties = SERVICES.filter((s) => s.hub === 'specialty');
 
 /** One icon per hub, drawn from the shared Icon set. */
 const HUB_ICONS = {
@@ -196,7 +196,7 @@ const schema = [
           specialties.map((s) => (
             <li>
               <a
-                href={s.path}
+                href={`/specialty/${s.slug}`}
                 class="card card-hover group flex min-h-14 items-center gap-3 px-4 py-3 text-sm font-semibold"
               >
                 <span

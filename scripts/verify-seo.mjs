@@ -562,8 +562,8 @@ notes.push(`specialty pages: content floor checked for ${SPECIALIST_SLUGS.length
 // Rule (6 Nov 2026): each of the eight partner product pages carries ONE quote
 // button that goes straight to the partner's referral link, opens in a new tab,
 // is rel="sponsored noopener noreferrer", and has no on-site form in front of it.
-// Medicare and Estate Planning live under /life-insurance but are also listed in
-// the Specialty menu. "Continue to" / "Go to" labels stay banned.
+// Medicare and Estate Planning are Life & Health pages (under /life-insurance) and
+// are not listed under Specialty. "Continue to" / "Go to" labels stay banned.
 {
   const decode = (s) => s.replace(/&#38;|&amp;/g, '&');
   const PARTNER_PAGES = {
@@ -597,13 +597,15 @@ notes.push(`specialty pages: content floor checked for ${SPECIALIST_SLUGS.length
   if (existsSync(nonPartner) && /data-partner-cta/.test(readFileSync(nonPartner, 'utf8'))) {
     fail('/personal-insurance/home: a non partner page carries a partner button');
   }
-  // Specialty menu lists Medicare and Estate Planning.
+  // The Specialty menu lists the seven /specialty pages only. Medicare and Estate
+  // Planning belong to the Life & Health hub and are reached from there.
   const homeHtml = readFileSync(join(DIST, 'index.html'), 'utf8');
   const menuStart = homeHtml.indexOf('href="/specialty/surety-bonds"');
   const menuEnd = homeHtml.indexOf('href="/about"', menuStart);
   const menu = menuStart >= 0 && menuEnd > menuStart ? homeHtml.slice(menuStart, menuEnd) : '';
-  for (const need of ['/specialty/device-protection', '/life-insurance/medicare', '/life-insurance/estate-planning']) {
-    if (!menu.includes(`href="${need}"`)) fail(`Specialty menu is missing ${need}`);
+  if (!menu.includes('href="/specialty/device-protection"')) fail('Specialty menu is missing /specialty/device-protection');
+  for (const stray of ['/life-insurance/medicare', '/life-insurance/estate-planning']) {
+    if (menu.includes(`href="${stray}"`)) fail(`Specialty menu must not list ${stray}; it belongs to Life & Health`);
   }
   for (const file of siteHtmlFiles) {
     const html = readFileSync(file, 'utf8');
@@ -613,7 +615,7 @@ notes.push(`specialty pages: content floor checked for ${SPECIALIST_SLUGS.length
       }
     }
   }
-  notes.push('partner pages: 8 pages carry one referral button and no form; Specialty menu cross lists Medicare and Estate Planning');
+  notes.push('partner pages: 8 pages carry one referral button and no form');
 }
 // ── 13. Blog (spec 0004) ─────────────────────────────────────────────────────
 // Duplicate slugs or malformed frontmatter already fail the build itself

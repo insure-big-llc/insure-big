@@ -13,7 +13,7 @@ import PartnerCta from '../../components/PartnerCta.astro';
 import QuoteCta from '../../components/QuoteCta.astro';
 import FaqBlock from '../../components/FaqBlock.astro';
 import RelatedCoverage from '../../components/RelatedCoverage.astro';
-import { SERVICES, SPECIALTY_GROUP, servicePath, specialtyLinks } from '../../config/services.js';
+import { SERVICES, SPECIALTY_GROUP, servicePath } from '../../config/services.js';
 import { partnerFor } from '../../config/partners.js';
 import { SPECIALTY_EXPLAINERS } from '../../config/specialty-explainers.js';
 import {
@@ -125,9 +125,9 @@ const schema = [
           <h2 class="text-xl">Other specialty cover we write</h2>
           <ul class="mt-4 grid gap-2 sm:grid-cols-2">
             {
-              specialtyLinks().filter((s) => s.slug !== service.slug).map((s) => (
+              SERVICES.filter((s) => s.hub === 'specialty' && s.slug !== service.slug).map((s) => (
                 <li>
-                  <a href={s.path} class="text-sm font-semibold underline">
+                  <a href={`/specialty/${s.slug}`} class="text-sm font-semibold underline">
                     {s.name}
                   </a>
                 </li>
