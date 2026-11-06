@@ -89,7 +89,9 @@ src/
     Schema.astro      Emits the @graph. Always includes the InsuranceAgency node
     Header.astro      Nav — every service linked with a real <a href>
     Footer.astro      🔴 Carries the NAP block
-    ServiceForm.astro Jotform, lazy-loaded on click
+    QuoteForm.astro      the stepped quote form on /get-a-quote (posts to /api/lead)
+    QuoteCta.astro       "Request a quote" card that links to /get-a-quote
+    PartnerCta.astro     the one referral button on partner product pages
     FaqBlock.astro    <details>/<summary> — works with JS disabled
     CarrierStrip.astro Logos, falling back to a text card when a file is missing
     Breadcrumbs.astro Visible trail, mirrors the BreadcrumbList JSON-LD
@@ -321,18 +323,29 @@ page — Google treats invisible FAQ markup as spam.
 
 ## Forms and lead attribution
 
-`ServiceForm.astro` appends `source`, `page_url` and `utm_*` to the Jotform URL so
-every submission carries its own origin. This is what makes "which policy line
-produces the best leads" answerable; today it is not.
+There is one quote form, on `/get-a-quote`. Every service, hub, office and contact
+page carries a `QuoteCta` card that links there with `?type=&line=&from=`, so the
+right form opens with the right cover ticked and the lead records which page it
+came from. Partner product pages (device protection, surety bonds, wind and hail,
+Premium Lock, estate planning, pet, travel, Medicare) have **no form**: their one
+button goes straight to the partner's referral link (`PartnerCta`, `rel="sponsored"`).
 
-The embed is **lazy-loaded on click** — it is the single largest performance risk
-on the site and would otherwise pull third-party JS before first paint. The
-static HTML always carries the real form URL as an `<a href>`, so it is
-discoverable with JS disabled.
+The form is `QuoteForm.astro`, built from `src/config/forms.js`. That file is the
+single definition of the fields, the options, the consent text and the validator,
+and the Netlify function validates with it again, so the page and the server can
+never disagree. Without JavaScript the form still submits (a plain post that
+redirects to `/quote-received`).
 
-⚠️ **Separate, non-website issue:** Jotform is integrated to AgencyZoom by **email
-parsing, not a webhook**. Moving it to a webhook is an AgencyZoom-side config
-change and is tracked in scope §11.
+`POST /api/lead` (`netlify/functions/lead.mts`, logic in `src/lib/lead-handler.js`)
+checks the origin, drops honeypot and too fast posts silently, validates, then forwards
+the lead to the n8n workflow **BIG - Website Lead Intake** with a shared secret. The
+workflow saves it to the *BIG Website Leads* Google Sheet, answers the website, emails
+the team, and (once switched on) creates the AgencyZoom lead. The website shows success
+only after the sheet write has succeeded. Setup, variables and moving to the org n8n
+instance are in `../docs/forms-setup.md`.
+
+`npm run verify` runs `scripts/verify-forms.mjs`, which tests the validator and the
+handler against a fake n8n and checks the built page.
 
 ---
 
