@@ -248,30 +248,34 @@ const schema = [
         <p class="text-xs font-semibold uppercase tracking-wide text-[var(--color-ink-muted)]">
           The people you'll talk to
         </p>
-        <ul class="mt-5 grid grid-cols-2 gap-5">
+        <ul class="mt-5 grid grid-cols-2 gap-4 sm:grid-cols-3">
           {
             TEAM.map((m) => (
-              <li class="rounded-xl bg-[var(--color-surface-alt)] p-4 text-center">
-                <img
-                  src={m.photo}
-                  alt={m.name}
-                  width="96"
-                  height="96"
-                  loading="lazy"
-                  class="mx-auto h-20 w-20 rounded-full object-cover ring-2 ring-white shadow-[var(--shadow-soft)]"
-                />
-                <p class="mt-3 text-sm font-semibold">{m.name}</p>
-                <p class="mt-0.5 text-xs text-[var(--color-ink-muted)]">{m.title}</p>
+              <li class="overflow-hidden rounded-xl bg-[var(--color-surface-alt)]">
+                <div class="team-portrait">
+                  <img
+                    src={m.photo}
+                    alt={m.name}
+                    width="640"
+                    height="640"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </div>
+                <div class="p-3 text-center">
+                  <p class="text-sm font-semibold">{m.name}</p>
+                  <p class="mt-0.5 text-xs text-[var(--color-ink-muted)]">{m.title}</p>
+                </div>
               </li>
             ))
           }
+          <li class="flex items-center justify-center rounded-xl border border-dashed border-[var(--color-brand-300)] p-4 text-center">
+            <a href="/about" class="group inline-flex flex-col items-center gap-2 text-sm font-semibold text-[var(--color-brand-700)] hover:underline">
+              Meet the whole team
+              <Icon name="arrow-right" class="arrow h-4 w-4" />
+            </a>
+          </li>
         </ul>
-        <p class="mt-5 text-sm">
-          <a href="/about" class="group inline-flex items-center gap-1.5 font-semibold text-[var(--color-brand-700)] hover:underline">
-            Meet the whole team
-            <Icon name="arrow-right" class="arrow h-4 w-4" />
-          </a>
-        </p>
       </div>
     </div>
   </section>

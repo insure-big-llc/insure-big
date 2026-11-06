@@ -16,7 +16,7 @@ import Breadcrumbs from '../components/Breadcrumbs.astro';
 import ServiceForm from '../components/ServiceForm.astro';
 import Icon from '../components/Icon.astro';
 import Stars from '../components/Stars.astro';
-import { SITE, LOCATIONS, CONTACT, absoluteUrl, mapEmbedUrl } from '../config/site.js';
+import { SITE, LOCATIONS, CONTACT, PHOTOS, absoluteUrl, mapEmbedUrl } from '../config/site.js';
 import { HUBS, SERVICES } from '../config/services.js';
 import { LOCATION_PROFILES, CUSTOMER_REVIEWS } from '../config/reviews.js';
 import { breadcrumbSchema, webPageSchema, locationReviewsSchema } from '../lib/schema.js';
@@ -247,6 +247,23 @@ const isPrimary = loc.isPrimary;
 
       <aside class="lg:sticky lg:top-24 lg:self-start">
         <ServiceForm form="personal" path={path} label="insurance" phone={loc.phone} phoneHref={loc.phoneHref} />
+        {isPrimary && (
+          <figure class="mt-6">
+            <div class="photo-light">
+              <img
+                src={PHOTOS.teamStorefront.src}
+                srcset={PHOTOS.teamStorefront.srcset}
+                sizes="(min-width: 1024px) 360px, 92vw"
+                alt={PHOTOS.teamStorefront.alt}
+                width={PHOTOS.teamStorefront.width}
+                height={PHOTOS.teamStorefront.height}
+                loading="lazy"
+                decoding="async"
+                class="h-auto w-full"
+              />
+            </div>
+          </figure>
+        )}
       </aside>
     </div>
   </article>

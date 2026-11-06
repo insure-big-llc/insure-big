@@ -203,6 +203,14 @@ export const PHOTOS = {
     height: 1024,
     alt: "Three members of the Ballentine Insurance Group team standing outside the agency's storefront",
   },
+  /** Group portrait, graded by scripts/process-team-photos.mjs. */
+  teamGroup: {
+    src: '/team/team-group-800.webp',
+    srcset: '/team/team-group-480.webp 480w, /team/team-group-800.webp 800w',
+    width: 800,
+    height: 1200,
+    alt: 'The five members of the Ballentine Insurance Group team standing together in a black and white group portrait',
+  },
 };
 
 /**

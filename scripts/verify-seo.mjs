@@ -543,6 +543,21 @@ for (const slug of SPECIALIST_SLUGS) {
 }
 notes.push(`specialty pages: content floor checked for ${SPECIALIST_SLUGS.length} pages`);
 
+// ── Team: the About page names every member from the CMS data ───────────────
+{
+  const aboutFile = join(DIST, 'about.html');
+  const teamData = JSON.parse(readFileSync(new URL('../src/content/data/team.json', import.meta.url).pathname.replace(/^\/([A-Za-z]:)/, '$1'), 'utf8').replace(/^\uFEFF/, ''));
+  if (!existsSync(aboutFile)) fail('dist/about.html missing');
+  else {
+    const aboutHtml = readFileSync(aboutFile, 'utf8');
+    for (const m of teamData.members) {
+      if (!aboutHtml.includes(m.name)) fail(`/about: team member "${m.name}" is missing from the page`);
+      if (!aboutHtml.includes(m.photo)) fail(`/about: photo for "${m.name}" (${m.photo}) is missing from the page`);
+    }
+    notes.push(`/about lists all ${teamData.members.length} team members`);
+  }
+}
+
 // ── 17. PARTNER LINKS — informational labels, never transactional ────────────
 // W3: the live site's intent is "LEARN MORE". "Continue to X" / "Go to X" reads
 // as a transaction. Both labels are banned from partner CTAs.

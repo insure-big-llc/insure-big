@@ -6,8 +6,8 @@
  * with two required corrections (scope §10):
  *   1. The market sentence is normalised to the agreed wording — the file said
  *      "Missouri, Kansas, and beyond" while the homepage said "Kansas" only.
- *   2. Any reference to Blaine is removed. Rodney Roberts does not appear either —
- *      both have left (scope §2, decision 10). Four team members only.
+ *   2. Any reference to Blaine is removed. Rodney Roberts appears again as of
+ *      6 November 2026, at the client's instruction (scope §2, decision 10).
  */
 import BaseLayout from '../layouts/BaseLayout.astro';
 import SectionBand from '../components/SectionBand.astro';
@@ -22,8 +22,11 @@ const trail = [
   { name: 'About', path },
 ];
 
-/** Four people. Both departures applied. */
+/** The team, in the order of src/content/data/team.json (editable in the CMS). */
 const team = TEAM;
+
+/** A bio is stored as plain text; a blank line starts a new paragraph. */
+const paragraphs = (bio) => bio.split(/\n\s*\n/).map((p) => p.trim()).filter(Boolean);
 
 const schema = [
   aboutPageSchema({
@@ -85,49 +88,65 @@ const schema = [
     <figure class="lg:sticky lg:top-24">
       <div class="photo-light">
         <img
-          src={PHOTOS.teamStorefront.src}
-          srcset={PHOTOS.teamStorefront.srcset}
+          src={PHOTOS.teamGroup.src}
+          srcset={PHOTOS.teamGroup.srcset}
           sizes="(min-width: 1024px) 380px, 92vw"
-          alt={PHOTOS.teamStorefront.alt}
-          width={PHOTOS.teamStorefront.width}
-          height={PHOTOS.teamStorefront.height}
+          alt={PHOTOS.teamGroup.alt}
+          width={PHOTOS.teamGroup.width}
+          height={PHOTOS.teamGroup.height}
           loading="lazy"
           decoding="async"
           class="h-auto w-full"
         />
       </div>
       <figcaption class="mt-3 text-sm text-[var(--color-ink-muted)]">
-        The team that answers the phone, outside the agency.
+        The team that answers the phone.
       </figcaption>
     </figure>
     </div>
 
-    <!-- Team — four people -->
+    <!-- Team -->
     <section class="mt-16">
       <h2 class="text-2xl">The team you'll work with</h2>
       <p class="prose-page mt-3 text-[var(--color-ink-soft)]">
-        When you call, you reach one of these four people — not a call centre.
+        When you call, you reach one of these people — not a call centre.
       </p>
 
-      <div class="mt-8 grid gap-8 sm:grid-cols-2">
+      <div class="mt-8 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
         {
           team.map((person) => (
-            <article class="card p-6">
-              <img
-                src={person.photo}
-                alt={`${person.name}, ${person.title} at ${SITE.name}`}
-                width="200"
-                height="200"
-                loading="lazy"
-                decoding="async"
-                class="h-28 w-28 rounded-full object-cover"
-              />
-              <h3 class="mt-4 text-lg">{person.name}</h3>
-              <p class="text-sm font-semibold text-[var(--color-brand-700)]">{person.title}</p>
-              <p class="mt-3 text-sm leading-relaxed text-[var(--color-ink-soft)]">{person.bio}</p>
+            <article class="team-card card overflow-hidden">
+              <div class="team-portrait">
+                <img
+                  src={person.photo}
+                  alt={`${person.name}, ${person.title} at ${SITE.name}`}
+                  width="640"
+                  height="640"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </div>
+              <div class="p-6">
+                <h3 class="text-lg">{person.name}</h3>
+                <p class="text-sm font-semibold text-[var(--color-brand-700)]">{person.title}</p>
+                <div class="mt-3 space-y-3 text-sm leading-relaxed text-[var(--color-ink-soft)]">
+                  {paragraphs(person.bio).map((p) => <p>{p}</p>)}
+                </div>
+              </div>
             </article>
           ))
         }
+        <aside class="card flex flex-col justify-center bg-[var(--color-surface-alt)] p-6 sm:col-span-2 lg:col-span-1">
+          <p class="kicker">Talk to the team</p>
+          <p class="mt-3 text-lg font-semibold">One local team, two offices.</p>
+          <p class="mt-2 text-sm leading-relaxed text-[var(--color-ink-soft)]">
+            Call, or start a quote and we will come back to you, usually the same business day.
+          </p>
+          <div class="mt-5 flex flex-wrap gap-2">
+            <a href={CONTACT.phoneHref} class="btn btn-secondary">Call {CONTACT.phone}</a>
+            <a href="/get-a-quote" class="btn btn-primary">Get a quote</a>
+          </div>
+        </aside>
       </div>
     </section>
 

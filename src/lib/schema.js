@@ -1,4 +1,4 @@
-/**
+﻿/**
  * JSON-LD node builders. website-scope.md §5.2.
  *
  * Pages pass the result of one of these into <Schema schema={...} />, so every
@@ -267,7 +267,7 @@ export function aboutPageSchema({ path, title, description, team }) {
       name: person.name,
       jobTitle: person.title,
       worksFor: { '@id': ORG_ID },
-      description: person.bio,
+      description: person.bio.replace(/\s*\n\s*/g, ' '),
     })),
   };
 }
