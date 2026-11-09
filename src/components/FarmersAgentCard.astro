@@ -1,0 +1,35 @@
+---
+/**
+ * Bret's official Farmers agent page (farmers.com). Shown on the Farmers Insurance
+ * page only. It is the agency's own agent profile, not a paid referral, so it is a
+ * plain outbound link (noopener noreferrer, no "sponsored"). The URL lives in
+ * FARMERS_AGENT in src/config/site.js and nowhere else.
+ */
+import { FARMERS_AGENT } from '../config/site.js';
+import Icon from './Icon.astro';
+---
+
+<section
+  class="mt-10 rounded-2xl border border-neutral-200 border-t-[3px] border-t-[var(--color-brand-500)] bg-[var(--color-surface-alt)] p-6 shadow-[var(--shadow-soft)] sm:p-8"
+>
+  <p class="kicker">Farmers Insurance</p>
+  <h2 class="mt-2 text-2xl">{FARMERS_AGENT.heading}</h2>
+  <p class="mt-3 max-w-2xl text-base leading-relaxed text-[var(--color-ink-soft)]">
+    {FARMERS_AGENT.body}
+  </p>
+  <a
+    href={FARMERS_AGENT.url}
+    class="btn btn-primary mt-6 w-full sm:w-auto"
+    target="_blank"
+    rel="noopener noreferrer"
+    data-farmers-agent-link
+  >
+    {FARMERS_AGENT.label}
+    <Icon name="arrow-right" class="h-4 w-4" />
+    <span class="sr-only"> (opens farmers.com in a new tab)</span>
+  </a>
+  <p class="mt-3 text-sm text-[var(--color-ink-muted)]">
+    This opens Farmers' own website in a new tab. To compare Farmers with other carriers, use the
+    Start your quote button on this page.
+  </p>
+</section>

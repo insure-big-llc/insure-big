@@ -11,6 +11,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import Breadcrumbs from '../../components/Breadcrumbs.astro';
 import PartnerCta from '../../components/PartnerCta.astro';
 import QuoteCta from '../../components/QuoteCta.astro';
+import FarmersAgentCard from '../../components/FarmersAgentCard.astro';
 import FaqBlock from '../../components/FaqBlock.astro';
 import RelatedCoverage from '../../components/RelatedCoverage.astro';
 import { SERVICES, SPECIALTY_GROUP, servicePath } from '../../config/services.js';
@@ -121,6 +122,8 @@ const schema = [
           )
         }
 
+        {service.slug === 'farmers-insurance' && <FarmersAgentCard />}
+
         <section class="mt-14 rounded-2xl bg-[var(--color-surface-alt)] p-6">
           <h2 class="text-xl">Other specialty cover we write</h2>
           <ul class="mt-4 grid gap-2 sm:grid-cols-2">
@@ -151,7 +154,7 @@ const schema = [
               form={service.form ?? 'personal'}
               path={path}
               line={service.slug}
-              label={service.name.replace(/ Insurance$/i, '').toLowerCase()}
+              label={service.slug === 'farmers-insurance' ? 'Farmers' : service.name.replace(/ Insurance$/i, '').toLowerCase()}
             />
           )
         }

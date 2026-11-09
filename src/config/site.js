@@ -128,6 +128,17 @@ export function mapEmbedUrl(loc) {
   return `https://maps.google.com/maps?q=${q}&z=16&output=embed`;
 }
 
+/**
+ * Bret's official Farmers agent page on farmers.com, linked from the Farmers
+ * Insurance page. The agency's own profile, so a plain link, not a paid referral.
+ */
+export const FARMERS_AGENT = {
+  url: 'https://agents.farmers.com/mo/lees-summit/bret-ballentine/',
+  label: "Visit Bret's Farmers agent page",
+  heading: "Bret's official Farmers agent page",
+  body: "Farmers publishes an official page for Bret Ballentine as your local Farmers agent. It is on farmers.com, so you can see his Farmers listing and the products Farmers offers there.",
+};
+
 /** The agency main line (the Lee's Summit number), the email and the hours both offices share. */
 export const CONTACT = {
   /** Display form. `tel` below is the machine form. */
