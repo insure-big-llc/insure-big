@@ -1,35 +1,83 @@
 ---
 /**
- * Bret's official Farmers agent page (farmers.com). Shown on the Farmers Insurance
+ * Bret's official Farmers agent page (farmers.com), shown on the Farmers Insurance
  * page only. It is the agency's own agent profile, not a paid referral, so it is a
- * plain outbound link (noopener noreferrer, no "sponsored"). The URL lives in
- * FARMERS_AGENT in src/config/site.js and nowhere else.
+ * plain outbound link (noopener noreferrer, no "sponsored"). Everything it says
+ * (URL, facts, what the visitor can do there) lives in FARMERS_AGENT in
+ * src/config/site.js, written from his live Farmers profile on 9 Nov 2026.
  */
 import { FARMERS_AGENT } from '../config/site.js';
+import { TEAM } from '../config/team.js';
 import Icon from './Icon.astro';
+
+const bret = TEAM.find((m) => /bret/i.test(m.name));
 ---
 
 <section
-  class="mt-10 rounded-2xl border border-neutral-200 border-t-[3px] border-t-[var(--color-brand-500)] bg-[var(--color-surface-alt)] p-6 shadow-[var(--shadow-soft)] sm:p-8"
+  class="mt-10 overflow-hidden rounded-2xl border border-neutral-200 border-t-[3px] border-t-[var(--color-brand-500)] bg-[var(--color-surface-alt)] shadow-[var(--shadow-soft)]"
+  aria-labelledby="farmers-agent-heading"
 >
-  <p class="kicker">Farmers Insurance</p>
-  <h2 class="mt-2 text-2xl">{FARMERS_AGENT.heading}</h2>
-  <p class="mt-3 max-w-2xl text-base leading-relaxed text-[var(--color-ink-soft)]">
-    {FARMERS_AGENT.body}
-  </p>
-  <a
-    href={FARMERS_AGENT.url}
-    class="btn btn-primary mt-6 w-full sm:w-auto"
-    target="_blank"
-    rel="noopener noreferrer"
-    data-farmers-agent-link
-  >
-    {FARMERS_AGENT.label}
-    <Icon name="arrow-right" class="h-4 w-4" />
-    <span class="sr-only"> (opens farmers.com in a new tab)</span>
-  </a>
-  <p class="mt-3 text-sm text-[var(--color-ink-muted)]">
-    This opens Farmers' own website in a new tab. To compare Farmers with other carriers, use the
-    Start your quote button on this page.
-  </p>
+  <div class="p-6 sm:p-8">
+    <div class="flex items-center gap-4">
+      {
+        bret?.photo && (
+          <img
+            src={bret.photo}
+            alt=""
+            width="72"
+            height="72"
+            loading="lazy"
+            decoding="async"
+            class="h-[72px] w-[72px] flex-none rounded-full object-cover ring-2 ring-[var(--color-brand-500)]"
+          />
+        )
+      }
+      <div>
+        <p class="kicker">{FARMERS_AGENT.kicker}</p>
+        <h2 id="farmers-agent-heading" class="mt-1 text-2xl">{FARMERS_AGENT.heading}</h2>
+      </div>
+    </div>
+
+    <p class="mt-5 max-w-2xl text-base leading-relaxed text-[var(--color-ink-soft)]">
+      {FARMERS_AGENT.body}
+    </p>
+
+    <ul class="mt-5 space-y-2 text-base">
+      {
+        FARMERS_AGENT.facts.map((fact) => (
+          <li class="flex gap-3">
+            <Icon name="check" class="mt-1 h-4 w-4 flex-none text-[var(--color-brand-700)]" />
+            <span>{fact}</span>
+          </li>
+        ))
+      }
+    </ul>
+
+    <div class="mt-6 rounded-xl bg-white p-4 sm:p-5">
+      <h3 class="text-base">{FARMERS_AGENT.thereHeading}</h3>
+      <ul class="mt-3 grid gap-x-6 gap-y-2 text-sm text-[var(--color-ink-soft)] sm:grid-cols-2">
+        {
+          FARMERS_AGENT.there.map((item) => (
+            <li class="flex gap-2">
+              <Icon name="chevron-right" class="mt-0.5 h-4 w-4 flex-none text-[var(--color-brand-700)]" />
+              <span>{item}</span>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+
+    <a
+      href={FARMERS_AGENT.url}
+      class="btn btn-primary mt-6 w-full sm:w-auto"
+      target="_blank"
+      rel="noopener noreferrer"
+      data-farmers-agent-link
+    >
+      {FARMERS_AGENT.label}
+      <Icon name="arrow-right" class="h-4 w-4" />
+      <span class="sr-only"> (opens farmers.com in a new tab)</span>
+    </a>
+    <p class="mt-3 text-sm text-[var(--color-ink-muted)]">{FARMERS_AGENT.note}</p>
+  </div>
 </section>

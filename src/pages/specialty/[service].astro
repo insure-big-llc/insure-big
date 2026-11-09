@@ -101,6 +101,8 @@ const schema = [
           </ul>
         </div>
 
+        {service.slug === 'farmers-insurance' && <FarmersAgentCard />}
+
         {
           service.newsLink && (
             <p class="mt-6 rounded-lg bg-[var(--color-surface-alt)] px-4 py-3 text-sm font-semibold">
@@ -121,8 +123,6 @@ const schema = [
             </div>
           )
         }
-
-        {service.slug === 'farmers-insurance' && <FarmersAgentCard />}
 
         <section class="mt-14 rounded-2xl bg-[var(--color-surface-alt)] p-6">
           <h2 class="text-xl">Other specialty cover we write</h2>

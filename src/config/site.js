@@ -134,9 +134,25 @@ export function mapEmbedUrl(loc) {
  */
 export const FARMERS_AGENT = {
   url: 'https://agents.farmers.com/mo/lees-summit/bret-ballentine/',
-  label: "Visit Bret's Farmers agent page",
+  kicker: 'Your Farmers agent',
   heading: "Bret's official Farmers agent page",
-  body: "Farmers publishes an official page for Bret Ballentine as your local Farmers agent. It is on farmers.com, so you can see his Farmers listing and the products Farmers offers there.",
+  label: "Visit Bret's Farmers agent page",
+  body: "Farmers publishes an official page for Bret Ballentine as your local Farmers Insurance agent. It sits on farmers.com, so you can check him out with Farmers directly.",
+  // Taken from his Farmers profile on 9 Nov 2026. Re-check if Farmers changes it.
+  // Deliberately NOT here: the star rating and review count. They change, and the
+  // site already shows its own Google ratings, so two different numbers would confuse.
+  facts: [
+    'Appointed with Farmers for over 5 years',
+    'Farmers Toppers Club in 2021 and 2022, ranking in the top 10 percent of the company',
+  ],
+  thereHeading: 'On his Farmers page you can',
+  there: [
+    'Get an online quote for auto, home, renters, life, business or condo',
+    'Bundle auto with home or renters',
+    'Pick up a quote you saved earlier',
+    'Make an appointment with Bret',
+  ],
+  note: 'This opens Farmers\' own website in a new tab. Want Farmers compared against other carriers? Use Start your quote on this page and we will do the comparing.',
 };
 
 /** The agency main line (the Lee's Summit number), the email and the hours both offices share. */
