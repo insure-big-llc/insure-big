@@ -14,6 +14,7 @@ import QuoteCta from '../../components/QuoteCta.astro';
 import FarmersAgentCard from '../../components/FarmersAgentCard.astro';
 import FaqBlock from '../../components/FaqBlock.astro';
 import RelatedCoverage from '../../components/RelatedCoverage.astro';
+import RelatedPosts from '../../components/RelatedPosts.astro';
 import { SERVICES, SPECIALTY_GROUP, servicePath } from '../../config/services.js';
 import { partnerFor } from '../../config/partners.js';
 import { SPECIALTY_EXPLAINERS } from '../../config/specialty-explainers.js';
@@ -138,6 +139,8 @@ const schema = [
             }
           </ul>
         </section>
+
+        <RelatedPosts service={service.slug} />
 
         <RelatedCoverage current={service.slug} hub="specialty" />
 

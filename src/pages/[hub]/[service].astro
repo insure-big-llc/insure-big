@@ -14,6 +14,7 @@ import QuoteCta from '../../components/QuoteCta.astro';
 import FaqBlock from '../../components/FaqBlock.astro';
 import CarrierStrip from '../../components/CarrierStrip.astro';
 import RelatedCoverage from '../../components/RelatedCoverage.astro';
+import RelatedPosts from '../../components/RelatedPosts.astro';
 import { partnerFor } from '../../config/partners.js';
 import { SPECIALTY_EXPLAINERS } from '../../config/specialty-explainers.js';
 import { HUBS, SERVICES, servicePath } from '../../config/services.js';
@@ -138,6 +139,8 @@ const schema = [
             <a href="/about" class="font-semibold underline">More about Ballentine Insurance Group</a>
           </p>
         </section>
+
+        <RelatedPosts service={service.slug} />
 
         <RelatedCoverage current={service.slug} hub={service.hub} />
 
