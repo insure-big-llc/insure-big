@@ -577,6 +577,26 @@
     line-height: 1.35;
   }
 
+  /* Tables in posts: full width of the column, light rules, room in the cells. */
+  .prose-page table {
+    width: 100%;
+    margin-block: 1.25rem;
+    border-collapse: collapse;
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+  .prose-page th,
+  .prose-page td {
+    padding: 0.7rem 1rem;
+    border-bottom: 1px solid var(--color-neutral-200, #e5e5e5);
+    text-align: left;
+    vertical-align: top;
+  }
+  .prose-page th {
+    background: var(--color-surface-alt);
+    font-weight: 700;
+  }
+
   .prose-page ul {
     margin-block: 1rem;
     padding-inline-start: 1.5rem;
