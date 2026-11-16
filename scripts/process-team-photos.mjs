@@ -30,7 +30,8 @@ mkdirSync(OUT, { recursive: true });
 const PORTRAITS = [
   { from: 'Bret Ballentine.png', slug: 'bret-ballentine', crop: [90, 40, 1074] },
   { from: 'Pete Carroll.png', slug: 'pete-carroll', crop: [0, 0, 1254] },
-  { from: 'Rodney Roberts.png', slug: 'rodney-roberts', crop: [60, 30, 1134] },
+  // Replaced 16 Nov 2026 with the client's new 957px portrait (full frame).
+  { from: 'Rodney Roberts 2.png', slug: 'rodney-roberts', crop: [0, 0, 957] },
   { from: 'Dillon Schallenberg.png', slug: 'dillon-schallenberg', crop: [80, 50, 1094] },
   { from: 'Ashley Neugebauer.png', slug: 'ashley-neugebauer', crop: [0, 0, 1254] },
 ];
@@ -80,10 +81,11 @@ for (const p of PORTRAITS) {
   }
 }
 
-// The group photo: 2:3 portrait. Same grade, two widths.
-const group = join(SRC, 'Team.png');
+// The group photo: 2:3 portrait. Same grade, two widths. Replaced 16 Nov 2026 with the
+// client's new photo, which is 638px wide, so the largest output is 638 (never upscaled).
+const group = join(SRC, 'Team 2.png');
 if (existsSync(group)) {
-  for (const w of [800, 480]) {
+  for (const w of [638, 480]) {
     const h = Math.round((w * 3) / 2);
     const base = await sharp(group)
       .resize(w, h, { fit: 'cover', kernel: 'lanczos3' })

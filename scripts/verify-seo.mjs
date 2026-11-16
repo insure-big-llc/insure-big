@@ -617,23 +617,28 @@ notes.push(`specialty pages: content floor checked for ${SPECIALIST_SLUGS.length
   }
   notes.push('partner pages: 8 pages carry one referral button and no form');
 }
-// ── 17b. Farmers Insurance page: Bret's official Farmers agent link ──────────
-// One plain outbound button (not a paid referral), new tab, noopener noreferrer.
+// ── 17b. Farmers Insurance page: Bret's official Farmers agent pages ─────────
+// Two plain outbound buttons (one per office, not paid referrals), new tab, noopener noreferrer.
 {
-  const FARMERS_URL = 'https://agents.farmers.com/mo/lees-summit/bret-ballentine/';
+  const FARMERS_URLS = [
+    'https://agents.farmers.com/mo/lees-summit/bret-ballentine/',
+    'https://agents.farmers.com/mo/kansas-city/bret-ballentine/',
+  ];
   const file = join(DIST, 'specialty', 'farmers-insurance.html');
   if (!existsSync(file)) fail('/specialty/farmers-insurance is missing');
   else {
     const html = readFileSync(file, 'utf8');
     const tags = [...html.matchAll(/<a\b[^>]*data-farmers-agent-link[^>]*>/g)].map((m) => m[0]);
-    if (tags.length !== 1) fail(`/specialty/farmers-insurance: expected exactly one Farmers agent button, found ${tags.length}`);
+    if (tags.length !== FARMERS_URLS.length) fail(`/specialty/farmers-insurance: expected ${FARMERS_URLS.length} Farmers agent buttons, found ${tags.length}`);
+    for (const url of FARMERS_URLS) {
+      if (!tags.some((t) => t.includes(`href="${url}"`))) fail(`Farmers agent button to ${url} is missing`);
+    }
     for (const tag of tags) {
-      if (!tag.includes(`href="${FARMERS_URL}"`)) fail(`Farmers agent button does not go to ${FARMERS_URL}`);
       if (!/target="_blank"/.test(tag)) fail('Farmers agent button must open in a new tab');
       if (!/rel="[^"]*noopener[^"]*noreferrer/.test(tag)) fail('Farmers agent button must be rel="noopener noreferrer"');
       if (/sponsored/.test(tag)) fail('Farmers agent button is the agency profile, not a paid referral: no rel="sponsored"');
     }
-    notes.push("Farmers page: one button to Bret's official Farmers agent page");
+    notes.push("Farmers page: buttons to Bret's two official Farmers agent pages");
   }
 }
 // ── 13. Blog (spec 0004) ─────────────────────────────────────────────────────

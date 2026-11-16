@@ -129,23 +129,25 @@ export function mapEmbedUrl(loc) {
 }
 
 /**
- * Bret's official Farmers agent page on farmers.com, linked from the Farmers
- * Insurance page. The agency's own profile, so a plain link, not a paid referral.
+ * Bret's official Farmers agent pages on farmers.com (one per office), linked from the
+ * Farmers Insurance page. The agency's own profiles, so plain links, not paid referrals.
  */
 export const FARMERS_AGENT = {
-  url: 'https://agents.farmers.com/mo/lees-summit/bret-ballentine/',
+  pages: [
+    { office: "Lee's Summit", url: 'https://agents.farmers.com/mo/lees-summit/bret-ballentine/', label: "Bret's Lee's Summit Farmers page" },
+    { office: 'Northland', url: 'https://agents.farmers.com/mo/kansas-city/bret-ballentine/', label: "Bret's Northland Farmers page" },
+  ],
   kicker: 'Your Farmers agent',
-  heading: "Bret's official Farmers agent page",
-  label: "Visit Bret's Farmers agent page",
-  body: "Farmers publishes an official page for Bret Ballentine as your local Farmers Insurance agent. It sits on farmers.com, so you can check him out with Farmers directly.",
-  // Taken from his Farmers profile on 9 Nov 2026. Re-check if Farmers changes it.
+  heading: "Bret's official Farmers agent pages",
+  body: "Farmers publishes an official page for Bret Ballentine for each of our two offices. They sit on farmers.com, so you can check him out with Farmers directly.",
+  // Taken from his Farmers profile on 9 Nov 2026 (Lee's Summit page); the Northland page was added 16 Nov 2026. Re-check if Farmers changes it.
   // Deliberately NOT here: the star rating and review count. They change, and the
   // site already shows its own Google ratings, so two different numbers would confuse.
   facts: [
     'Appointed with Farmers for over 5 years',
     'Farmers Toppers Club in 2021 and 2022, ranking in the top 10 percent of the company',
   ],
-  thereHeading: 'On his Farmers page you can',
+  thereHeading: 'On his Farmers pages you can',
   there: [
     'Get an online quote for auto, home, renters, life, business or condo',
     'Bundle auto with home or renters',
@@ -226,10 +228,10 @@ export const PHOTOS = {
   },
   /** Group portrait, graded by scripts/process-team-photos.mjs. */
   teamGroup: {
-    src: '/team/team-group-800.webp',
-    srcset: '/team/team-group-480.webp 480w, /team/team-group-800.webp 800w',
-    width: 800,
-    height: 1200,
+    src: '/team/team-group-638.webp',
+    srcset: '/team/team-group-480.webp 480w, /team/team-group-638.webp 638w',
+    width: 638,
+    height: 957,
     alt: 'The five members of the Ballentine Insurance Group team standing together in a black and white group portrait',
   },
 };
