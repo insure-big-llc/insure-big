@@ -7,6 +7,7 @@ import Stars from '../components/Stars.astro';
 import Art from '../components/Art.astro';
 import { TEAM } from '../config/team.js';
 import FaqBlock from '../components/FaqBlock.astro';
+import FarmersIndependent from '../components/FarmersIndependent.astro';
 import { SITE, CONTACT, LOCATIONS, PHOTOS } from '../config/site.js';
 import { HUBS, SERVICES, SPECIALTY_GROUP, HOME_OFFER_COPY, HOME_FAQ } from '../config/services.js';
 import { GOOGLE_REVIEWS, LOCATION_PROFILES, CUSTOMER_REVIEWS } from '../config/reviews.js';
@@ -49,17 +50,18 @@ const schema = [
 ---
 
 <BaseLayout
-  title="Insurance in the Kansas City Metro"
-  description="Independent insurance agency in Lee's Summit and Kansas City. Home, auto, business, life and specialty coverage compared across carriers. Call (816) 868-1787."
+  title="Independent Insurance Agency in Lee's Summit & Kansas City"
+  description={`Independent, Farmers-appointed insurance agency in Lee's Summit and Kansas City. Compare ${SITE.carriersClaim} carriers for home, auto, business and life. Call (816) 868-1787.`}
   path="/"
   schema={schema}
   footerFlush
 >
   <!-- Hero: gradient and SVG art behind, the agency's own office photo on the right. -->
   <Hero
-    headline={SITE.tagline}
-    emphasis="BIG"
-    supporting={`Tailored insurance solutions to fit you — home, auto, business, life and specialty coverage, compared across 50+ top-rated carriers instead of sold from a single shelf.`}
+    headline="Independent insurance in Lee's Summit and Kansas City"
+    emphasis="Independent"
+    kicker={SITE.name}
+    supporting={`${SITE.name} is a Farmers-appointed independent agency. We compare ${SITE.carriersClaim} carriers for home, auto, business, life and specialty cover, from offices in Downtown Lee's Summit and the Kansas City Northland. ${SITE.tagline}.`}
     photo={{
       ...PHOTOS.officeMeeting,
       sizes: '(min-width: 1024px) 460px, (min-width: 640px) 448px, 92vw',
@@ -108,7 +110,7 @@ const schema = [
           <p class="mt-1 text-xs font-semibold text-[var(--color-ink-soft)]">Google rating</p>
         </div>
         <div class="px-2">
-          <p class="text-2xl font-bold">50+</p>
+          <p class="text-2xl font-bold">{SITE.carriersClaim}</p>
           <p class="mt-1 text-xs font-semibold text-[var(--color-ink-soft)]">carriers compared</p>
         </div>
         <div class="px-2">
@@ -178,6 +180,9 @@ const schema = [
     </div>
   </section>
 
+  <!-- Farmers agent and independent agency, explained in plain words -->
+  <FarmersIndependent variant="band" />
+
   <!-- Specialty -->
   <section class="bg-[var(--color-surface-alt)] py-20">
     <div class="container-page">
@@ -224,7 +229,7 @@ const schema = [
         <ul class="mt-7 space-y-5 text-[var(--color-ink-soft)]">
           {
             [
-              'An independent agency representing multiple top-rated insurance companies.',
+              `An independent agency with appointments across ${SITE.carriersClaim} carriers, Farmers included.`,
               'Personalised recommendations rather than a one-size-fits-all package.',
               'Annual policy reviews, so your cover keeps pace with your life.',
               'Claims support from someone who knows you — not a call centre.',

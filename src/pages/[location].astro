@@ -16,6 +16,7 @@ import Breadcrumbs from '../components/Breadcrumbs.astro';
 import QuoteCta from '../components/QuoteCta.astro';
 import Icon from '../components/Icon.astro';
 import Stars from '../components/Stars.astro';
+import FarmersIndependent from '../components/FarmersIndependent.astro';
 import { SITE, LOCATIONS, CONTACT, PHOTOS, absoluteUrl, mapEmbedUrl } from '../config/site.js';
 import { HUBS, SERVICES } from '../config/services.js';
 import { LOCATION_PROFILES, CUSTOMER_REVIEWS } from '../config/reviews.js';
@@ -38,9 +39,9 @@ const trail = [
 const LOCAL = {
   'lees-summit': {
     heading: "Insurance in Lee's Summit, Missouri",
-    metaTitle: "Insurance in Lee's Summit, MO | Ballentine | BIG",
+    metaTitle: "Insurance Agency in Lee's Summit | Ballentine Insurance Group",
     metaDescription:
-      "Ballentine Insurance Group has served Lee's Summit from Downtown since 2018. Home, auto, business and life insurance on 3rd Street. Call (816) 868-1787.",
+      "Independent, Farmers-appointed insurance agency in Downtown Lee's Summit since 2018. Home, auto, business and life from 50+ carriers. (816) 868-1787.",
     lead: `Ballentine Insurance Group began here. Bret Ballentine founded the agency in ${SITE.founded} in Downtown Lee's Summit, and this is still where the team works from.`,
     body: [
       "If you live in Lee's Summit, you are likely insuring a home that has appreciated faster than its rebuild cost, two or more vehicles, and possibly a business you run from the same address. Those are the conversations we have every week.",
@@ -50,9 +51,9 @@ const LOCAL = {
   },
   northland: {
     heading: 'Insurance in the Kansas City Northland',
-    metaTitle: 'Insurance in the Kansas City Northland | BIG',
+    metaTitle: 'Northland Kansas City Insurance | Ballentine Insurance Group',
     metaDescription:
-      `Ballentine Insurance Group serves the Kansas City Northland from our 91st Street office. Home, auto, business and life insurance. Call ${LOCATIONS.find((l) => l.id === 'northland').phone}.`,
+      `Independent, Farmers-appointed insurance agency on NE 91st Street in the Kansas City Northland. Home, auto, business and life from 50+ carriers. ${LOCATIONS.find((l) => l.id === 'northland').phone}.`,
     lead:
       'Our Northland office on NE 91st Street serves clients across the northern corridor — from the river up through Gladstone, Liberty and beyond.',
     body: [
@@ -67,7 +68,7 @@ const copy = LOCAL[loc.id];
 
 /**
  * This office's own Google profile: the Lee's Summit office carries its
- * Ballentine Insurance Group profile (5.0 from 83), the Northland office the
+ * Ballentine Insurance Group profile (5.0 from 84), the Northland office the
  * Bret Ballentine profile (5.0 from 54). The Northland reviews are the
  * agency-wide CUSTOMER_REVIEWS set, which came from that profile.
  */
@@ -115,6 +116,8 @@ const isPrimary = loc.isPrimary;
         <div class="prose-page mt-8 text-[var(--color-ink-soft)]">
           {copy.body.map((p) => <p>{p}</p>)}
         </div>
+
+        <FarmersIndependent />
 
         <section class="card mt-10 p-6">
           <h2 class="text-xl">Find this office</h2>

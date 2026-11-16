@@ -11,6 +11,7 @@
  */
 import BaseLayout from '../layouts/BaseLayout.astro';
 import SectionBand from '../components/SectionBand.astro';
+import FarmersIndependent from '../components/FarmersIndependent.astro';
 import Breadcrumbs from '../components/Breadcrumbs.astro';
 import { SITE, LOCATIONS, CONTACT, PHOTOS } from '../config/site.js';
 import { TEAM } from '../config/team.js';
@@ -52,6 +53,7 @@ const schema = [
   <article class="container-page py-12">
     <!-- Who we are — the agency's own words, market sentence normalised -->
     <div class="grid items-start gap-12 lg:grid-cols-[minmax(0,1fr)_380px]">
+    <div>
     <header class="max-w-3xl">
       <div class="prose-page mt-6 text-[var(--color-ink-soft)]">
         <p>
@@ -68,7 +70,7 @@ const schema = [
         </p>
         <p>
           Whether you need homeowners, auto, life, commercial, or specialty insurance,
-          our experienced team works with multiple top-rated insurance carriers to find
+          our experienced team works with {SITE.carriersClaim} carriers to find
           coverage tailored to your needs and budget. We also offer value-added services
           including Surety Bonds, Estate Planning, Premium Lock, Medicare solutions, and
           supplemental protection options to help clients prepare for every stage of life.
@@ -84,6 +86,8 @@ const schema = [
         </p>
       </div>
     </header>
+    <FarmersIndependent />
+    </div>
 
     <figure class="lg:sticky lg:top-24">
       <div class="photo-light">

@@ -1329,22 +1329,32 @@ export const SERVICES = [
     slug: 'farmers-insurance',
     hub: 'specialty',
     name: 'Farmers Insurance',
-    h1: 'Farmers Insurance',
-    metaTitle: 'Farmers Insurance Agent | Kansas City Metro | BIG',
+    h1: "Farmers Insurance Agent in Lee's Summit and Kansas City",
+    metaTitle: "Farmers Insurance Agent in Lee's Summit & Kansas City",
     metaDescription:
-      'Ballentine Insurance Group is a Farmers Insurance agency serving the Kansas City metro, alongside a wider panel of carriers.',
+      "Local Farmers Insurance agent in Lee's Summit and the Kansas City Northland. We quote Farmers directly and compare it with 50+ other carriers. (816) 868-1787.",
     blurb:
-      'We are a Farmers agency — and independent enough to compare Farmers against the wider market.',
+      "Bret Ballentine is your local Farmers agent in Downtown Lee's Summit and the Kansas City Northland. We quote Farmers directly, and we compare it with 50+ other carriers so you know it is the right fit.",
     form: 'personal',
     source: 'site:life-insurance + Farmers agent listing',
     covers: [
-      'Farmers home, auto and life products',
-      'Farmers commercial lines',
-      'Compared against our wider carrier panel',
-      'Local service from a Farmers-appointed agency',
+      'Farmers home, auto, renters, condo, life and business insurance',
+      "Two local offices: 16 SE 3rd St in Lee's Summit and 200 NE 91 St in the Kansas City Northland",
+      'Compared against 50+ other carriers before you decide',
+      'Local service from a Farmers-appointed agent, not a call centre',
     ],
     searchIntent: 'Farmers Insurance agent Kansas City',
     faq: [
+      {
+        q: "Is there a Farmers insurance agent in Lee's Summit?",
+        s: "Yes. Bret Ballentine is an appointed Farmers agent at 16 SE 3rd St in Downtown Lee's Summit, with a second office at 200 NE 91 St in the Kansas City Northland.",
+        a: "You can call (816) 868-1787, walk in during business hours, or start a quote online. Farmers also publishes an official page for each office, linked at the top of this page.",
+      },
+      {
+        q: 'Which Farmers products can you quote?',
+        s: "Auto, home, renters, condo, life and business insurance, the products listed on Bret's Farmers agent page.",
+        a: "Availability depends on your details and where you live, and we confirm it before recommending anything. If another carrier fits better, we say so.",
+      },
       {
         q: 'Are you a Farmers agency or an independent agency?',
         s: "Both, and it works in your favour.",

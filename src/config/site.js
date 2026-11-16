@@ -52,6 +52,13 @@ export const SITE = {
 
   tagline: 'Feel the BIG Difference',
 
+  /**
+   * THE carrier claim, in one place (Bret's figure, 16 Nov 2026). The trust strip lists the
+   * carriers shown with a logo, which is a selection, so every page says "50+ carriers,
+   * including" and never a different number. verify-seo fails if another figure appears.
+   */
+  carriersClaim: '50+',
+
   founded: 2018,
   foundedWhere: "Downtown Lee's Summit",
 
@@ -87,6 +94,8 @@ export const LOCATIONS = [
     /** Verbatim string used in schema and the footer — must not drift. */
     full: "16 SE 3rd St, Lee's Summit, MO 64063",
     isPrimary: true,
+    /** Bret's official Farmers agent page for this office (farmers.com). */
+    farmersUrl: 'https://agents.farmers.com/mo/lees-summit/bret-ballentine/',
     /** The exact Google Business Profile name. ASCII hyphen. */
     listingName: 'Farmers Insurance - Ballentine Insurance Group',
     phone: '(816) 868-1787',
@@ -107,6 +116,7 @@ export const LOCATIONS = [
     street: '200 NE 91 St',
     full: '200 NE 91 St, Kansas City, MO 64155',
     isPrimary: false,
+    farmersUrl: 'https://agents.farmers.com/mo/kansas-city/bret-ballentine/',
     /** The exact Google Business Profile name. ASCII hyphen. */
     listingName: 'Farmers Insurance - Bret Ballentine',
     phone: '(816) 272-8786',
@@ -134,8 +144,8 @@ export function mapEmbedUrl(loc) {
  */
 export const FARMERS_AGENT = {
   pages: [
-    { office: "Lee's Summit", url: 'https://agents.farmers.com/mo/lees-summit/bret-ballentine/', label: "Bret's Lee's Summit Farmers page" },
-    { office: 'Northland', url: 'https://agents.farmers.com/mo/kansas-city/bret-ballentine/', label: "Bret's Northland Farmers page" },
+    { office: "Lee's Summit", url: LOCATIONS[0].farmersUrl, label: "Bret's Lee's Summit Farmers page" },
+    { office: 'Northland', url: LOCATIONS[1].farmersUrl, label: "Bret's Northland Farmers page" },
   ],
   kicker: 'Your Farmers agent',
   heading: "Bret's official Farmers agent pages",
@@ -155,6 +165,23 @@ export const FARMERS_AGENT = {
     'Make an appointment with Bret',
   ],
   note: 'This opens Farmers\' own website in a new tab. Want Farmers compared against other carriers? Use Start your quote on this page and we will do the comparing.',
+};
+
+/**
+ * Farmers agent and independent agency, explained once. Every figure and claim here
+ * comes from the agency's own pages and Bret's Farmers profile: appointed Farmers
+ * agent (over 5 years per his Farmers page), Farmers named on both office listings,
+ * appointments with 50+ carriers (Bret, 16 Nov 2026). Nothing is added beyond that.
+ * The answer a customer is really asking is "which carriers can quote MY cover?"
+ */
+export const FARMERS_INDEPENDENT = {
+  kicker: 'Farmers and independent',
+  heading: 'Farmers agency and independent agency: how does that work?',
+  short: `We are appointed with Farmers Insurance, and we are independent, with appointments across ${SITE.carriersClaim} carriers. So we can quote Farmers directly and still tell you when another carrier is the better fit.`,
+  body: [
+    "Bret Ballentine is an appointed Farmers agent, and the Farmers name is on both of our office listings. On top of Farmers, the agency holds appointments with other carriers, so for each quote we compare rather than steer you to one company.",
+    "Which carriers can quote you depends on the type of cover and your details. Ask us. It is a fair question, and we answer it before you decide anything.",
+  ],
 };
 
 /** The agency main line (the Lee's Summit number), the email and the hours both offices share. */

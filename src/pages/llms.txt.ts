@@ -13,6 +13,7 @@
 import type { APIRoute } from 'astro';
 import { SITE, LOCATIONS, CONTACT, absoluteUrl } from '../config/site.js';
 import { HUBS, SERVICES, SPECIALTY_GROUP } from '../config/services.js';
+import { LOCATION_PROFILES } from '../config/reviews.js';
 
 export const prerender = true;
 
@@ -22,7 +23,7 @@ export const GET: APIRoute = () => {
 
   lines.push(`# ${SITE.name}`);
   lines.push('');
-  lines.push(`> ${SITE.tagline} — an independent insurance agency serving the Kansas City metro.`);
+  lines.push(`> ${SITE.tagline}. A Farmers-appointed independent insurance agency with offices in Downtown Lee's Summit and the Kansas City Northland, comparing ${SITE.carriersClaim} carriers.`);
   lines.push('');
   lines.push(`**Business:** ${SITE.name} (${SITE.shortName})`);
   lines.push(`**Website:** ${SITE.url}/`);
@@ -79,7 +80,7 @@ export const GET: APIRoute = () => {
     `- [Get a quote](${absoluteUrl('/get-a-quote')}): Start a personal or business insurance quote.`,
   );
   lines.push(
-    `- [Client reviews](${absoluteUrl('/lees-summit')} and ${absoluteUrl('/northland')}): 5.0 from 83 Google reviews at the Lee's Summit office, 5.0 from 54 at the Northland office, reproduced in full on each office page.`,
+    `- [Client reviews](${absoluteUrl('/lees-summit')} and ${absoluteUrl('/northland')}): ${LOCATION_PROFILES['lees-summit'].rating.toFixed(1)} from ${LOCATION_PROFILES['lees-summit'].count} Google reviews at the Lee's Summit office, ${LOCATION_PROFILES.northland.rating.toFixed(1)} from ${LOCATION_PROFILES.northland.count} at the Northland office, reproduced in full on each office page.`,
   );
   lines.push(
     `- [Coverage partners](${absoluteUrl('/coverage-partners')}): How we place specialty cover with partner programmes.`,

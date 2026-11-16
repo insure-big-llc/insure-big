@@ -1,6 +1,16 @@
 {
   "items": [
     {
+      "q": "Are there independent insurance agents in Lee’s Summit?",
+      "s": "Yes. Ballentine Insurance Group is an independent agency at 16 SE 3rd St in Downtown Lee’s Summit, with a second office in the Kansas City Northland.",
+      "a": "We compare 50+ carriers for home, auto, business and life cover. Call (816) 868-1787 or start a quote and a licensed agent follows up, usually the same business day."
+    },
+    {
+      "q": "Are you a Farmers agent or an independent agency?",
+      "s": "Both. We are appointed with Farmers and with other carriers, so we can quote Farmers and tell you when another carrier fits better.",
+      "a": "Which carriers can quote you depends on the type of cover and your details. Ask us, and we confirm it before recommending anything."
+    },
+    {
       "q": "What types of insurance do you offer?",
       "s": "Home, auto, renters, condo, landlord, umbrella, flood, business, life, Medicare, surety bonds, travel, pet, device protection and more.",
       "a": "If you do not see it listed, call us: we write coverage well beyond this list, and the list grows as new programmes come online."

@@ -55,7 +55,9 @@ const callHref = officeLoc?.phoneHref ?? CONTACT.phoneHref;
  * can never come out as "... | BIG | Ballentine Insurance Group".
  */
 const BRAND_MARKER = '| BIG';
-const fullTitle = title.includes(BRAND_MARKER) ? title : `${title} ${BRAND_MARKER}`;
+// A title that already ends in the full brand name (office pages) keeps it and gets no marker.
+const hasBrand = title.includes(BRAND_MARKER) || title.includes(SITE.name);
+const fullTitle = hasBrand ? title : `${title} ${BRAND_MARKER}`;
 ---
 
 <!doctype html>

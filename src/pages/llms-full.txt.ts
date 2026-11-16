@@ -44,9 +44,11 @@ export const GET: APIRoute = () => {
     appointments with multiple insurance carriers and compares them rather than
     representing only one. The agency works with individuals, families and businesses.`),
     '',
-    clean(`It is a Farmers Insurance agency and also holds appointments with a wider panel of
-    carriers, so it can quote Farmers directly and still recommend another carrier when
-    that fits better.`),
+    clean(`It is a Farmers Insurance agency (Bret Ballentine is an appointed Farmers agent, and
+    the Farmers name is on both office listings) and also holds appointments with
+    ${SITE.carriersClaim} carriers in total, so it can quote Farmers directly and still recommend
+    another carrier when that fits better. Which carriers can quote a customer depends on the
+    type of cover and the customer's details.`),
     '',
     `**Service area:** ${SITE.marketStatement}`,
     '',
@@ -114,8 +116,8 @@ export const GET: APIRoute = () => {
 
   h(2, 'Insurance carriers');
   out.push(
-    clean(`The agency is appointed with the following carriers. It compares them rather than
-    representing only one.`),
+    clean(`The agency holds appointments with ${SITE.carriersClaim} carriers. A selection is listed below.
+    It compares carriers rather than representing only one.`),
     '',
   );
   for (const c of [...CARRIERS].sort((a, b) => a.display.localeCompare(b.display))) {

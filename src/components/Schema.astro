@@ -22,7 +22,7 @@ const organization = {
   name: SITE.name,
   alternateName: SITE.alternateNames,
   url: `${SITE.url}/`,
-  description: `${SITE.name} is an independent insurance agency in the Kansas City metro, offering personal, business, life and specialty insurance. ${SITE.marketStatement}`,
+  description: `${SITE.name} is a Farmers-appointed independent insurance agency with offices in Downtown Lee's Summit and the Kansas City Northland, offering personal, business, life and specialty insurance from ${SITE.carriersClaim} carriers. ${SITE.marketStatement}`,
   foundingDate: String(SITE.founded),
   foundingLocation: SITE.foundedWhere,
   telephone: CONTACT.phone,
@@ -103,6 +103,8 @@ const organization = {
       longitude: loc.geo.longitude,
     },
     hasMap: loc.mapLink,
+    // This office's official Farmers agent page on farmers.com: the same entity.
+    sameAs: [loc.farmersUrl],
     openingHoursSpecification: [CONTACT.hours.spec],
     url: `${SITE.url}/${loc.slug}`,
   })),
@@ -113,6 +115,7 @@ const website = {
   '@id': WEBSITE_ID,
   url: `${SITE.url}/`,
   name: SITE.name,
+  alternateName: SITE.shortName,
   publisher: { '@id': ORG_ID },
   inLanguage: 'en-US',
 };

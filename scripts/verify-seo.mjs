@@ -210,7 +210,8 @@ for (const file of siteHtmlFiles) {
   } else {
     if (titles.has(title)) fail(`duplicate title "${title}" on ${urlPath} and ${titles.get(title)}`);
     titles.set(title, urlPath);
-    if (title.length > 65) warn(`${urlPath}: title is ${title.length} chars (aim ≤60): "${title}"`);
+    const shown = title.replace(/&#39;|&#x27;/g, "'").replace(/&amp;/g, '&').replace(/&quot;/g, '"');
+    if (shown.length > 65) warn(`${urlPath}: title is ${shown.length} chars (aim ≤60): "${shown}"`);
   }
 
   // The 404 page is intentionally noindex and may share boilerplate.
@@ -258,8 +259,12 @@ if (!existsSync(sitemapPath)) {
     fail('sitemap must not list the 404 page');
   }
   const nonPage = new Set(['/404', '/quote-received', '/llms.txt', '/sitemap.xml', ...TOOL_PATHS]);
+  // A noindex page (a blog draft, for example) is meant to stay out of the sitemap.
+  const noindexPaths = new Set(
+    siteHtmlFiles.filter((f) => /<meta\s+name="robots"\s+content="[^"]*noindex/.test(readFileSync(f, 'utf8'))).map(urlPathFor),
+  );
   const orphaned = [...emitted].filter(
-    (u) => !nonPage.has(u) && !locs.includes(u === '/' ? `${SITE}/` : `${SITE}${u}`),
+    (u) => !nonPage.has(u) && !noindexPaths.has(u) && !locs.includes(u === '/' ? `${SITE}/` : `${SITE}${u}`),
   );
   if (orphaned.length) fail(`pages missing from sitemap: ${orphaned.join(', ')}`);
 
@@ -294,7 +299,7 @@ if (!existsSync(llmsFull)) {
   // Spot-check that it carries real prose, not just a link list.
   if (!body.includes('Q:')) fail('llms-full.txt contains no FAQ answers');
   if (!body.includes('(816) 868-1787')) fail('llms-full.txt is missing the phone number');
-  if (!body.includes('Carriers')) warn('llms-full.txt may be missing the carrier list');
+  if (!/carriers/i.test(body)) warn('llms-full.txt may be missing the carrier list');
   const serviceHeadings = (body.match(/^### /gm) || []).length;
   if (serviceHeadings < 26) {
     fail(`llms-full.txt has only ${serviceHeadings} sections — expected all 26 service lines`);
@@ -381,7 +386,10 @@ if (!existsSync(homePage)) {
 
 // Each office page carries its own reviews and aggregate, attributed to the
 // right LocalBusiness node.
-for (const [slug, expectedCount] of [['lees-summit', 83], ['northland', 54]]) {
+// The expected review counts come from the CMS data files, so the markup is checked against
+// the data the editors maintain rather than a number frozen in this script.
+const reviewCountOf = (file) => JSON.parse(readFileSync(new URL(`../src/content/data/${file}`, import.meta.url).pathname.replace(/^\/([A-Za-z]:)/, '$1'), 'utf8')).count;
+for (const [slug, expectedCount] of [['lees-summit', reviewCountOf('reviews-lees-summit.json')], ['northland', reviewCountOf('reviews-northland.json')]]) {
   const page = join(DIST, `${slug}.html`);
   if (!existsSync(page)) {
     fail(`dist/${slug}.html missing`);
@@ -641,6 +649,55 @@ notes.push(`specialty pages: content floor checked for ${SPECIALIST_SLUGS.length
     notes.push("Farmers page: buttons to Bret's two official Farmers agent pages");
   }
 }
+// ── 18. Local intent, one carrier claim, entity links (16 Nov 2026) ──────────
+// From docs/seo-aeo-competitor-gap.md: the winners say the city and "independent" in
+// the title and headline, state ONE countable carrier claim, and tie their profiles to
+// one entity. These checks keep those wins from regressing.
+{
+  const decodeAll = (s) => s.replace(/&#39;|&#x27;/g, "'").replace(/&amp;/g, '&').replace(/&quot;/g, '"').replace(/&rsquo;|&#8217;/g, "'");
+  const read = (p) => (existsSync(join(DIST, p)) ? decodeAll(readFileSync(join(DIST, p), 'utf8')) : '');
+  const text = (h) => h.replace(/<script[\s\S]*?<\/script>|<style[\s\S]*?<\/style>|<svg[\s\S]*?<\/svg>/g, ' ').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ');
+  const h1Of = (h) => text((h.match(/<h1[\s\S]*?<\/h1>/) || [''])[0]).trim();
+  const titleOf = (h) => (h.match(/<title>([^<]*)/) || [])[1] || '';
+
+  // Home: city and "independent" in the title and headline, quotable first paragraph.
+  const home = read('index.html');
+  if (!/Lee's Summit/.test(titleOf(home)) || !/independent/i.test(titleOf(home))) fail("/: the title must say independent and Lee's Summit");
+  if (!/Lee's Summit/.test(h1Of(home)) || !/Kansas City/.test(h1Of(home)) || !/independent/i.test(h1Of(home))) fail("/: the <h1> must say independent, Lee's Summit and Kansas City");
+  if (!/Farmers-appointed independent agency/.test(text(home))) fail('/: the first paragraph must say Farmers-appointed independent agency');
+
+  // Farmers page: local title and headline.
+  const farmers = read('specialty/farmers-insurance.html');
+  if (!/Lee's Summit/.test(titleOf(farmers)) || !/Lee's Summit/.test(h1Of(farmers))) fail("/specialty/farmers-insurance: title and <h1> must say Lee's Summit");
+
+  // One carrier claim: any "<number>+ carriers" on any page must be the single claim.
+  const CLAIM = '50+';
+  for (const file of siteHtmlFiles) {
+    const t = text(decodeAll(readFileSync(file, 'utf8')));
+    for (const m of t.matchAll(/(\d+\+?)\s+(?:top[- ]rated\s+)?carriers/gi)) {
+      if (m[1] !== CLAIM) fail(`${urlPathFor(file)}: carrier claim "${m[0]}" must be "${CLAIM} carriers" (src/config/site.js carriersClaim)`);
+    }
+  }
+
+  // Farmers + independent explained on the home page, About and both offices.
+  for (const p of ['index.html', 'about.html', 'lees-summit.html', 'northland.html']) {
+    if (!/Farmers agency and independent agency/.test(read(p))) fail(`/${p.replace(/\.html$/, '').replace(/^index$/, '')}: the Farmers and independent explanation is missing`);
+  }
+
+  // Entity links: each office ties to its own official Farmers agent page.
+  const graphOf = (h) => [...h.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)].flatMap((m) => { try { const o = JSON.parse(m[1]); return o['@graph'] || [o]; } catch { return []; } });
+  const org = graphOf(readFileSync(join(DIST, 'index.html'), 'utf8')).find((n) => n['@type'] === 'InsuranceAgency');
+  const wantSameAs = { 'lees-summit': 'https://agents.farmers.com/mo/lees-summit/bret-ballentine/', northland: 'https://agents.farmers.com/mo/kansas-city/bret-ballentine/' };
+  for (const [id, url] of Object.entries(wantSameAs)) {
+    const loc = (org?.location || []).find((l) => l['@id']?.endsWith('#location-' + id));
+    if (!loc?.sameAs?.includes(url)) fail(`schema: the ${id} office node must have sameAs ${url}`);
+  }
+  const site = graphOf(readFileSync(join(DIST, 'index.html'), 'utf8')).find((n) => n['@type'] === 'WebSite');
+  if (!site?.alternateName) fail('schema: WebSite must carry alternateName (BIG) so Google can show the short site name');
+
+  notes.push('local intent: home and Farmers page carry the city and "independent"; one carrier claim (50+); Farmers and independent explained; offices tied to their Farmers pages');
+}
+
 // ── 13. Blog (spec 0004) ─────────────────────────────────────────────────────
 // Duplicate slugs or malformed frontmatter already fail the build itself
 // (the collection schema and Astro's duplicate path check). This section

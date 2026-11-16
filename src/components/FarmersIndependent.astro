@@ -1,0 +1,46 @@
+---
+/**
+ * "How can you be Farmers and independent?" in plain words, once, reused on the home
+ * page, About and the office pages. The copy lives in FARMERS_INDEPENDENT in
+ * src/config/site.js so every page says the same thing. A lead-in sentence an
+ * answer engine can quote comes first; the detail follows.
+ *
+ * variant="band"    a full width section (home)
+ * variant="inline"  a compact card inside an article (About, offices)
+ */
+import { FARMERS_INDEPENDENT } from '../config/site.js';
+import Icon from './Icon.astro';
+
+const { variant = 'inline' } = Astro.props;
+const band = variant === 'band';
+---
+
+<section
+  class:list={[
+    band ? 'bg-[var(--color-surface-alt)] py-16' : 'mt-10',
+  ]}
+  aria-labelledby="farmers-independent-heading"
+>
+  <div class:list={[band ? 'container-page' : '']}>
+    <div
+      class="rounded-2xl border border-neutral-200 border-t-[3px] border-t-[var(--color-brand-500)] bg-white p-6 shadow-[var(--shadow-soft)] sm:p-8"
+    >
+      <p class="kicker">{FARMERS_INDEPENDENT.kicker}</p>
+      <h2 id="farmers-independent-heading" class="mt-2 text-2xl">{FARMERS_INDEPENDENT.heading}</h2>
+      <p class="mt-4 max-w-3xl text-lg font-semibold leading-relaxed">{FARMERS_INDEPENDENT.short}</p>
+      <div class="prose-page mt-3 max-w-3xl text-[var(--color-ink-soft)]">
+        {FARMERS_INDEPENDENT.body.map((p) => <p>{p}</p>)}
+      </div>
+      <p class="mt-5 flex flex-wrap gap-x-6 gap-y-2 text-sm font-semibold">
+        <a href="/specialty/farmers-insurance" class="inline-flex items-center gap-1.5 underline">
+          Farmers insurance in Lee's Summit and Kansas City
+          <Icon name="arrow-right" class="h-4 w-4" />
+        </a>
+        <a href="/get-a-quote" class="inline-flex items-center gap-1.5 underline">
+          Compare carriers for your quote
+          <Icon name="arrow-right" class="h-4 w-4" />
+        </a>
+      </p>
+    </div>
+  </div>
+</section>
