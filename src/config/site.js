@@ -69,7 +69,9 @@ export const SITE = {
    * Google Business Profile, 16 Nov 2026). Used in schema sameAs and llms.txt only.
    *   agency   profiles of the business (the Facebook page above is also one)
    *   office   the Lee's Summit office's own listing
-   *   bret     Bret Ballentine's own profiles, on his Person node, not the business's.
+   *   bret     Bret Ballentine's LinkedIn only, on his Person node. His personal Facebook and
+   *            Instagram are deliberately NOT used (Francis, 16 Nov 2026): the business Facebook
+   *            page above already covers social.
    * Left out on purpose: ZoomInfo, Yahoo Local and the Vaia job board. Data brokers and job
    * boards carry stale or different names, which weakens the entity instead of tying it.
    */
@@ -80,8 +82,6 @@ export const SITE = {
     },
     bret: [
       'https://www.linkedin.com/in/ballentinebret',
-      'https://www.instagram.com/bballentine/',
-      'https://www.facebook.com/bret.ballentine.7/',
     ],
   },
 };
