@@ -176,6 +176,12 @@ export const GET: APIRoute = () => {
     '## Optional',
     '',
     `- [Facebook](${SITE.facebook})`,
+    ...SITE.profiles.agency.map((u) => `- [Agency profile](${u})`),
+    ...LOCATIONS.flatMap((l) => [
+      `- [Official Farmers agent page, ${l.name}](${l.farmersUrl})`,
+      ...(SITE.profiles.office[l.id] ?? []).map((u) => `- [Reviews and listing, ${l.name}](${u})`),
+    ]),
+    `- [Bret Ballentine on LinkedIn](${SITE.profiles.bret[0]})`,
     `- [Sitemap](${absoluteUrl('/sitemap.xml')})`,
     `- [llms.txt](${absoluteUrl('/llms.txt')})`,
     '',

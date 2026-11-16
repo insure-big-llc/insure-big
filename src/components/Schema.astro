@@ -11,10 +11,13 @@
  * Every node gets a stable `@id` so the graph can reference rather than duplicate.
  */
 import { SITE, LOCATIONS, CONTACT, absoluteUrl } from '../config/site.js';
+import { TEAM } from '../config/team.js';
 import { offerCatalogSchema, AREA_SERVED } from '../lib/schema.js';
 
 const ORG_ID = `${SITE.url}/#organization`;
 const WEBSITE_ID = `${SITE.url}/#website`;
+const BRET_ID = `${SITE.url}/#bret-ballentine`;
+const bretRecord = TEAM.find((m) => /bret/i.test(m.name));
 
 const organization = {
   '@type': 'InsuranceAgency',
@@ -27,7 +30,8 @@ const organization = {
   foundingLocation: SITE.foundedWhere,
   telephone: CONTACT.phone,
   email: CONTACT.email,
-  sameAs: [SITE.facebook],
+  sameAs: [SITE.facebook, ...SITE.profiles.agency],
+  founder: { '@id': BRET_ID },
   areaServed: AREA_SERVED,
   knowsAbout: [
     'Home insurance',
@@ -104,10 +108,25 @@ const organization = {
     },
     hasMap: loc.mapLink,
     // This office's official Farmers agent page on farmers.com: the same entity.
-    sameAs: [loc.farmersUrl],
+    sameAs: [loc.farmersUrl, ...(SITE.profiles.office[loc.id] ?? [])],
     openingHoursSpecification: [CONTACT.hours.spec],
     url: `${SITE.url}/${loc.slug}`,
   })),
+};
+
+/**
+ * Bret Ballentine as his own entity, so his profiles (LinkedIn, Instagram, Facebook, and his
+ * Farmers agent page) attach to him and not to the business. The About page's team entry for
+ * Bret carries the same @id, so the two are one person in the graph.
+ */
+const bret = {
+  '@type': 'Person',
+  '@id': BRET_ID,
+  name: bretRecord?.name ?? 'Bret Ballentine',
+  jobTitle: bretRecord?.title ?? 'Founder & Principal Agent',
+  worksFor: { '@id': ORG_ID },
+  url: `${SITE.url}/about`,
+  sameAs: [...SITE.profiles.bret, ...LOCATIONS.map((l) => l.farmersUrl)],
 };
 
 const website = {
@@ -161,7 +180,7 @@ for (const node of supplied) {
 
 mergedOrganization = { ...mergedOrganization, location: mergedLocations };
 
-const graph = [mergedOrganization, website, offerCatalog, ...pageNodes];
+const graph = [mergedOrganization, bret, website, offerCatalog, ...pageNodes];
 ---
 
 <script type="application/ld+json" set:html={JSON.stringify({ '@context': 'https://schema.org', '@graph': graph })} />

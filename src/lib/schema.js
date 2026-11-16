@@ -264,6 +264,8 @@ export function aboutPageSchema({ path, title, description, team }) {
     about: { '@id': ORG_ID },
     mentions: team.map((person) => ({
       '@type': 'Person',
+      // Bret's @id matches the sitewide Person node in Schema.astro, so he is one entity.
+      ...(/bret/i.test(person.name) ? { '@id': `${SITE.url}/#bret-ballentine` } : {}),
       name: person.name,
       jobTitle: person.title,
       worksFor: { '@id': ORG_ID },

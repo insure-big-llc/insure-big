@@ -63,6 +63,27 @@ export const SITE = {
   foundedWhere: "Downtown Lee's Summit",
 
   facebook: 'https://www.facebook.com/184676192224260',
+
+  /**
+   * Other public profiles that identify the SAME entity (supplied by Francis from Bret's
+   * Google Business Profile, 16 Nov 2026). Used in schema sameAs and llms.txt only.
+   *   agency   profiles of the business (the Facebook page above is also one)
+   *   office   the Lee's Summit office's own listing
+   *   bret     Bret Ballentine's own profiles, on his Person node, not the business's.
+   * Left out on purpose: ZoomInfo, Yahoo Local and the Vaia job board. Data brokers and job
+   * boards carry stale or different names, which weakens the entity instead of tying it.
+   */
+  profiles: {
+    agency: ['https://www.hagerty.com/Apps/Resources/AgentLocator/Agency/644530/Bret_Ballentine'],
+    office: {
+      'lees-summit': ['https://www.yelp.com/biz/farmers-insurance-bret-ballentine-lees-summit-2'],
+    },
+    bret: [
+      'https://www.linkedin.com/in/ballentinebret',
+      'https://www.instagram.com/bballentine/',
+      'https://www.facebook.com/bret.ballentine.7/',
+    ],
+  },
 };
 
 /**

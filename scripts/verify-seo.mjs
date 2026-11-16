@@ -695,6 +695,23 @@ notes.push(`specialty pages: content floor checked for ${SPECIALIST_SLUGS.length
   const site = graphOf(readFileSync(join(DIST, 'index.html'), 'utf8')).find((n) => n['@type'] === 'WebSite');
   if (!site?.alternateName) fail('schema: WebSite must carry alternateName (BIG) so Google can show the short site name');
 
+  // Profiles: the business's own on the agency node, Bret's on his Person node, Yelp on the Lee's Summit office.
+  const graph = graphOf(readFileSync(join(DIST, 'index.html'), 'utf8'));
+  const bret = graph.find((n) => n['@type'] === 'Person' && /#bret-ballentine$/.test(n['@id'] || ''));
+  if (!bret) fail('schema: the Bret Ballentine Person node is missing');
+  else {
+    for (const need of ['https://www.linkedin.com/in/ballentinebret', 'https://agents.farmers.com/mo/lees-summit/bret-ballentine/']) {
+      if (!bret.sameAs?.includes(need)) fail(`schema: Bret's Person node must have sameAs ${need}`);
+    }
+    if (org?.founder?.['@id'] !== bret['@id']) fail('schema: the agency node must name Bret as founder');
+  }
+  if (!org?.sameAs?.some((u) => /hagerty\.com/.test(u))) fail('schema: the agency node must carry the Hagerty agency profile in sameAs');
+  const lsNode = (org?.location || []).find((l) => l['@id']?.endsWith('#location-lees-summit'));
+  if (!lsNode?.sameAs?.some((u) => /yelp\.com\/biz\/farmers-insurance-bret-ballentine-lees-summit/.test(u))) fail("schema: the Lee's Summit office must carry its Yelp listing in sameAs");
+  // About: Bret must be the same entity, not a second Bret.
+  const aboutHtml = read('about.html');
+  if (!/#bret-ballentine/.test(aboutHtml)) fail('/about: the team entry for Bret must carry the shared Person @id');
+
   notes.push('local intent: home and Farmers page carry the city and "independent"; one carrier claim (50+); Farmers and independent explained; offices tied to their Farmers pages');
 }
 

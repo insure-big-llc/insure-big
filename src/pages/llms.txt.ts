@@ -104,6 +104,12 @@ export const GET: APIRoute = () => {
     `- [Full content](${absoluteUrl('/llms-full.txt')}): The whole site as prose, for answer engines that quote rather than link.`,
   );
   lines.push(`- [Facebook](${SITE.facebook})`);
+  for (const url of SITE.profiles.agency) lines.push(`- [Agency profile](${url})`);
+  for (const loc of LOCATIONS) {
+    lines.push(`- [Official Farmers agent page, ${loc.name}](${loc.farmersUrl})`);
+    for (const url of SITE.profiles.office[loc.id] ?? []) lines.push(`- [Reviews and listing, ${loc.name}](${url})`);
+  }
+  lines.push(`- [Bret Ballentine on LinkedIn](${SITE.profiles.bret[0]})`);
   lines.push(`- [Sitemap](${absoluteUrl('/sitemap.xml')})`);
   lines.push('');
 
